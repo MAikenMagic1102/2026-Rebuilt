@@ -6,8 +6,19 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Inches;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.PerUnit;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.subsystems.Tower;
 import frc.robot.subsystems.pivot;
 
@@ -65,8 +76,40 @@ public final class Constants {
   public static double towerOutakeSpeed = 0;
 //Pivot
   public static double pivotUp = 0;
+  public static double pivotLength = 0;
+  public static double pivotMinAngle = 0;
+  public static double pivotMaxAngle = 0;
   public static double pivotDown = 1.9531;
   public static double pivotGearRatio = 7.8125 ;
+  public static double pivotStartingAngle = 0;
+  public static double pivotMass = 0;
+
+  public static TalonFXConfiguration pivotConfig = new TalonFXConfiguration()
+        .withCurrentLimits(
+            new CurrentLimitsConfigs()
+            .withSupplyCurrentLimit(70)
+        )
+        .withMotorOutput(
+            new MotorOutputConfigs()
+            .withNeutralMode(NeutralModeValue.Brake)
+            .withInverted(InvertedValue.Clockwise_Positive)
+        )
+        .withFeedback(
+            new FeedbackConfigs()
+            .withSensorToMechanismRatio(pivotGearRatio)
+        )
+        
+        .withSlot0(
+            new Slot0Configs()
+            .withKG(.82)
+            .withKV(0.0)
+            .withKA(0.0)
+            .withKP(40.0)
+            .withKI(0.0)
+            .withKD(4.0)
+            .withGravityType(GravityTypeValue.Arm_Cosine)
+        );
+
 
   public static String busname = "bob";
 //Turrett
@@ -75,5 +118,28 @@ public final class Constants {
   public static double TurrettUD = 180;
   public static double TurrettRotateSpeed = 90;
  
+    public static enum Mode {
+        /** Running on a real robot. */
+        REAL,
+    
+        /** Running a physics simulator. */
+        SIM,
+    
+        /** Replaying from a log file. */
+        REPLAY
+      }
 
+      public static final Mode simMode = Mode.SIM;
+
+      public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
+
+      public static final double triggerPressedThreshold = 0.1;
+
+      public static final double controllerDeadband = 0.15;
+
+      public static final String canivore = "can2";
+      public static double robotArmCenterOffset = Units.inchesToMeters(1.75);
+      public static final double robotToReefOffset = 0.56;
 }
+
+
