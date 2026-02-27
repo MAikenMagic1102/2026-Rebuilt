@@ -96,7 +96,7 @@ public class Robot extends TimedRobot {
   @Override
   public void simulationInit() {
     // Update with the simulated drivetrain pose. This should be called every loop in simulation.
-   // VisionSim.update(robotPoseMeters);
+    // Vision.visionSim.update(robotPoseMeters);
   }
 
   /** This function is called periodically whilst in simulation. */
