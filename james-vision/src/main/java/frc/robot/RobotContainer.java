@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.subsystems.drive.DemoDrive;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
-import frc.robot.subsystems.vision.VisionIOLimelight;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 
 /**
@@ -39,15 +39,10 @@ public class RobotContainer {
       case REAL:
         // Real robot, instantiate hardware IO implementations
         vision =
-            new Vision(
-                drive::addVisionMeasurement,
-                new VisionIOLimelight(camera0Name, drive::getRotation),
-                new VisionIOLimelight(camera1Name, drive::getRotation));
-        // vision =
-        // new Vision(
-        // demoDrive::addVisionMeasurement,
-        // new VisionIOPhotonVision(camera0Name, robotToCamera0),
-        // new VisionIOPhotonVision(camera1Name, robotToCamera1));
+        new Vision(
+        drive::addVisionMeasurement,
+        new VisionIOPhotonVision(camera0Name, robotToCamera0),
+        new VisionIOPhotonVision(camera1Name, robotToCamera1));
         break;
 
       case SIM:
