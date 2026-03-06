@@ -62,6 +62,20 @@ public class Vision extends SubsystemBase {
     return inputs[cameraIndex].latestTargetObservation.tx();
   }
 
+  public static int[] concatIntArrays(int[]... arrays) {
+      int totalLen = 0;
+      for (int[] arr : arrays) totalLen += arr.length;
+
+      int[] result = new int[totalLen];
+      int offset = 0;
+      for (int[] arr : arrays) {
+          System.arraycopy(arr, 0, result, offset, arr.length);
+          offset += arr.length;
+      }
+      return result;
+  }
+
+
   @Override
   public void periodic() {
     for (int i = 0; i < io.length; i++) {
@@ -74,7 +88,7 @@ public class Vision extends SubsystemBase {
     List<Pose3d> allRobotPoses = new LinkedList<>();
     List<Pose3d> allRobotPosesAccepted = new LinkedList<>();
     List<Pose3d> allRobotPosesRejected = new LinkedList<>();
-    int[] allTagIds;
+    int[] allTagIds = {};
 
     // Loop over cameras
     for (int cameraIndex = 0; cameraIndex < io.length; cameraIndex++) {
@@ -159,14 +173,15 @@ public class Vision extends SubsystemBase {
       Logger.recordOutput(
           "Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPosesRejected",
           robotPosesRejected.toArray(new Pose3d[0]));
-      // Logger.recordOutput(
-      //     "Vision/Camera" + Integer.toString(cameraIndex) + "/DetectedTagIds",
-      //     camTagIds);
+      Logger.recordOutput(
+          "Vision/Camera" + Integer.toString(cameraIndex) + "/DetectedTagIds",
+          camTagIds);
 
       allTagPoses.addAll(tagPoses);
       allRobotPoses.addAll(robotPoses);
       allRobotPosesAccepted.addAll(robotPosesAccepted);
       allRobotPosesRejected.addAll(robotPosesRejected);
+      allTagIds = concatIntArrays(allTagIds, camTagIds);
     }
 
     // Log summary data
@@ -176,7 +191,7 @@ public class Vision extends SubsystemBase {
         "Vision/Summary/RobotPosesAccepted", allRobotPosesAccepted.toArray(new Pose3d[0]));
     // Logger.recordOutput(
     //     "Vision/Summary/RobotPosesRejected", allRobotPosesRejected.toArray(new Pose3d[0]));
-    // Logger.recordOutput("Vision/Summary/TagIds", (byte[][]) allTagIds.toArray());
+    Logger.recordOutput("Vision/Summary/TagIds", allTagIds);
   }
 
   @FunctionalInterface
