@@ -74,7 +74,7 @@ public class Vision extends SubsystemBase {
     List<Pose3d> allRobotPoses = new LinkedList<>();
     List<Pose3d> allRobotPosesAccepted = new LinkedList<>();
     List<Pose3d> allRobotPosesRejected = new LinkedList<>();
-    List<int[]> allTagIds = new ArrayList<>();
+    int[] allTagIds;
 
     // Loop over cameras
     for (int cameraIndex = 0; cameraIndex < io.length; cameraIndex++) {
@@ -159,15 +159,14 @@ public class Vision extends SubsystemBase {
       Logger.recordOutput(
           "Vision/Camera" + Integer.toString(cameraIndex) + "/RobotPosesRejected",
           robotPosesRejected.toArray(new Pose3d[0]));
-      Logger.recordOutput(
-          "Vision/Camera" + Integer.toString(cameraIndex) + "/DetectedTagIds",
-          camTagIds);
+      // Logger.recordOutput(
+      //     "Vision/Camera" + Integer.toString(cameraIndex) + "/DetectedTagIds",
+      //     camTagIds);
 
       allTagPoses.addAll(tagPoses);
       allRobotPoses.addAll(robotPoses);
       allRobotPosesAccepted.addAll(robotPosesAccepted);
       allRobotPosesRejected.addAll(robotPosesRejected);
-      allTagIds.add(camTagIds);
     }
 
     // Log summary data
@@ -175,10 +174,9 @@ public class Vision extends SubsystemBase {
     Logger.recordOutput("Vision/Summary/RobotPoses", allRobotPoses.toArray(new Pose3d[0]));
     Logger.recordOutput(
         "Vision/Summary/RobotPosesAccepted", allRobotPosesAccepted.toArray(new Pose3d[0]));
-    Logger.recordOutput(
-        "Vision/Summary/RobotPosesRejected", allRobotPosesRejected.toArray(new Pose3d[0]));
-    Logger.recordOutput(
-        "Vision/Summary/TagIds", (byte[][]) allTagIds.toArray());
+    // Logger.recordOutput(
+    //     "Vision/Summary/RobotPosesRejected", allRobotPosesRejected.toArray(new Pose3d[0]));
+    // Logger.recordOutput("Vision/Summary/TagIds", (byte[][]) allTagIds.toArray());
   }
 
   @FunctionalInterface
