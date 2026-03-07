@@ -1,0 +1,50 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  issue_comment:
+    types: [created]
+
+jobs:
+  claude-review:
+    if: |
+      github.event_name == 'pull_request' ||
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.pull_request &&
+       contains(github.event.comment.body, '@claude'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          trigger_phrase: "@claude"
+          track_progress: true
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number || github.event.issue.number }}
+
+            Review this pull request with focus on:
+            - Code quality and best practices in Java
+            - Potential bugs or issues
+            - FRC/WPILib specific concerns use web search for any needed up to date information
+            - FRC 2026 Season - REBUILT Game use web search for any needed up to date information
+            - Programmers are High School level
+
+            The PR branch is already checked out.
+
+            Use `gh pr comment` for top-level feedback.
+            Only post GitHub comments - don't edit any code files.
+
+          claude_args: |
+            --model claude-sonnet-4-6
+            --allowedTools "Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*),Bash(git diff:*),Bash(git log:*),Read,Glob,Grep,Task,WebSearch""
