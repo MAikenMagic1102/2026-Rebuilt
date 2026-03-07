@@ -76,6 +76,8 @@ public class Vision extends SubsystemBase {
   }
 
 
+
+
   @Override
   public void periodic() {
     for (int i = 0; i < io.length; i++) {
@@ -88,7 +90,7 @@ public class Vision extends SubsystemBase {
     List<Pose3d> allRobotPoses = new LinkedList<>();
     List<Pose3d> allRobotPosesAccepted = new LinkedList<>();
     List<Pose3d> allRobotPosesRejected = new LinkedList<>();
-    int[] allTagIds = {};
+    List<Integer> allTagIds = new LinkedList<>();
 
     // Loop over cameras
     for (int cameraIndex = 0; cameraIndex < io.length; cameraIndex++) {
@@ -101,12 +103,14 @@ public class Vision extends SubsystemBase {
       List<Pose3d> robotPosesAccepted = new LinkedList<>();
       List<Pose3d> robotPosesRejected = new LinkedList<>();
       int[] camTagIds = inputs[cameraIndex].tagIds;
+      List<Integer> camTagIdList = new LinkedList<>();
 
       // Add tag poses
       for (int tagId : camTagIds) {
         var tagPose = aprilTagLayout.getTagPose(tagId);
         if (tagPose.isPresent()) {
           tagPoses.add(tagPose.get());
+          camTagIdList.add(tagId);
         }
       }
 
@@ -175,13 +179,13 @@ public class Vision extends SubsystemBase {
           robotPosesRejected.toArray(new Pose3d[0]));
       Logger.recordOutput(
           "Vision/Camera" + Integer.toString(cameraIndex) + "/DetectedTagIds",
-          camTagIds);
+          camTagIdList.stream().mapToInt(i->i).toArray());
 
       allTagPoses.addAll(tagPoses);
       allRobotPoses.addAll(robotPoses);
       allRobotPosesAccepted.addAll(robotPosesAccepted);
       allRobotPosesRejected.addAll(robotPosesRejected);
-      allTagIds = concatIntArrays(allTagIds, camTagIds);
+      allTagIds.addAll(camTagIdList);
     }
 
     // Log summary data
@@ -191,7 +195,8 @@ public class Vision extends SubsystemBase {
         "Vision/Summary/RobotPosesAccepted", allRobotPosesAccepted.toArray(new Pose3d[0]));
     // Logger.recordOutput(
     //     "Vision/Summary/RobotPosesRejected", allRobotPosesRejected.toArray(new Pose3d[0]));
-    Logger.recordOutput("Vision/Summary/TagIds", allTagIds);
+    Logger.recordOutput("Vision/Summary/TagIds", allTagIds.stream().mapToInt(i->i).toArray());
+  
   }
 
   @FunctionalInterface
