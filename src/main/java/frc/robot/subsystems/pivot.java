@@ -39,7 +39,7 @@ private SingleJointedArmSim CoralIntakeSim =
   private PositionVoltage posVoltage = new PositionVoltage(0).withSlot(0);
   private boolean isClosedLoop = false;
 
-  private boolean L1Mode = false;
+  // private boolean L1Mode = false;
 
   private double targetPosition = 0;
 
