@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class pivot extends SubsystemBase{
+public class Pivot extends SubsystemBase{
 
 private TalonFX pivotLeftMotorFx;
 private TalonFX pivotRightMotorFx;
@@ -56,7 +56,7 @@ private SingleJointedArmSim CoralIntakeSim =
 private PositionVoltage posVoltageDown = new PositionVoltage(Constants.pivotDown);
 private PositionVoltage posVoltageUp = new PositionVoltage(Constants.pivotUp);
 
-public pivot () {
+public Pivot () {
     pivotLeftMotorFx = new TalonFX(Constants.pivotLeftID, Constants.busname);
     pivotRightMotorFx = new TalonFX(Constants.pivotRightID, Constants.busname);
     pivotDebouncer = new Debouncer(0.1);
@@ -113,3 +113,6 @@ public Command downPositionCommand () {
 
 
 }
+//intakepivot 4.95, 0.45
+//intake pivot 2 -0.45. -4.95
+//hood 0.145, -1.305
