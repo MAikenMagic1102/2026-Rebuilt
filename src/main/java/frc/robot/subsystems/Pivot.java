@@ -22,9 +22,47 @@ public class Pivot extends SubsystemBase {
     private PositionVoltage positonReq = new PositionVoltage(0).withSlot(0);
     private DutyCycleOut dutyCycleOutput = new DutyCycleOut(0);
 
+<<<<<<< Updated upstream
     public Pivot() {
         pivotLeftMotorFx = new TalonFX(Constants.pivotLeftID, Constants.busname);
         pivotRightMotorFx = new TalonFX(Constants.pivotRightID, Constants.busname);
+=======
+private SingleJointedArmSim PivotIntakeSim = 
+  new SingleJointedArmSim(
+        pivotGearbox,
+        Constants.pivotGearRatio,
+        SingleJointedArmSim.estimateMOI(Constants.pivotLength, Constants.pivotMass),
+        Constants.pivotLength,
+        Constants.pivotMinAngle,
+        Constants.pivotMaxAngle,
+        false,
+        Constants.pivotStartingAngle);
+
+  private DutyCycleOut pivotOut = new DutyCycleOut(0);
+  private PositionVoltage posVoltage = new PositionVoltage(0).withSlot(0);
+  private boolean isClosedLoop = false;
+  
+
+  private double targetPosition = 0;
+
+  private double pivotSpeed = 0;
+
+
+  // AdvantageScope log paths
+  private final String loggerPath = "Subsystems/Pivot";
+  private final String motorLoggerPath = loggerPath + "/Motors";
+  private final String pivotMotorLoggerPath = motorLoggerPath + "/Pivot";
+  private Debouncer pivotDebouncer;
+
+
+private PositionVoltage posVoltageDown = new PositionVoltage(Constants.pivotDown);
+private PositionVoltage posVoltageUp = new PositionVoltage(Constants.pivotUp);
+
+public Pivot () {
+    pivotLeftMotorFx = new TalonFX(Constants.pivotLeftID, Constants.busname);
+    pivotRightMotorFx = new TalonFX(Constants.pivotRightID, Constants.busname);
+    pivotDebouncer = new Debouncer(0.1);
+>>>>>>> Stashed changes
 
         // Apply config to the leader (right) motor
         StatusCode status = StatusCode.StatusCodeNotInitialized;
