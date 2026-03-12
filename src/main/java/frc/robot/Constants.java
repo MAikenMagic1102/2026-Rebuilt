@@ -40,11 +40,12 @@ public final class Constants {
   public static int climberMotorLeftID = 0;
   public static int hopperMotorID = 0;
   public static int intakeRollerMotorID = 0;
-  public static int pivotLeftID = 0;
-  public static int pivotRightID = 0; 
+  public static int pivotLeftID = 7;
+  public static int pivotRightID = 5; 
   public static int rollerID = 0;
   public static int shooterID = 0;
   public static int towerID = 0;
+  public static int SpindexID = 0;
   public static int turretRotateID = 0;
   public static int turretUDID = 0;
 //climber jason
@@ -54,10 +55,10 @@ public final class Constants {
   public static Distance ClimberSprocketRadius = Inches.of(1.128);
   public static double climberDistance = 90;
 //Hopper
-  public static double PosVoltageInHopper = 0;
-  public static double PosVoltageOutHopper = 0;
-  public static double HopperGearRatio = 0;
-  public static Distance HopperSprocketRadius = Inches.of(1);
+  // public static double PosVoltageInHopper = 0;
+  // public static double PosVoltageOutHopper = 0;
+  // public static double HopperGearRatio = 0;
+  // public static Distance HopperSprocketRadius = Inches.of(1);
 //Intake Roller
   public static double IntakeRollerOnSpeed = 0;
   public static double IntakeRollerOffSpeed = 0;
@@ -66,6 +67,10 @@ public final class Constants {
   public static double rollerOnSpeed = 0;
   public static double rollerOffSpeed = 0;
   public static double rollerOutakeSpeed = 0;
+//Spindex
+  public static double SpindexOnSpeed = 0;
+  public static double SpindexOffSpeed = 0;
+  public static double SpindexIdleSpeed = 0;
 //Shooter
   public static double shooterOnSpeed = 0;
   public static double shooterOffSpeed = 0;
@@ -77,12 +82,13 @@ public final class Constants {
 //Pivot
   public static double pivotUp = 0;
   public static double pivotLength = 0;
-  public static double pivotMinAngle = 0;
-  public static double pivotMaxAngle = 0;
+  public static double pivotMinAngle = 0.45;
+  public static double pivotMaxAngle = 4.95;
   public static double pivotDown = 1.9531;
   public static double pivotGearRatio = 7.8125 ;
   public static double pivotStartingAngle = 0;
   public static double pivotMass = 0;
+   public static Distance pivotTotalDistance = Inches.of(1.128);
 
   public static TalonFXConfiguration pivotConfig = new TalonFXConfiguration()
         .withCurrentLimits(

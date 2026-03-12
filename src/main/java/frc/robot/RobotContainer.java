@@ -18,7 +18,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.InatkeRoller;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Spindex;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -38,6 +40,8 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
     private final Pivot pivot = new Pivot();
+    private final InatkeRoller inatkeRoller = new InatkeRoller();
+    private final Spindex spindex = new Spindex();
 
     public RobotContainer() {
         configureBindings();
@@ -67,7 +71,8 @@ public class RobotContainer {
             point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
         ));
 
-        joystick.x().whileTrue(pivot.downPositionCommand()).whileFalse(pivot.upPositionCommand());
+        joystick.rightTrigger().whileTrue(pivot.downPositionCommand()).whileFalse(pivot.upPositionCommand());
+        joystick.leftTrigger().whileTrue(inatkeRoller.turnRollerOn()).whileFalse(inatkeRoller.turnRollerOff()).onTrue(spindex.turnSpindexOn()).onFalse(spindex.SpindexIdleMode());
 
 
         // Run SysId routines when holding back/start and X/Y.
