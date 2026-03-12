@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.InatkeRoller;
 import frc.robot.subsystems.Pivot;
@@ -48,6 +49,7 @@ public class RobotContainer {
     private final Shooter shooter = new Shooter();
     private final Tower tower = new Tower();
     private final Roller roller = new Roller();
+    private final Climber climber = new Climber();
 
     public RobotContainer() {
         configureBindings();
@@ -77,15 +79,11 @@ public class RobotContainer {
             point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
         ));
 
-        joystick.rightTrigger().whileTrue(pivot.downPositionCommand()).whileFalse(pivot.upPositionCommand()).whileTrue(inatkeRoller.turnRollerOn()).whileFalse(inatkeRoller.turnRollerOff());
-
-        joystick.leftTrigger().whileTrue(shooter.turnShooterOn()).whileFalse(shooter.turnShooterOff())
-
-            .whileTrue(tower.turnTowerOn()).whileFalse(tower.turnTowerOff())
-
-                .whileTrue(roller.turnRollerOn()).whileFalse(roller.turnRollerOff())
-
-                    .onTrue(spindex.turnSpindexOn()).onFalse(spindex.SpindexIdleMode());
+        joystick.leftTrigger().whileTrue(inatkeRoller.turnIntakeRollerOn()).whileFalse(inatkeRoller.turnIntakeRollerOff());
+        joystick.rightBumper().onTrue(tower.towerUp()).onFalse(tower.turnTowerOff());
+        joystick.rightTrigger().whileTrue(spindex.turnSpindexOn().alongWith(shooter.turnShooterOn())).onFalse((shooter.turnShooterOff())).whileFalse(spindex.turnSpindexOff());
+        joystick.pov(0).onTrue(climber.turnClimberOn());
+        joystick.pov(180).onTrue(climber.climberHomPos());
         
     
 
