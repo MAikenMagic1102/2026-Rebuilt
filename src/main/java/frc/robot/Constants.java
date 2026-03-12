@@ -20,7 +20,7 @@ import edu.wpi.first.units.PerUnit;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.subsystems.Tower;
-import frc.robot.subsystems.pivot;
+import frc.robot.subsystems.Pivot;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
