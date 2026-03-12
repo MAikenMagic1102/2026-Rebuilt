@@ -26,6 +26,8 @@ import frc.robot.subsystems.vision.VisionIO.VisionIOInputs;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.ejml.equation.IntegerSequence.Range;
 import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
@@ -33,6 +35,7 @@ public class Vision extends SubsystemBase {
   private final VisionIO[] io;
   private final VisionIOInputs[] inputs;
   private final Alert[] disconnectedAlerts;
+  private int[] trackedIds;
 
   public Vision(VisionConsumer consumer, VisionIO... io) {
     this.consumer = consumer;
@@ -61,6 +64,31 @@ public class Vision extends SubsystemBase {
   public Rotation2d getTargetX(int cameraIndex) {
     return inputs[cameraIndex].latestTargetObservation.tx();
   }
+  public int getTargetId(int cameraIndex) {
+    return inputs[cameraIndex].latestTargetObservation.id();
+  }
+
+  public boolean getIdXTracked(int id){
+    int[] cams = {0, 1, 2};
+    for (int i : cams){
+      int[] ids = inputs[i].tagIds;
+      for (int e : ids){
+        if(e == 9){
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  // public Rotation2d getAlignTargetX(int id) {
+  //   return inputs
+  // }
+
+  // public boolean autoAimAvaliable(){
+
+  //   if
+  //   return false;
+  // }
 
   public static int[] concatIntArrays(int[]... arrays) {
       int totalLen = 0;
@@ -75,6 +103,14 @@ public class Vision extends SubsystemBase {
       return result;
   }
 
+  private static boolean intInThing(int[] thing, int inty){
+    for(int i : thing){
+      if(i == inty){
+        return true;
+      }
+    }
+    return false;
+  }
 
 
 
@@ -196,7 +232,11 @@ public class Vision extends SubsystemBase {
     // Logger.recordOutput(
     //     "Vision/Summary/RobotPosesRejected", allRobotPosesRejected.toArray(new Pose3d[0]));
     Logger.recordOutput("Vision/Summary/TagIds", allTagIds.stream().mapToInt(i->i).toArray());
-  
+
+    // Check for alignment targets
+    Logger.recordOutput("Vision/Summary/AlignmentTag9", intInThing(allTagIds.stream().mapToInt(i->i).toArray(), 9));
+    Logger.recordOutput("Vision/Summary/AlignmentTag25", intInThing(allTagIds.stream().mapToInt(i->i).toArray(), 25));
+
   }
 
   @FunctionalInterface

@@ -14,7 +14,9 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.DemoDrive;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
@@ -86,17 +88,30 @@ public class RobotContainer {
     @SuppressWarnings("resource")
     PIDController aimController = new PIDController(0.2, 0.0, 0.0);
     aimController.enableContinuousInput(-Math.PI, Math.PI);
-    keyboard
-        .button(1)
-        .whileTrue(
-            Commands.startRun(
+    // keyboard
+    //     .button(1)
+    //     .whileTrue(
+    //         Commands.startRun(
+    //             () -> {
+    //               aimController.reset();
+    //             },
+    //             () -> {
+    //               drive.run(0.0, aimController.calculate(vision.getTargetX(0).getRadians()));
+    //             },
+    //             drive));
+
+      CommandXboxController m_XboxController = new CommandXboxController(0);
+      m_XboxController.rightBumper().whileTrue(Commands.startRun(
                 () -> {
                   aimController.reset();
                 },
                 () -> {
-                  drive.run(0.0, aimController.calculate(vision.getTargetX(0).getRadians()));
+
+                    drive.run(0.0, aimController.calculate(vision.getTargetX(0).getRadians()));
                 },
+
                 drive));
+        
   }
 
   /**
