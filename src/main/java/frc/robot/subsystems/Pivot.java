@@ -7,11 +7,13 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+@Logged
 public class Pivot extends SubsystemBase {
 
     private TalonFX pivotLeftMotorFx;
@@ -66,6 +68,7 @@ public class Pivot extends SubsystemBase {
       return runOnce(() -> setDutyCycle(0));
     }
 
+    @Logged(name = "AngleDeg")
     public double getPivotAngle() {
         return Units.rotationsToDegrees(pivotRightMotorFx.getPosition().getValueAsDouble());
     }

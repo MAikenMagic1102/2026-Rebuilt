@@ -1,11 +1,16 @@
  package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+@Logged
 public class Shooter extends SubsystemBase {
  private TalonFX shooterMotorFx;
 
@@ -35,6 +40,10 @@ public class Shooter extends SubsystemBase {
         shooterOff();
       }  
     );
+ }
+ @Logged(name = "VelocityRPM")
+ public double getShooterRPM() {
+    return RotationsPerSecond.of(shooterMotorFx.getVelocity().getValueAsDouble()).in(RPM);
  }
  public Command slowShooter () {
     return runOnce(

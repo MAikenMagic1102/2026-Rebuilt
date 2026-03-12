@@ -10,6 +10,7 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Second;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.units.DistanceUnit;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+@Logged
 public class Climber extends SubsystemBase{
     
     private TalonFX climberMotorLeftFx;
@@ -55,10 +57,19 @@ public class Climber extends SubsystemBase{
             }
         );
     }
+    
+    @Logged(name = "LeftHeightInches")
+    public double getLeftHeightInches() {
+        return rotationsToInches(Rotations.of(climberMotorLeftFx.getPosition().getValueAsDouble())).in(Inches);
+    }
+
+    @Logged(name = "RightHeightInches")
+    public double getRightHeightInches() {
+        return rotationsToInches(Rotations.of(climberMotorRightFx.getPosition().getValueAsDouble())).in(Inches);
+    }
+
     public static Distance rotationsToInches (Angle rotations) {
         var gearedRadians = rotations.in(Radians) / Constants.ClimberGearRatio;
         return Constants.ClimberSprocketRadius.times(gearedRadians);
     }
-
-
 }
