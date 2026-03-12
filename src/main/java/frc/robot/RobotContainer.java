@@ -20,7 +20,10 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.InatkeRoller;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Roller;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Spindex;
+import frc.robot.subsystems.Tower;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -42,6 +45,9 @@ public class RobotContainer {
     private final Pivot pivot = new Pivot();
     private final InatkeRoller inatkeRoller = new InatkeRoller();
     private final Spindex spindex = new Spindex();
+    private final Shooter shooter = new Shooter();
+    private final Tower tower = new Tower();
+    private final Roller roller = new Roller();
 
     public RobotContainer() {
         configureBindings();
@@ -71,8 +77,17 @@ public class RobotContainer {
             point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
         ));
 
-        joystick.rightTrigger().whileTrue(pivot.downPositionCommand()).whileFalse(pivot.upPositionCommand());
-        joystick.leftTrigger().whileTrue(inatkeRoller.turnRollerOn()).whileFalse(inatkeRoller.turnRollerOff()).onTrue(spindex.turnSpindexOn()).onFalse(spindex.SpindexIdleMode());
+        joystick.rightTrigger().whileTrue(pivot.downPositionCommand()).whileFalse(pivot.upPositionCommand()).whileTrue(inatkeRoller.turnRollerOn()).whileFalse(inatkeRoller.turnRollerOff());
+
+        joystick.leftTrigger().whileTrue(shooter.turnShooterOn()).whileFalse(shooter.turnShooterOff())
+
+            .whileTrue(tower.turnTowerOn()).whileFalse(tower.turnTowerOff())
+
+                .whileTrue(roller.turnRollerOn()).whileFalse(roller.turnRollerOff())
+
+                    .onTrue(spindex.turnSpindexOn()).onFalse(spindex.SpindexIdleMode());
+        
+    
 
 
         // Run SysId routines when holding back/start and X/Y.
