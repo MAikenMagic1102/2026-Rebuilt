@@ -4,10 +4,12 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+@Logged
 public class InatkeRoller extends SubsystemBase {
  private TalonFX intakeRollerMotorFx;
  private final VoltageOut voltageRequest = new VoltageOut(0);
