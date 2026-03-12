@@ -4,6 +4,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -60,6 +61,8 @@ private TalonFXSimState pivotSimState;
 private DCMotor pivotGearbox = DCMotor.getKrakenX60Foc(1);
 
  private DutyCycleOut dutyCycleOutput = new DutyCycleOut(0);
+
+ private final VoltageOut voltageRequest = new VoltageOut(0);
 
 private SingleJointedArmSim PivotIntakeSim = 
   new SingleJointedArmSim(

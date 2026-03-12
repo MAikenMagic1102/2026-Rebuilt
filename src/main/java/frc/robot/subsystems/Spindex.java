@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -7,20 +8,21 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Spindex extends SubsystemBase {
-    private TalonFX rollerTalonFX;
+    private TalonFX spindexTalonFX;
+     private final VoltageOut voltageRequest = new VoltageOut(0);
 
     public Spindex () {
-        rollerTalonFX = new TalonFX(Constants.SpindexID, Constants.busname);
+        spindexTalonFX = new TalonFX(Constants.SpindexID, Constants.busname);
     }
 
     public void SpindexOn () {
-        rollerTalonFX.set(Constants.SpindexOnSpeed);
+       spindexTalonFX.setControl(voltageRequest.withOutput(Constants.SpindexOnSpeed));
     }
     public void SpindexOff () {
-        rollerTalonFX.set(Constants.SpindexOffSpeed);
+       spindexTalonFX.setControl(voltageRequest.withOutput(Constants.shooterOffSpeed));
     }
     public void SpindexIdle () {
-        rollerTalonFX.set(Constants.SpindexIdleSpeed);
+       spindexTalonFX.setControl(voltageRequest.withOutput(Constants.SpindexIdleSpeed));
     }
     public Command turnSpindexOn () {
         return runOnce(
