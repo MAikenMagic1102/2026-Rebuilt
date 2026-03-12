@@ -104,7 +104,6 @@ public final class Constants {
             new FeedbackConfigs()
             .withSensorToMechanismRatio(pivotGearRatio)
         )
-        
         .withSlot0(
             new Slot0Configs()
             .withKG(.82)
@@ -116,9 +115,9 @@ public final class Constants {
             .withGravityType(GravityTypeValue.Arm_Cosine)
         );
 
-
   public static String busname = "bob";
-//Turrett
+
+  //Turrett
   public static double TurrettRotate = 360;
   public static double TurrettGearRatio = 72;
   public static double TurrettUD = 180;
