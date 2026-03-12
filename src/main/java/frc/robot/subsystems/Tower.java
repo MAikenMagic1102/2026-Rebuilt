@@ -29,6 +29,14 @@ public class Tower extends SubsystemBase{
           }  
         );
     }
+ public Command turnTowerOn () {
+        return runOnce(
+            () -> {
+                towerOn();
+            }
+        );
+    }
+
     public Command turnTowerOff () {
         return runOnce(
             () -> {
