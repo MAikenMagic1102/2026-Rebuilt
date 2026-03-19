@@ -16,7 +16,6 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.networktables.IntegerArrayEntry;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,10 +23,9 @@ import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
 import frc.robot.subsystems.vision.VisionIO.VisionIOInputs;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
-
-import org.ejml.equation.IntegerSequence.Range;
+import java.util.Set;
 import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
@@ -35,7 +33,6 @@ public class Vision extends SubsystemBase {
   private final VisionIO[] io;
   private final VisionIOInputs[] inputs;
   private final Alert[] disconnectedAlerts;
-  private int[] trackedIds;
 
   public Vision(VisionConsumer consumer, VisionIO... io) {
     this.consumer = consumer;
@@ -64,54 +61,6 @@ public class Vision extends SubsystemBase {
   public Rotation2d getTargetX(int cameraIndex) {
     return inputs[cameraIndex].latestTargetObservation.tx();
   }
-  public int getTargetId(int cameraIndex) {
-    return inputs[cameraIndex].latestTargetObservation.id();
-  }
-
-  public boolean getIdXTracked(int id){
-    int[] cams = {0, 1, 2};
-    for (int i : cams){
-      int[] ids = inputs[i].tagIds;
-      for (int e : ids){
-        if(e == 9){
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-  // public Rotation2d getAlignTargetX(int id) {
-  //   return inputs
-  // }
-
-  // public boolean autoAimAvaliable(){
-
-  //   if
-  //   return false;
-  // }
-
-  public static int[] concatIntArrays(int[]... arrays) {
-      int totalLen = 0;
-      for (int[] arr : arrays) totalLen += arr.length;
-
-      int[] result = new int[totalLen];
-      int offset = 0;
-      for (int[] arr : arrays) {
-          System.arraycopy(arr, 0, result, offset, arr.length);
-          offset += arr.length;
-      }
-      return result;
-  }
-
-  private static boolean intInThing(int[] thing, int inty){
-    for(int i : thing){
-      if(i == inty){
-        return true;
-      }
-    }
-    return false;
-  }
-
 
 
   @Override
@@ -122,11 +71,11 @@ public class Vision extends SubsystemBase {
     }
 
     // Initialize logging values
-    List<Pose3d> allTagPoses = new LinkedList<>();
-    List<Pose3d> allRobotPoses = new LinkedList<>();
-    List<Pose3d> allRobotPosesAccepted = new LinkedList<>();
-    List<Pose3d> allRobotPosesRejected = new LinkedList<>();
-    List<Integer> allTagIds = new LinkedList<>();
+    List<Pose3d> allTagPoses = new ArrayList<>();
+    List<Pose3d> allRobotPoses = new ArrayList<>();
+    List<Pose3d> allRobotPosesAccepted = new ArrayList<>();
+    List<Pose3d> allRobotPosesRejected = new ArrayList<>();
+    Set<Integer> allTagIds = new LinkedHashSet<>();
 
     // Loop over cameras
     for (int cameraIndex = 0; cameraIndex < io.length; cameraIndex++) {
@@ -134,12 +83,12 @@ public class Vision extends SubsystemBase {
       disconnectedAlerts[cameraIndex].set(!inputs[cameraIndex].connected);
 
       // Initialize logging values
-      List<Pose3d> tagPoses = new LinkedList<>();
-      List<Pose3d> robotPoses = new LinkedList<>();
-      List<Pose3d> robotPosesAccepted = new LinkedList<>();
-      List<Pose3d> robotPosesRejected = new LinkedList<>();
+      List<Pose3d> tagPoses = new ArrayList<>();
+      List<Pose3d> robotPoses = new ArrayList<>();
+      List<Pose3d> robotPosesAccepted = new ArrayList<>();
+      List<Pose3d> robotPosesRejected = new ArrayList<>();
       int[] camTagIds = inputs[cameraIndex].tagIds;
-      List<Integer> camTagIdList = new LinkedList<>();
+      List<Integer> camTagIdList = new ArrayList<>();
 
       // Add tag poses
       for (int tagId : camTagIds) {
@@ -217,11 +166,15 @@ public class Vision extends SubsystemBase {
           "Vision/Camera" + Integer.toString(cameraIndex) + "/DetectedTagIds",
           camTagIdList.stream().mapToInt(i->i).toArray());
 
-      allTagPoses.addAll(tagPoses);
+      // Deduplicate tags across cameras — only add poses for newly seen IDs
+      for (int j = 0; j < camTagIdList.size(); j++) {
+        if (allTagIds.add(camTagIdList.get(j))) {
+          allTagPoses.add(tagPoses.get(j));
+        }
+      }
       allRobotPoses.addAll(robotPoses);
       allRobotPosesAccepted.addAll(robotPosesAccepted);
       allRobotPosesRejected.addAll(robotPosesRejected);
-      allTagIds.addAll(camTagIdList);
     }
 
     // Log summary data
@@ -232,11 +185,7 @@ public class Vision extends SubsystemBase {
     // Logger.recordOutput(
     //     "Vision/Summary/RobotPosesRejected", allRobotPosesRejected.toArray(new Pose3d[0]));
     Logger.recordOutput("Vision/Summary/TagIds", allTagIds.stream().mapToInt(i->i).toArray());
-
-    // Check for alignment targets
-    Logger.recordOutput("Vision/Summary/AlignmentTag9", intInThing(allTagIds.stream().mapToInt(i->i).toArray(), 9));
-    Logger.recordOutput("Vision/Summary/AlignmentTag25", intInThing(allTagIds.stream().mapToInt(i->i).toArray(), 25));
-
+  
   }
 
   @FunctionalInterface
