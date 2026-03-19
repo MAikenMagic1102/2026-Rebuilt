@@ -7,12 +7,9 @@
 
 package frc.robot;
 
-import static frc.robot.game_util.FieldConstants.Hub;
 import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -98,35 +95,6 @@ public class RobotContainer {
                 },
                 () -> {
                   drive.run(0.0, aimController.calculate(vision.getTargetX(0).getRadians()));
-                },
-                drive));
-
-    // Auto aim at nearest hub center
-    @SuppressWarnings("resource")
-    PIDController hubAimController = new PIDController(1.0, 0.0, 0.0);
-    hubAimController.enableContinuousInput(-Math.PI, Math.PI);
-    keyboard
-        .button(2)
-        .whileTrue(
-            Commands.startRun(
-                () -> {
-                  hubAimController.reset();
-                },
-                () -> {
-                  Pose2d pose = drive.getPose();
-                  Translation2d robotPos = pose.getTranslation();
-                  double distBlue = robotPos.getDistance(Hub.blueHubCenter2d);
-                  double distRed = robotPos.getDistance(Hub.redHubCenter2d);
-                  Translation2d target =
-                      distBlue < distRed ? Hub.blueHubCenter2d : Hub.redHubCenter2d;
-
-                  double targetAngle =
-                      Math.atan2(
-                          target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
-
-                  hubAimController.setSetpoint(targetAngle);
-                  drive.run(
-                      0.0, hubAimController.calculate(pose.getRotation().getRadians()));
                 },
                 drive));
   }
