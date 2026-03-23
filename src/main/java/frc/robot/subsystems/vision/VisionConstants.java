@@ -7,10 +7,14 @@
 
 package frc.robot.subsystems.vision;
 
+import static edu.wpi.first.units.Units.Inches;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Distance;
 
 public class VisionConstants {
   // AprilTag layout
@@ -18,18 +22,34 @@ public class VisionConstants {
       AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
   // Camera names, must match names configured on coprocessor
-  public static String camera0Name = "camera_0";
-  public static String camera1Name = "camera_1";
-  public static String camera3Name = "camera_3";
+  public static String camera0Name = "cameraLeftWide";
+  public static String camera1Name = "cameraCenterNarrow";
+  public static String camera3Name = "cameraRightWide";
+
+  private static double inchesToMeters(double inches){
+    double meters = inches * 0.0254;
+    return meters;
+  }
 
   // Robot to camera transforms
   // (Not used by Limelight, configure in web UI instead)
-  public static Transform3d robotToCamera0 =
-      new Transform3d(0.0, 0.0, 0.0, new Rotation3d(0.0, 0, 0.0));
-  public static Transform3d robotToCamera1 =
-      new Transform3d(0.0, 0.0, 0.0, new Rotation3d(0.0, 0, Math.PI));
-  public static Transform3d robotToCamera3 = 
-      new Transform3d(0.0, 0.0, 0.0, new Rotation3d(0.0, 0.0, -Math.PI));
+  // TODO: CONVERT MEASURES (XYZ) TO ROBOT CENTER TO CAMERA CENTER y(Rotations are a-ok)
+//     public static Transform3d robotToCamera0 =
+//       new Transform3d(0.0, 0.0, 0.0, new Rotation3d(0.0, 0, 0.0));
+//   public static Transform3d robotToCamera1 =
+//       new Transform3d(0.0, 0.0, 0.0, new Rotation3d(0.0, 0, Math.PI));
+//   public static Transform3d robotToCamera3 = 
+//       new Transform3d(0.0, 0.0, 0.0, new Rotation3d(0.0, 0.0, -Math.PI));
+ 
+  public static Transform3d robotToCameraLeft =
+      new Transform3d(0, 0, 0, 
+      new Rotation3d(0.0, 0, Units.degreesToRadians(90 + 60)));
+  public static Transform3d robotToCameraCenter =
+      new Transform3d(1.5, -1.5, 16,
+      (new Rotation3d(0.0, 0, Units.degreesToRadians(90))));
+  public static Transform3d robotToCameraRight = 
+      new Transform3d(0, 0, 0,
+      new Rotation3d(0.0, 0, Units.degreesToRadians(90 - 60)));
 
   // Basic filtering thresholds
   public static double maxAmbiguity = 0.3;
