@@ -46,7 +46,7 @@ public class RobotContainer {
         drive::addVisionMeasurement,
         new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
         new VisionIOPhotonVision(camera1Name, robotToCameraCenter),
-        new VisionIOPhotonVision(camera3Name, robotToCameraRight));
+        new VisionIOPhotonVision(camera2Name, robotToCameraRight));
         break;
 
       case SIM:
@@ -56,7 +56,7 @@ public class RobotContainer {
                 drive::addVisionMeasurement,
                 new VisionIOPhotonVisionSim(camera0Name, robotToCameraLeft, drive::getPose),
                 new VisionIOPhotonVisionSim(camera1Name, robotToCameraCenter, drive::getPose),
-                new VisionIOPhotonVisionSim(camera3Name, robotToCameraRight, drive::getPose));
+                new VisionIOPhotonVisionSim(camera2Name, robotToCameraRight, drive::getPose));
         break;
 
       default:

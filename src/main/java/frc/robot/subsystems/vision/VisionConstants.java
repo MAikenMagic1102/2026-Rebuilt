@@ -24,7 +24,7 @@ public class VisionConstants {
   // Camera names, must match names configured on coprocessor
   public static String camera0Name = "cameraLeftWide";
   public static String camera1Name = "cameraCenterNarrow";
-  public static String camera3Name = "cameraRightWide";
+  public static String camera2Name = "cameraRightWide";
 
   private static double inchesToMeters(double inches){
     double meters = inches * 0.0254;
@@ -42,13 +42,13 @@ public class VisionConstants {
 //       new Transform3d(0.0, 0.0, 0.0, new Rotation3d(0.0, 0.0, -Math.PI));
  
   public static Transform3d robotToCameraLeft =
-      new Transform3d(0, 0, 0, 
+      new Transform3d(1.5, -1.5, 0, 
       new Rotation3d(0.0, 0, Units.degreesToRadians(90 + 60)));
   public static Transform3d robotToCameraCenter =
       new Transform3d(1.5, -1.5, 16,
       (new Rotation3d(0.0, 0, Units.degreesToRadians(90))));
   public static Transform3d robotToCameraRight = 
-      new Transform3d(0, 0, 0,
+      new Transform3d(1.5, -1.5, 0,
       new Rotation3d(0.0, 0, Units.degreesToRadians(90 - 60)));
 
   // Basic filtering thresholds
