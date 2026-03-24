@@ -11,45 +11,46 @@ import frc.robot.Constants;
 
 @Logged
 public class InatkeRoller extends SubsystemBase {
- private TalonFX intakeRollerMotorFx;
- private final VoltageOut voltageRequest = new VoltageOut(0);
+    private TalonFX intakeRollerMotorFx;
+    private final VoltageOut voltageRequest = new VoltageOut(0);
 
- public InatkeRoller () {
-    intakeRollerMotorFx = new TalonFX(Constants.intakeRollerMotorID, Constants.busname);
- }
+    public InatkeRoller () {
+        intakeRollerMotorFx = new TalonFX(Constants.intakeRollerMotorID, Constants.busname);
+    }
 
+    public void rollerOn () {
+        intakeRollerMotorFx.setControl(voltageRequest.withOutput(Constants.IntakeRollerOnSpeed));
+    }
+    
+    public void rollerOff () {
+        intakeRollerMotorFx.setControl(voltageRequest.withOutput(Constants.IntakeRollerOnSpeed));
+    }
+    
+    public void rollerOut () {
+        intakeRollerMotorFx.setControl(voltageRequest.withOutput(Constants.IntakeRollerOnSpeed));
+    }
+   
+    public Command turnIntakeRollerOn () {
+        return runOnce(
+            () -> {
+                rollerOn();
+            }
+        );
+    }
 
- public void rollerOn () {
-    intakeRollerMotorFx.setControl(voltageRequest.withOutput(Constants.IntakeRollerOnSpeed));
- }
- public void rollerOff () {
-    intakeRollerMotorFx.setControl(voltageRequest.withOutput(Constants.IntakeRollerOnSpeed));
- }
- public void rollerOut () {
-    intakeRollerMotorFx.setControl(voltageRequest.withOutput(Constants.IntakeRollerOnSpeed));
- }
- public Command turnIntakeRollerOn () {
-    return runOnce(
-        () -> {
-            rollerOn();
-        }
-    );
- }
-public Command turnIntakeRollerOff () {
-    return runOnce(
-        () -> {
-            rollerOff();
-        }
-    );
-}
-public Command intakeRollerOutake () {
-    return runOnce(
-        () -> {
-            rollerOut();
-        }
-    );
-}
+    public Command turnIntakeRollerOff () {
+        return runOnce(
+            () -> {
+                rollerOff();
+            }
+        );
+    }
 
-
-
+    public Command intakeRollerOutake () {
+        return runOnce(
+            () -> {
+                rollerOut();
+            }
+        );
+    }
 }

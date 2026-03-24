@@ -16,11 +16,8 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.PerUnit;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.subsystems.Tower;
-import frc.robot.subsystems.Pivot;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -36,8 +33,7 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
   
-  public static int climberMotorRightID = 0;
-  public static int climberMotorLeftID = 0;
+  // Motor IDs
   public static int hopperMotorID = 0;
   public static int intakeRollerMotorID = 0;
   public static int pivotLeftID = 7;
@@ -45,20 +41,7 @@ public final class Constants {
   public static int rollerID = 0;
   public static int shooterID = 0;
   public static int towerID = 0;
-  public static int SpindexID = 0;
-  public static int turretRotateID = 0;
-  public static int turretUDID = 0;
-//climber jason
-  public static double PosVoltageUpClimb = 0;
-  public static double PosVoltageDownClimb = 0;
-  public static double ClimberGearRatio = 90.75;
-  public static Distance ClimberSprocketRadius = Inches.of(1.128);
-  public static double climberDistance = 90;
-//Hopper
-  // public static double PosVoltageInHopper = 0;
-  // public static double PosVoltageOutHopper = 0;
-  // public static double HopperGearRatio = 0;
-  // public static Distance HopperSprocketRadius = Inches.of(1);
+
 //Intake Roller
   public static double IntakeRollerOnSpeed = 0;
   public static double IntakeRollerOffSpeed = 0;
@@ -67,18 +50,12 @@ public final class Constants {
   public static double rollerOnSpeed = 0;
   public static double rollerOffSpeed = 0;
   public static double rollerOutakeSpeed = 0;
-//Spindex
-  public static double SpindexOnSpeed = 0;
-  public static double SpindexOffSpeed = 0;
-  public static double SpindexIdleSpeed = 0;
-//Shooter
-  public static double shooterOnSpeed = 0;
-  public static double shooterOffSpeed = 0;
-  public static double shooterSlowSpeed = 0;
+
 //Tower
   public static double towerOnSpeed = 0;
   public static double towerOffSpeed = 0;
   public static double towerOutakeSpeed = 0;
+
 //Pivot
   public static double pivotUp = 0;
   public static double pivotLength = 0;
@@ -89,6 +66,7 @@ public final class Constants {
   public static double pivotStartingAngle = 0;
   public static double pivotMass = 0;
    public static Distance pivotTotalDistance = Inches.of(1.128);
+
 
   public static TalonFXConfiguration pivotConfig = new TalonFXConfiguration()
         .withCurrentLimits(
@@ -117,11 +95,6 @@ public final class Constants {
 
   public static String busname = "bob";
 
-  //Turrett
-  public static double TurrettRotate = 360;
-  public static double TurrettGearRatio = 72;
-  public static double TurrettUD = 180;
-  public static double TurrettRotateSpeed = 90;
  
     public static enum Mode {
         /** Running on a real robot. */

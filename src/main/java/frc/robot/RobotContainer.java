@@ -17,13 +17,11 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.InatkeRoller;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Roller;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Spindex;
 import frc.robot.subsystems.Tower;
 
 public class RobotContainer {
@@ -40,16 +38,11 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final CommandXboxController joystick = new CommandXboxController(0);
-
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    private final Pivot pivot = new Pivot();
     private final InatkeRoller inatkeRoller = new InatkeRoller();
-    private final Spindex spindex = new Spindex();
     private final Shooter shooter = new Shooter();
     private final Tower tower = new Tower();
-    private final Roller roller = new Roller();
-    private final Climber climber = new Climber();
 
     public RobotContainer() {
         configureBindings();
@@ -81,10 +74,8 @@ public class RobotContainer {
 
         joystick.leftTrigger().whileTrue(inatkeRoller.turnIntakeRollerOn()).whileFalse(inatkeRoller.turnIntakeRollerOff());
         joystick.rightBumper().onTrue(tower.towerUp()).onFalse(tower.turnTowerOff());
-        joystick.rightTrigger().whileTrue(spindex.turnSpindexOn().alongWith(shooter.turnShooterOn())).onFalse((shooter.turnShooterOff())).whileFalse(spindex.turnSpindexOff());
-        joystick.pov(0).onTrue(climber.turnClimberOn());
-        joystick.pov(180).onTrue(climber.climberHomPos());
-        
+        joystick.rightTrigger().whileTrue(shooter.turnShooterOn()).whileFalse((shooter.turnShooterOff()));
+
 
 
         // Run SysId routines when holding back/start and X/Y.
@@ -98,24 +89,5 @@ public class RobotContainer {
         joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
         drivetrain.registerTelemetry(logger::telemeterize);
-    }
-
-    public Command getAutonomousCommand() {
-        // Simple drive forward auton
-        final var idle = new SwerveRequest.Idle();
-        return Commands.sequence(
-            // Reset our field centric heading to match the robot
-            // facing away from our alliance station wall (0 deg).
-            drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
-            // Then slowly drive forward (away from us) for 5 seconds.
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(0.5)
-                    .withVelocityY(0)
-                    .withRotationalRate(0)
-            )
-            .withTimeout(5.0),
-            // Finally idle for the rest of auton
-            drivetrain.applyRequest(() -> idle)
-        );
     }
 }
