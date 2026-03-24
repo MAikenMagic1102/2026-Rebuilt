@@ -1,6 +1,7 @@
  package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -16,25 +17,39 @@ public class Shooter extends SubsystemBase {
     shooterMotorFx = new TalonFX(Constants.shooterID, Constants.busname);
     var shooterConfig = new TalonFXConfiguration();
 
-    var slot0Configs = shooterConfig.Slot0;
+  //From https://v6.docs.ctr-electronics.com/en/stable/docs/api-reference/device-specific/talonfx/motion-magic.html
+   var talonFXConfigs = new TalonFXConfiguration();
+
+   // set slot 0 gains
+   var slot0Configs = talonFXConfigs.Slot0;
    slot0Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
    slot0Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
    slot0Configs.kA = 0.01; // An acceleration of 1 rps/s requires 0.01 V output
-   slot0Configs.kP = 4.8; // A position error of 2.5 rotations results in 12 V output
+   slot0Configs.kP = 0.11; // An error of 1 rps results in 0.11 V output
    slot0Configs.kI = 0; // no output for integrated error
-   slot0Configs.kD = 0.1; // A velocity error of 1 rps results in 0.1 V output
+   slot0Configs.kD = 0; // no output for error derivative
 
+   // set Motion Magic Velocity settings
+   var motionMagicConfigs = talonFXConfigs.MotionMagic;
+   motionMagicConfigs.MotionMagicAcceleration = 400; // Target acceleration of 400 rps/s (0.25 seconds to max)
+   motionMagicConfigs.MotionMagicJerk = 4000; // Target jerk of 4000 rps/s/s (0.1 seconds)
+
+   m_talonFX.getConfigurator().apply(talonFXConfigs);
  }
     
  public void shooterPower () {
     shooterMotorFx.setControl(voltageRequest.withOutput(Constants.shooterOnSpeed));
+    m_talonFX.setControl(m_request.withVelocity(10)); // 10 rps
  }
  public void shooterOff () {
     shooterMotorFx.setControl(voltageRequest.withOutput(Constants.shooterOffSpeed));
+    m_talonFX.setControl(m_request.withVelocity(0)); // 0 rps
+    
  }
- public void shooterLimit() {
-    shooterMotorFx.setControl(voltageRequest.withOutput(Constants.shooterSlowSpeed));
- }
+//  public void shooterLimit() {
+//     shooterMotorFx.setControl(voltageRequest.withOutput(Constants.shooterSlowSpeed));
+   
+//  }
  public Command turnShooterOn () {
     return runOnce(
       () ->   {
@@ -49,11 +64,24 @@ public class Shooter extends SubsystemBase {
       }  
     );
  }
- public Command slowShooter () {
-    return runOnce(
-        () -> {
-            shooterLimit();
-        }
-    );
+//  public Command slowShooter () {
+//     return runOnce(
+//         () -> {
+//             shooterLimit();
+//         }
+//     );
  }
-}
+// // create a Motion Magic Velocity request, voltage output
+//    final MotionMagicVelocityVoltage m_request = new MotionMagicVelocityVoltage(0);
+
+//    if (m_joy.getAButton()) {
+//       // while the joystick A button is held, use a slower acceleration
+//       m_request.Acceleration = 10; // rot/s^2
+//    } else {
+//       // otherwise, fall back to the config
+//       m_request.Acceleration = 0;
+//    }
+
+//    // set target velocity to 80 rps
+   
+
