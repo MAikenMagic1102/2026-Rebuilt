@@ -79,13 +79,12 @@ public class RobotContainer {
             point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
         ));
 
-        // joystick.leftTrigger().whileTrue(inatkeRoller.turnIntakeRollerOn()).whileFalse(inatkeRoller.turnIntakeRollerOff());
-        // joystick.rightBumper().onTrue(tower.towerUp()).onFalse(tower.turnTowerOff());
-        // joystick.rightTrigger().whileTrue(spindex.turnSpindexOn().alongWith(shooter.turnShooterOn())).onFalse((shooter.turnShooterOff())).whileFalse(spindex.turnSpindexOff());
-        // joystick.pov(0).onTrue(climber.turnClimberOn());
-        // joystick.pov(180).onTrue(climber.climberHomPos());
+        joystick.leftTrigger().whileTrue(inatkeRoller.turnIntakeRollerOn()).whileFalse(inatkeRoller.turnIntakeRollerOff());
+        joystick.rightBumper().onTrue(tower.towerUp()).onFalse(tower.turnTowerOff());
+        joystick.rightTrigger().whileTrue(spindex.turnSpindexOn().alongWith(shooter.turnShooterOn())).onFalse((shooter.turnShooterOff())).whileFalse(spindex.turnSpindexOff());
+        joystick.pov(0).onTrue(climber.turnClimberOn());
+        joystick.pov(180).onTrue(climber.climberHomPos());
         
-    \
 
 
         // Run SysId routines when holding back/start and X/Y.

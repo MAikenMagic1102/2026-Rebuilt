@@ -12,6 +12,7 @@ import frc.robot.Constants;
 public class Shooter extends SubsystemBase {
  private TalonFX shooterMotorFx;
  private final VoltageOut voltageRequest = new VoltageOut(0);
+ final MotionMagicVelocityVoltage m_request;
 
  public Shooter () {
     shooterMotorFx = new TalonFX(Constants.shooterID, Constants.busname);
@@ -34,22 +35,17 @@ public class Shooter extends SubsystemBase {
    motionMagicConfigs.MotionMagicAcceleration = 400; // Target acceleration of 400 rps/s (0.25 seconds to max)
    motionMagicConfigs.MotionMagicJerk = 4000; // Target jerk of 4000 rps/s/s (0.1 seconds)
 
-   m_talonFX.getConfigurator().apply(talonFXConfigs);
+   shooterMotorFx.getConfigurator().apply(talonFXConfigs);
+   m_request = new MotionMagicVelocityVoltage(0);
  }
     
  public void shooterPower () {
-    shooterMotorFx.setControl(voltageRequest.withOutput(Constants.shooterOnSpeed));
-    m_talonFX.setControl(m_request.withVelocity(10)); // 10 rps
+      shooterMotorFx.setControl(m_request.withVelocity(10));
  }
  public void shooterOff () {
-    shooterMotorFx.setControl(voltageRequest.withOutput(Constants.shooterOffSpeed));
-    m_talonFX.setControl(m_request.withVelocity(0)); // 0 rps
-    
+      shooterMotorFx.setControl(m_request.withVelocity(0));
  }
-//  public void shooterLimit() {
-//     shooterMotorFx.setControl(voltageRequest.withOutput(Constants.shooterSlowSpeed));
-   
-//  }
+
  public Command turnShooterOn () {
     return runOnce(
       () ->   {
@@ -64,24 +60,6 @@ public class Shooter extends SubsystemBase {
       }  
     );
  }
-//  public Command slowShooter () {
-//     return runOnce(
-//         () -> {
-//             shooterLimit();
-//         }
-//     );
- }
-// // create a Motion Magic Velocity request, voltage output
-//    final MotionMagicVelocityVoltage m_request = new MotionMagicVelocityVoltage(0);
 
-//    if (m_joy.getAButton()) {
-//       // while the joystick A button is held, use a slower acceleration
-//       m_request.Acceleration = 10; // rot/s^2
-//    } else {
-//       // otherwise, fall back to the config
-//       m_request.Acceleration = 0;
-//    }
-
-//    // set target velocity to 80 rps
    
-
+}
