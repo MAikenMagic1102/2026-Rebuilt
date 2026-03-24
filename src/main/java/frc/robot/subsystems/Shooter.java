@@ -16,13 +16,13 @@ public class Shooter extends SubsystemBase {
 
  public Shooter () {
     shooterMotorFx = new TalonFX(Constants.shooterID, Constants.busname);
-    var shooterConfig = new TalonFXConfiguration();
+   
 
   //From https://v6.docs.ctr-electronics.com/en/stable/docs/api-reference/device-specific/talonfx/motion-magic.html
-   var talonFXConfigs = new TalonFXConfiguration();
+    var shooterConfig = new TalonFXConfiguration();
 
    // set slot 0 gains
-   var slot0Configs = talonFXConfigs.Slot0;
+   var slot0Configs = shooterConfig.Slot0;
    slot0Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
    slot0Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
    slot0Configs.kA = 0.01; // An acceleration of 1 rps/s requires 0.01 V output
@@ -31,11 +31,11 @@ public class Shooter extends SubsystemBase {
    slot0Configs.kD = 0; // no output for error derivative
 
    // set Motion Magic Velocity settings
-   var motionMagicConfigs = talonFXConfigs.MotionMagic;
+   var motionMagicConfigs = shooterConfig.MotionMagic;
    motionMagicConfigs.MotionMagicAcceleration = 400; // Target acceleration of 400 rps/s (0.25 seconds to max)
    motionMagicConfigs.MotionMagicJerk = 4000; // Target jerk of 4000 rps/s/s (0.1 seconds)
 
-   shooterMotorFx.getConfigurator().apply(talonFXConfigs);
+   shooterMotorFx.getConfigurator().apply(shooterConfig);
    m_request = new MotionMagicVelocityVoltage(0);
  }
     
