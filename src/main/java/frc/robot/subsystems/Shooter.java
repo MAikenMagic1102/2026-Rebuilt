@@ -32,8 +32,8 @@ public class Shooter extends SubsystemBase {
 
    // set Motion Magic Velocity settings
    var motionMagicConfigs = shooterConfig.MotionMagic;
-   motionMagicConfigs.MotionMagicAcceleration = 400; // Target acceleration of 400 rps/s (0.25 seconds to max)
-   motionMagicConfigs.MotionMagicJerk = 4000; // Target jerk of 4000 rps/s/s (0.1 seconds)
+   motionMagicConfigs.MotionMagicAcceleration = 100; // Target acceleration of 400 rps/s (0.25 seconds to max)
+   motionMagicConfigs.MotionMagicJerk = 1000; // Target jerk of 4000 rps/s/s (0.1 seconds)
 
    shooterMotorFx.getConfigurator().apply(shooterConfig);
    m_request = new MotionMagicVelocityVoltage(0);
