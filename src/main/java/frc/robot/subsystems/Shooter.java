@@ -2,9 +2,12 @@
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -13,6 +16,7 @@ public class Shooter extends SubsystemBase {
  private TalonFX shooterMotorFx;
  private final VoltageOut voltageRequest = new VoltageOut(0);
  final MotionMagicVelocityVoltage m_request;
+ private final NeutralOut neutralRequest = new NeutralOut();
 
  public Shooter () {
     shooterMotorFx = new TalonFX(Constants.shooterID, Constants.busname);
@@ -29,6 +33,8 @@ public class Shooter extends SubsystemBase {
    slot0Configs.kP = 0.11; // An error of 1 rps results in 0.11 V output
    slot0Configs.kI = 0; // no output for integrated error
    slot0Configs.kD = 0; // no output for error derivative
+   
+   shooterConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
    // set Motion Magic Velocity settings
    var motionMagicConfigs = shooterConfig.MotionMagic;
@@ -39,27 +45,19 @@ public class Shooter extends SubsystemBase {
    m_request = new MotionMagicVelocityVoltage(0);
  }
     
- public void shooterPower () {
-      shooterMotorFx.setControl(m_request.withVelocity(10));
- }
- public void shooterOff () {
-      shooterMotorFx.setControl(m_request.withVelocity(0));
+ public void shooterPower(double tgtVelocity) {
+      shooterMotorFx.setControl(m_request.withVelocity(tgtVelocity));
  }
 
- public Command turnShooterOn () {
-    return runOnce(
-      () ->   {
-        shooterPower();
-      }
-    );
- }
- public Command turnShooterOff () {
-    return runOnce(
-      () -> {
-        shooterOff();
-      }  
-    );
- }
+public void shooterOff() {
+    shooterMotorFx.setControl(neutralRequest);
+}
 
-   
+public Command shootCommand(double tgtVelocity) {
+    return startEnd(
+        () -> shooterPower(tgtVelocity),
+        () -> shooterOff()
+    );
+}
+
 }
