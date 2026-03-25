@@ -42,13 +42,13 @@ public class VisionConstants {
 //       new Transform3d(0.0, 0.0, 0.0, new Rotation3d(0.0, 0.0, -Math.PI));
  
   public static Transform3d robotToCameraLeft =
-      new Transform3d(inchesToMeters(1.5), inchesToMeters(-1.5), inchesToMeters(16), 
+      new Transform3d(inchesToMeters(1.5 + 3.25), inchesToMeters(-1.5), inchesToMeters(16 + 5.75), 
       new Rotation3d(0.0, 0, Units.degreesToRadians(90 + 60)));
   public static Transform3d robotToCameraCenter =
-      new Transform3d(inchesToMeters(1.5), inchesToMeters(-1.5), inchesToMeters(16),
+      new Transform3d(inchesToMeters(1.5), inchesToMeters(-1.5 + 2.75), inchesToMeters(16 + 6.5),
       (new Rotation3d(0.0, 0, Units.degreesToRadians(90))));
   public static Transform3d robotToCameraRight = 
-      new Transform3d(inchesToMeters(1.5), inchesToMeters(-1.5), inchesToMeters(16),
+      new Transform3d(inchesToMeters(-1.5 - 3.25), inchesToMeters(-1.5), inchesToMeters(16 + 5.75),
       new Rotation3d(0.0, 0, Units.degreesToRadians(90 - 60)));
 
   // Basic filtering thresholds
