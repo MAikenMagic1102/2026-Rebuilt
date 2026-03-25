@@ -17,14 +17,13 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.InatkeRoller;
-import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.Roller;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Spindex;
-import frc.robot.subsystems.Tower;
+import frc.robot.subsystems.Hood.Hood;
+import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.Pivot.Pivot;
+import frc.robot.subsystems.Shooter.Shooter;
+import frc.robot.subsystems.Tower.Tower;
+import frc.robot.subsystems.util.CommandCustomXboxController;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -39,17 +38,16 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    private final CommandXboxController joystick = new CommandXboxController(0);
+    private final CommandCustomXboxController joystick = new CommandCustomXboxController(0);
+    private final CommandCustomXboxController joystick2 = new CommandCustomXboxController(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    private final Pivot pivot = new Pivot();
-    private final InatkeRoller inatkeRoller = new InatkeRoller();
-    private final Spindex spindex = new Spindex();
-    private final Shooter shooter = new Shooter();
-    private final Tower tower = new Tower();
-    private final Roller roller = new Roller();
-    private final Climber climber = new Climber();
+    Intake intake = new Intake();
+    Shooter shooter = new Shooter();
+    Tower tower = new Tower();
+    Pivot pivot = new Pivot();
+    Hood hood = new Hood();
 
     public RobotContainer() {
         configureBindings();
@@ -74,19 +72,10 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        joystick.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
-        ));
-
-        joystick.leftTrigger().whileTrue(inatkeRoller.turnIntakeRollerOn()).whileFalse(inatkeRoller.turnIntakeRollerOff());
-        joystick.rightBumper().onTrue(tower.towerUp()).onFalse(tower.turnTowerOff());
-        joystick.rightTrigger().whileTrue(spindex.turnSpindexOn().alongWith(shooter.turnShooterOn())).onFalse((shooter.turnShooterOff())).whileFalse(spindex.turnSpindexOff());
-        joystick.pov(0).onTrue(climber.turnClimberOn());
-        joystick.pov(180).onTrue(climber.climberHomPos());
-        
-    
-
+        // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        // joystick.b().whileTrue(drivetrain.applyRequest(() ->
+        //     point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
+        // ));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -95,10 +84,24 @@ public class RobotContainer {
         joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        // Reset the field-centric heading on left bumper press.
-        joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        joystick2.rightBumper().onTrue(intake.IN()).onFalse(intake.STOP());
+        joystick2.leftBumper().onTrue(intake.OUT()).onFalse(intake.STOP());
 
-        drivetrain.registerTelemetry(logger::telemeterize);
+        joystick2.rightTrigger().onTrue(tower.UP()).onFalse(tower.TOWERSTOP());
+        joystick2.leftTrigger().onTrue(shooter.ShooterGOSHOOT()).onTrue(shooter.ShooterNoSHOOT());
+
+        joystick.x().onTrue(pivot.PDOWN()).onFalse(pivot.PSTOP());
+        joystick.y().onTrue(pivot.PUP()).onFalse(pivot.PSTOP());
+
+        joystick2.x().onTrue(tower.CLEAN());
+
+        
+
+
+        // Reset the field-centric heading on left bumper press.
+        // joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+
+        // drivetrain.registerTelemetry(logger::telemeterize);
     }
 
     public Command getAutonomousCommand() {
@@ -110,13 +113,60 @@ public class RobotContainer {
             drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
             // Then slowly drive forward (away from us) for 5 seconds.
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(0.5)
+                drive.withVelocityX(-0.5)
                     .withVelocityY(0)
                     .withRotationalRate(0)
             )
-            .withTimeout(5.0),
-            // Finally idle for the rest of auton
-            drivetrain.applyRequest(() -> idle)
+            .withTimeout(2.8),
+
+         // Finally idle for the rest of auton
+        drivetrain.applyRequest(() -> idle)
         );
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//^^^ line 123, delete past after pasteing.
+    //         intake.IN()
+            
+    //         .withTimeout(1.5),
+
+    //         intake.STOP().andThen(pivot.PUP()).andThen( 
+    //             drivetrain.applyRequest(() ->
+    //             drive.withVelocityX(0.5)
+    //                 .withVelocityY(0)
+    //                 .withRotationalRate(0.5)
+    //         )),
+
+    //         shooter.ShooterGOSHOOT()
+            
+    //         .withTimeout(2),
+
+    //         shooter.ShooterNoSHOOT(),
+            
+    //         drivetrain.applyRequest(() -> idle)
+    //     );
+    // }
+
+
+    //Actually tweaking how the frickity frick frack too many knick knacks do i get this freaking auto to work bro what is this its so late bro
+    //im only gonna get like 2hrs of sleep bro its 2 something in the morning
+    //We keep messing with this until robot moves foreward, ill figure it out eventually-- 
+    //OR i break the robot bc it goes foreward too much and slams into the wall, like a tragic homadge to the 2025 season :.)
+    //i miss my choreo :( come back to me my beloved please *sob* im so lonely, im nothing w/out you
 }
