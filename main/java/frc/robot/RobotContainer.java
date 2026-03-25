@@ -26,9 +26,31 @@ import frc.robot.subsystems.Spindex.Spindex;
 import frc.robot.subsystems.Tower.Tower;
 import frc.robot.subsystems.util.CommandCustomXboxController;
 
+import static frc.robot.game_util.FieldConstants.Hub;
+import static frc.robot.subsystems.vision.VisionConstants.*;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import frc.robot.subsystems.drive.DemoDrive;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
+import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+
+
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+
+      private final Vision vision;
+
+      private final CommandGenericHID keyboard = new CommandGenericHID(0); // Keyboard 0 on port 0
+
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -52,6 +74,34 @@ public class RobotContainer {
     Hood hood = new Hood();
 
     public RobotContainer() {
+
+        switch (Constants.currentMode) {
+      case REAL:
+        // Real robot, instantiate hardware IO implementations
+        vision =
+        new Vision(
+        drive::addVisionMeasurement,
+        new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
+        new VisionIOPhotonVision(camera1Name, robotToCameraCenter),
+        new VisionIOPhotonVision(camera2Name, robotToCameraRight));
+        break;
+
+      case SIM:
+        // Sim robot, instantiate physics sim IO implementations
+        vision =
+            new Vision(
+                drive::addVisionMeasurement,
+                new VisionIOPhotonVisionSim(camera0Name, robotToCameraLeft, drive::getPose),
+                new VisionIOPhotonVisionSim(camera1Name, robotToCameraCenter, drive::getPose),
+                new VisionIOPhotonVisionSim(camera2Name, robotToCameraRight, drive::getPose));
+        break;
+
+      default:
+        // Replayed robot, disable IO implementations
+        // (Use same number of dummy implementations as the real robot)
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
+        break;
+    }
         configureBindings();
     }
 
@@ -97,7 +147,59 @@ public class RobotContainer {
 
         joystick2.x().onTrue(tower.CLEAN());
 
-        
+         drive.setDefaultCommand(
+        Commands.run(
+            () -> {
+              drive.run(-keyboard.getRawAxis(1), -keyboard.getRawAxis(0));
+            },
+            drive));
+
+    // Auto aim command example
+    @SuppressWarnings("resource")
+    PIDController aimController = new PIDController(0.2, 0.0, 0.0);
+    aimController.enableContinuousInput(-Math.PI, Math.PI);
+    keyboard
+        .button(1)
+        .whileTrue(
+            Commands.startRun(
+                () -> {
+                  aimController.reset();
+                },
+                () -> {
+                  drive.run(0.0, aimController.calculate(vision.getTargetX(0).getRadians()));
+                },
+                drive));
+
+    // Auto aim at nearest hub center
+    @SuppressWarnings("resource")
+    PIDController hubAimController = new PIDController(1.0, 0.0, 0.0);
+    hubAimController.enableContinuousInput(-Math.PI, Math.PI);
+    keyboard
+        .button(2)
+        .whileTrue(
+            Commands.startRun(
+                () -> {
+                  hubAimController.reset();
+                },
+                () -> {
+                  Pose2d pose = drive.getPose();
+                  Translation2d robotPos = pose.getTranslation();
+                  double distBlue = robotPos.getDistance(Hub.blueHubCenter2d);
+                  double distRed = robotPos.getDistance(Hub.redHubCenter2d);
+                  Translation2d target =
+                      distBlue < distRed ? Hub.blueHubCenter2d : Hub.redHubCenter2d;
+
+                  double targetAngle =
+                      Math.atan2(
+                          target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
+
+                  
+
+                  hubAimController.setSetpoint(targetAngle);
+                  drive.run(
+                      0.0, hubAimController.calculate(pose.getRotation().getRadians()));
+                },
+                drive));
 
 
         // Reset the field-centric heading on left bumper press.
