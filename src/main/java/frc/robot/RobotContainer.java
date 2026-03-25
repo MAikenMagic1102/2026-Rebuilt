@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.subsystems.drive.DemoDrive;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
@@ -35,6 +36,11 @@ public class RobotContainer {
 
   private final DemoDrive drive = new DemoDrive(); // Demo drive subsystem, sim only
   private final CommandGenericHID keyboard = new CommandGenericHID(0); // Keyboard 0 on port 0
+  
+  private static double metersToInches(double meters){
+    double inches = meters / 0.0254;
+    return inches;
+  }
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -121,10 +127,12 @@ public class RobotContainer {
                       distBlue < distRed ? Hub.blueHubCenter2d : Hub.redHubCenter2d;
 
                   double targetAngle =
-                      Math.atan2(
-                          target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
+                      Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
+                  targetAngle += Math.toRadians(-90);
 
-                  
+                  double distToTgt = robotPos.getDistance(target);
+                  double shooterAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
+                  double shooterSpeed = 0.2083 * metersToInches(distToTgt) - 8.5208;
 
                   hubAimController.setSetpoint(targetAngle);
                   drive.run(
