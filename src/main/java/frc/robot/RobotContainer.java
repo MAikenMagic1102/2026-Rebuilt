@@ -19,11 +19,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import frc.robot.game_util.FieldConstants.Hub;
-import frc.robot.subsystems.drive.DemoDrive;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,7 +34,7 @@ import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 public class RobotContainer {
   private final Vision vision;
 
-  private final DemoDrive drive = new DemoDrive(); // Demo drive subsystem, sim only
+  private CommandSwerveDrivetrain driveyboi; 
   private final CommandGenericHID keyboard = new CommandGenericHID(0); // Keyboard 0 on port 0
   
   private static double metersToInches(double meters){
@@ -47,28 +47,28 @@ public class RobotContainer {
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
-        vision =
-        new Vision(
-        drive::addVisionMeasurement,
-        new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
-        new VisionIOPhotonVision(camera1Name, robotToCameraCenter),
-        new VisionIOPhotonVision(camera2Name, robotToCameraRight));
-        break;
+        // vision =
+        // new Vision(
+        // drive::addVisionMeasurement,
+        // new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
+        // new VisionIOPhotonVision(camera1Name, robotToCameraCenter),
+        // new VisionIOPhotonVision(camera2Name, robotToCameraRight));
+        // break;
 
-      case SIM:
-        // Sim robot, instantiate physics sim IO implementations
-        vision =
-            new Vision(
-                drive::addVisionMeasurement,
-                new VisionIOPhotonVisionSim(camera0Name, robotToCameraLeft, drive::getPose),
-                new VisionIOPhotonVisionSim(camera1Name, robotToCameraCenter, drive::getPose),
-                new VisionIOPhotonVisionSim(camera2Name, robotToCameraRight, drive::getPose));
-        break;
+      // case SIM:
+      //   // Sim robot, instantiate physics sim IO implementations
+      //   vision =
+      //       new Vision(
+      //           drive::addVisionMeasurement,
+      //           new VisionIOPhotonVisionSim(camera0Name, robotToCameraLeft, drive::getPose),
+      //           new VisionIOPhotonVisionSim(camera1Name, robotToCameraCenter, drive::getPose),
+      //           new VisionIOPhotonVisionSim(camera2Name, robotToCameraRight, drive::getPose));
+      //   break;
 
       default:
         // Replayed robot, disable IO implementations
         // (Use same number of dummy implementations as the real robot)
-        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
+        // vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         break;
     }
 
@@ -84,12 +84,12 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Joystick drive command
-    drive.setDefaultCommand(
-        Commands.run(
-            () -> {
-              drive.run(-keyboard.getRawAxis(1), -keyboard.getRawAxis(0));
-            },
-            drive));
+    // drive.setDefaultCommand(
+    //     Commands.run(
+    //         () -> {
+    //           drive.run(-keyboard.getRawAxis(1), -keyboard.getRawAxis(0));
+    //         },
+    //         drive));
 
     // Auto aim command example
     @SuppressWarnings("resource")
@@ -104,42 +104,41 @@ public class RobotContainer {
                 },
                 () -> {
                   drive.run(0.0, aimController.calculate(vision.getTargetX(0).getRadians()));
-                },
-                drive));
+                }
 
     // Auto aim at nearest hub center
-    @SuppressWarnings("resource")
-    PIDController hubAimController = new PIDController(1.0, 0.0, 0.0);
-    hubAimController.enableContinuousInput(-Math.PI, Math.PI);
-    keyboard
-        .button(2)
-        .whileTrue(
-            Commands.startRun(
-                () -> {
-                  hubAimController.reset();
-                },
-                () -> {
-                  Pose2d pose = drive.getPose();
-                  Translation2d robotPos = pose.getTranslation();
-                  double distBlue = robotPos.getDistance(Hub.blueHubCenter2d);
-                  double distRed = robotPos.getDistance(Hub.redHubCenter2d);
-                  Translation2d target =
-                      distBlue < distRed ? Hub.blueHubCenter2d : Hub.redHubCenter2d;
+  //   @SuppressWarnings("resource")
+  //   PIDController hubAimController = new PIDController(1.0, 0.0, 0.0);
+  //   hubAimController.enableContinuousInput(-Math.PI, Math.PI);
+  //   keyboard
+  //       .button(2)
+  //       .whileTrue(
+  //           Commands.startRun(
+  //               () -> {
+  //                 hubAimController.reset();
+  //               },
+  //               () -> {
+  //                 Pose2d pose = drive.getPose();
+  //                 Translation2d robotPos = pose.getTranslation();
+  //                 double distBlue = robotPos.getDistance(Hub.blueHubCenter2d);
+  //                 double distRed = robotPos.getDistance(Hub.redHubCenter2d);
+  //                 Translation2d target =
+  //                     distBlue < distRed ? Hub.blueHubCenter2d : Hub.redHubCenter2d;
 
-                  double targetAngle =
-                      Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
-                  targetAngle += Math.toRadians(-90);
+  //                 double targetAngle =
+  //                     Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
+  //                 targetAngle += Math.toRadians(-90);
 
-                  double distToTgt = robotPos.getDistance(target);
-                  double shooterAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
-                  double shooterSpeed = 0.2083 * metersToInches(distToTgt) - 8.5208;
+  //                 double distToTgt = robotPos.getDistance(target);
+  //                 double shooterAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
+  //                 double shooterSpeed = 0.2083 * metersToInches(distToTgt) - 8.5208;
 
-                  hubAimController.setSetpoint(targetAngle);
-                  drive.run(
-                      0.0, hubAimController.calculate(pose.getRotation().getRadians()));
-                },
-                drive));
-  }
+  //                 hubAimController.setSetpoint(targetAngle);
+  //                 drive.run(
+  //                     0.0, hubAimController.calculate(pose.getRotation().getRadians()));
+  //               },
+  //               drive));
+  // }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
