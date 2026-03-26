@@ -18,12 +18,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Hood.Hood;
-import frc.robot.subsystems.Intake.Intake;
-import frc.robot.subsystems.Pivot.Pivot;
-import frc.robot.subsystems.Shooter.Shooter;
-import frc.robot.subsystems.Spindex.Spindex;
-import frc.robot.subsystems.Tower.Tower;
 import frc.robot.subsystems.util.CommandCustomXboxController;
 
 public class RobotContainer {
@@ -43,13 +37,6 @@ public class RobotContainer {
     private final CommandCustomXboxController joystick2 = new CommandCustomXboxController(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-
-    Intake intake = new Intake();
-    Shooter shooter = new Shooter();
-    Tower tower = new Tower();
-    Pivot pivot = new Pivot();
-    Spindex spindex = new Spindex();
-    Hood hood = new Hood();
 
     public RobotContainer() {
         configureBindings();
@@ -84,20 +71,7 @@ public class RobotContainer {
         joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
         joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-
-        joystick2.rightBumper().onTrue(intake.IN()).onFalse(intake.STOP());
-        joystick2.leftBumper().onTrue(intake.OUT()).onFalse(intake.STOP());
-
-        joystick2.rightTrigger().onTrue(tower.UP()).onFalse(tower.TOWERSTOP());
-        joystick2.leftTrigger().onTrue(shooter.ShooterGOSHOOT()).onTrue(shooter.ShooterNoSHOOT());
-
-        joystick.x().onTrue(pivot.PDOWN()).onFalse(pivot.PSTOP());
-        joystick.y().onTrue(pivot.PUP()).onFalse(pivot.PSTOP());
-
-        joystick2.x().onTrue(tower.CLEAN());
-
-        
+        joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));   
 
 
         // Reset the field-centric heading on left bumper press.
