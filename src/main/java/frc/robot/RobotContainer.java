@@ -8,7 +8,9 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import static frc.robot.subsystems.vision.VisionConstants.*;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -19,8 +21,13 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.util.CommandCustomXboxController;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
+import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 
 public class RobotContainer {
+    private final Vision vision;
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
@@ -38,7 +45,36 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+
     public RobotContainer() {
+            switch (Constants.currentMode) {
+      case REAL:
+        // Real robot, instantiate hardware IO implementations
+        vision =
+        new Vision(
+        drivetrain::addVisionMeasurement,
+        new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
+        new VisionIOPhotonVision(camera1Name, robotToCameraCenter),
+        new VisionIOPhotonVision(camera2Name, robotToCameraRight));
+        break;
+
+      case SIM:
+        // Sim robot, instantiate physics sim IO implementations
+        vision =
+            new Vision(
+                drivetrain::addVisionMeasurement,
+                new VisionIOPhotonVisionSim(camera0Name, robotToCameraLeft, drivetrain::getPose),
+                new VisionIOPhotonVisionSim(camera1Name, robotToCameraCenter, drivetrain::getPose),
+                new VisionIOPhotonVisionSim(camera2Name, robotToCameraRight, drivetrain::getPose));
+        break;
+
+      default:
+        // Replayed robot, disable IO implementations
+        // (Use same number of dummy implementations as the real robot)
+        vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
+        break;
+    }
+
         configureBindings();
     }
 

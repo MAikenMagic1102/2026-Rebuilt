@@ -35,7 +35,8 @@ public final class Constants {
     }
 
     public static final Mode simMode = Mode.SIM;
-
+    public static final double controllerDeadband = 0.15;
+    public static final double triggerPressedThreshold = 0.1;
     public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
     public static final double robotWidthWithBumpers = Units.inchesToMeters(34.25);
 }
