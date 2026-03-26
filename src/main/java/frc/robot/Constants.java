@@ -7,9 +7,7 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.Hertz;
-
-import edu.wpi.first.units.measure.Frequency;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -18,22 +16,26 @@ import edu.wpi.first.wpilibj.RobotBase;
  * (log replay from a file).
  */
 public final class Constants {
-  public static final Mode simMode = Mode.SIM;
-  public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
-  public static final double loopPeriodSecs = 0;
-  public static final Frequency phoenixUpdateFreqHz = Hertz.of(50);
+    public static final boolean tuningMode = true;
+    public static boolean disableHAL = false;
 
-  public static enum Mode {
-    /** Running on a real robot. */
-    REAL,
+    public static void disableHAL() {
+        disableHAL = true;
+    }
 
-    /** Running a physics simulator. */
-    SIM,
+    public static enum Mode {
+        /** Running on a real robot. */
+        REAL,
 
-    /** Replaying from a log file. */
-    REPLAY
-  }
+        /** Running a physics simulator. */
+        SIM,
 
-  public static final double controllerDeadband = 0.15;
-  public static final double triggerPressedThreshold = 0.1;
+        /** Replaying from a log file. */
+        REPLAY
+    }
+
+    public static final Mode simMode = Mode.SIM;
+
+    public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
+    public static final double robotWidthWithBumpers = Units.inchesToMeters(34.25);
 }
