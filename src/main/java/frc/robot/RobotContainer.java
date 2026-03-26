@@ -32,7 +32,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  private final Vision vision;
+  //private final Vision vision;
 
   private CommandSwerveDrivetrain driveyboi; 
   private final CommandGenericHID keyboard = new CommandGenericHID(0); // Keyboard 0 on port 0
@@ -44,33 +44,33 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    switch (Constants.currentMode) {
-      case REAL:
-        // Real robot, instantiate hardware IO implementations
-        // vision =
-        // new Vision(
-        // drive::addVisionMeasurement,
-        // new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
-        // new VisionIOPhotonVision(camera1Name, robotToCameraCenter),
-        // new VisionIOPhotonVision(camera2Name, robotToCameraRight));
-        // break;
+    // switch (Constants.currentMode) {
+    //   case REAL:
+    //     // Real robot, instantiate hardware IO implementations
+    //     // vision =
+    //     // new Vision(
+    //     // drive::addVisionMeasurement,
+    //     // new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
+    //     // new VisionIOPhotonVision(camera1Name, robotToCameraCenter),
+    //     // new VisionIOPhotonVision(camera2Name, robotToCameraRight));
+    //     // break;
 
-      // case SIM:
-      //   // Sim robot, instantiate physics sim IO implementations
-      //   vision =
-      //       new Vision(
-      //           drive::addVisionMeasurement,
-      //           new VisionIOPhotonVisionSim(camera0Name, robotToCameraLeft, drive::getPose),
-      //           new VisionIOPhotonVisionSim(camera1Name, robotToCameraCenter, drive::getPose),
-      //           new VisionIOPhotonVisionSim(camera2Name, robotToCameraRight, drive::getPose));
-      //   break;
+    //   // case SIM:
+    //   //   // Sim robot, instantiate physics sim IO implementations
+    //   //   vision =
+    //   //       new Vision(
+    //   //           drive::addVisionMeasurement,
+    //   //           new VisionIOPhotonVisionSim(camera0Name, robotToCameraLeft, drive::getPose),
+    //   //           new VisionIOPhotonVisionSim(camera1Name, robotToCameraCenter, drive::getPose),
+    //   //           new VisionIOPhotonVisionSim(camera2Name, robotToCameraRight, drive::getPose));
+    //   //   break;
 
-      default:
-        // Replayed robot, disable IO implementations
-        // (Use same number of dummy implementations as the real robot)
-        // vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
-        break;
-    }
+    //   default:
+    //     // Replayed robot, disable IO implementations
+    //     // (Use same number of dummy implementations as the real robot)
+    //     // vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
+    //     break;
+    // }
 
     // Configure the button bindings
     configureButtonBindings();
@@ -95,16 +95,16 @@ public class RobotContainer {
     @SuppressWarnings("resource")
     PIDController aimController = new PIDController(0.2, 0.0, 0.0);
     aimController.enableContinuousInput(-Math.PI, Math.PI);
-    keyboard
-        .button(1)
-        .whileTrue(
-            Commands.startRun(
-                () -> {
-                  aimController.reset();
-                },
-                () -> {
-                  drive.run(0.0, aimController.calculate(vision.getTargetX(0).getRadians()));
-                }
+    // keyboard
+    //     .button(1)
+    //     .whileTrue(
+    //         Commands.startRun(
+    //             () -> {
+    //               aimController.reset();
+    //             },
+    //             () -> {
+    //               drive.run(0.0, aimController.calculate(vision.getTargetX(0).getRadians()));
+    //             }
 
     // Auto aim at nearest hub center
   //   @SuppressWarnings("resource")
@@ -145,7 +145,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    return Commands.none();
-  }
+//   public Command getAutonomousCommand() {
+//     return Commands.none();
+//   }
+}
 }
