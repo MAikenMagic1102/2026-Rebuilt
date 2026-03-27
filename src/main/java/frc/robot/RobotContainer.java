@@ -242,7 +242,7 @@ public class RobotContainer {
         joystick.povUp().onTrue(pivot.PUP()).onFalse(pivot.PSTOP());
         joystick.povDown().onTrue(pivot.PDOWN()).onFalse(pivot.PSTOP());
 
-       // joystick2.a().onTrue(shooter.ShooterSEE().alongWith(hood.HoodVision())).onFalse(shooter.ShooterStop().alongWith(hood.HoodNO()));
+       joystick2.a().onTrue(shooter.ShooterSEE().alongWith(hood.HoodVision())).onFalse(shooter.ShooterStop().alongWith(hood.HoodNO()));
 
 
 

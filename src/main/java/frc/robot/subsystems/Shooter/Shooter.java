@@ -7,7 +7,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.BobotState;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,10 +32,13 @@ final VelocityVoltage m_shooter = new VelocityVoltage(0).withSlot(0);
     }
 
         public void ShooterSHOOTCLIMB(){
-       shooterMotorFx.setControl(m_shooter.withVelocity(33));
+       shooterMotorFx.setControl(m_shooter.withVelocity(32.5));
     }
-            public void ShooterSHOOTSEE(){
-       shooterMotorFx.setControl(m_shooter.withVelocity(BobotState.getShooterSpeed()));
+    
+    public void ShooterSHOOTSEE(){
+        double tgtSpeed = BobotState.getShooterSpeed();
+       shooterMotorFx.setControl(m_shooter.withVelocity(tgtSpeed));
+        SmartDashboard.putNumber("Shooter Raw", tgtSpeed);
     }
 
     

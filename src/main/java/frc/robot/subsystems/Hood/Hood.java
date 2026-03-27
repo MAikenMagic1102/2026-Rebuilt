@@ -40,9 +40,8 @@ final PositionVoltage m_hood = new PositionVoltage(0).withSlot(0);
     }
 
             public void HoodVIS(){
-        // hoodMotorFx.setControl(m_hood.withPosition(0.175 - (1.475 * BobotState.getHoodAngle())));
-        double hoodRaw = 1.475 * BobotState.getHoodAngle();
-        hoodMotorFx.setControl(m_hood.withPosition((1.475 * BobotState.getHoodAngle())));
+        double hoodRaw = 0.175 - (1.475 * (BobotState.getHoodAngle() / 100));
+        hoodMotorFx.setControl(m_hood.withPosition(hoodRaw));
         SmartDashboard.putNumber("Hood Raw", hoodRaw);
 
     }

@@ -315,15 +315,32 @@ public Rotation2d getAngley(){
 
     double targetAngle =
         Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
-    targetAngle += Math.toRadians(90);
+
+    
+    System.out.println(DriverStation.getAlliance());
+    if (DriverStation.getAlliance().toString().contains("Red")){
+        targetAngle += Math.toRadians(90);
+    } else {
+        targetAngle -= Math.toRadians(90);
+    }
     distToTgt = robotPos.getDistance(target);
-    shooterSpeed = 0.0729 * metersToInches(distToTgt) + 23.018;
+
+
+    shooterSpeed = (0.0729 * metersToInches(distToTgt)) + 23.018;
+    System.out.println(shooterSpeed);
+
     SmartDashboard.putNumber("HOOD ANGLE!", hoodAngle);
     hoodAngle = 0.2083 * metersToInches(distToTgt) - 8.5208;
+
+    double hoodRaw = 0.175 - (1.475 * BobotState.getHoodAngle());
+    SmartDashboard.putNumber("Hood Raw", hoodRaw);
+
+
     SmartDashboard.putNumber("SHOOTER SPEED!", shooterSpeed);
-    BobotState.setShooterSpeed(shooterSpeed);
-    BobotState.setHoodAngle(hoodAngle);
     
+    BobotState.setHoodAngle(hoodAngle);
+    BobotState.setShooterSpeed(shooterSpeed);
+
     Rotation2d angley = new Rotation2d(targetAngle);
 
     return angley;
