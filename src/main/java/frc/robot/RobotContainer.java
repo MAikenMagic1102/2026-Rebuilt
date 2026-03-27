@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -145,7 +146,9 @@ public class RobotContainer {
 
         double targetAngle =
             Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
-        targetAngle += Math.toRadians(-90);
+        //targetAngle += Math.toRadians(90);
+        
+        Rotation2d angley = new Rotation2d(targetAngle);
 
         double distToTgt = robotPos.getDistance(target);
         double shooterAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
@@ -157,12 +160,11 @@ public class RobotContainer {
                 .withHeadingPID(5, 0, 0); // tune kP
 
         // In command:
-        Transform2d translotion = new Transform2d(drivetrain.getPose(), Pose2d.kZero);
         joystick.a().whileTrue(drivetrain.applyRequest(() ->
             driveAtAngle
                 .withVelocityX(0)
                 .withVelocityY(0)
-                .withTargetDirection(translotion.getRotation().minus(Rotation2d.fromDegrees(-90)))) // face 90°
+                .withTargetDirection(angley))
         );
 
         // Run SysId routines when holding back/start and X/Y.
