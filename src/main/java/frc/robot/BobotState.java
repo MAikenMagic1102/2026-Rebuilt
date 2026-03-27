@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class BobotState {
+    // TODO: Add more values here and log them
     @Getter @Setter
     private static Pose2d globalPose = new Pose2d();
     @Getter @Setter

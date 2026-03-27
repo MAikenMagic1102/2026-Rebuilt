@@ -4,26 +4,18 @@ import static edu.wpi.first.units.Units.*;
 
 import java.util.Optional;
 import java.util.function.Supplier;
-
-import org.opencv.core.Mat.Tuple2;
-
 import edu.wpi.first.math.geometry.Translation2d;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.BobotState;
 import frc.robot.game_util.FieldConstants.Hub;
-
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -33,7 +25,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -283,28 +274,28 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public Pose2d getPose(){
-    var state = super.getState();
-    // pull out the pose estimate
-    Pose2d pose = state.Pose;
-    return pose;
+        var state = super.getState();
+        // pull out the pose estimate
+        Pose2d pose = state.Pose;
+        return pose;
     }
 
-            private static double metersToInches(double meters){
-    double inches = meters / 0.0254;
-    return inches;
-  }
+    private static double metersToInches(double meters){
+        double inches = meters / 0.0254;
+        return inches;
+    }
 
-  public Translation2d distToHub(){
-          Pose2d pose = getPose();
+    public Translation2d distToHub(){
+        Pose2d pose = getPose();
         Translation2d robotPos = pose.getTranslation();
         double distBlue = robotPos.getDistance(Hub.blueHubCenter2d);
         double distRed = robotPos.getDistance(Hub.redHubCenter2d);
         Translation2d target =
             distBlue < distRed ? Hub.blueHubCenter2d : Hub.redHubCenter2d;
         return target;
-  }
-
-public Rotation2d getAngley(){
+    }
+    // TODO: Refactor these calls lowk
+    public Rotation2d getAngleToHub(){
 
     Pose2d pose = getPose();
     Translation2d robotPos = pose.getTranslation();
@@ -329,14 +320,7 @@ public Rotation2d getAngley(){
     shooterSpeed = (0.0729 * metersToInches(distToTgt)) + 23;
     System.out.println(shooterSpeed);
 
-    SmartDashboard.putNumber("HOOD ANGLE!", hoodAngle);
     hoodAngle = 0.2083 * metersToInches(distToTgt) - 8.5208;
-
-    double hoodRaw = 0.175 - (1.475 * BobotState.getHoodAngle());
-    SmartDashboard.putNumber("Hood Raw", hoodRaw);
-
-
-    SmartDashboard.putNumber("SHOOTER SPEED!", shooterSpeed);
     
     BobotState.setHoodAngle(hoodAngle);
     BobotState.setShooterSpeed(shooterSpeed);
@@ -344,7 +328,8 @@ public Rotation2d getAngley(){
     Rotation2d angley = new Rotation2d(targetAngle);
 
     return angley;
-}
+    }
+
     /**
      * Adds a vision measurement to the Kalman Filter. This will correct the odometry pose estimate
      * while still accounting for measurement noise.
@@ -367,10 +352,6 @@ public Rotation2d getAngley(){
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
     }
 
-    // public Rotation2d getHeading(){
-    //     heading = super.poseEstimator.getEstimatedPosition().getRotation();
-    // }
-
     /**
      * Return the pose at a given timestamp, if the buffer is not empty.
      *
@@ -380,8 +361,5 @@ public Rotation2d getAngley(){
     @Override
     public Optional<Pose2d> samplePoseAt(double timestampSeconds) {
         return super.samplePoseAt(Utils.fpgaToCurrentTime(timestampSeconds));
-    }
-
-
-    
+    }    
 }
