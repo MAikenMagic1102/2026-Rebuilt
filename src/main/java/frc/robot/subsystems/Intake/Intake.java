@@ -10,26 +10,26 @@ public class Intake {
 
     public Intake(){}
 
-    public void IntakeIN(){
+    public void IntakeIn(){
         IntakeMotorFX.set(0.7);
     }
 
-    public void IntakeOUT(){
+    public void IntakeOut(){
         IntakeMotorFX.set(-0.7);
     }
 
-    public void IntakeSTOP(){
+    public void IntakeStop(){
         IntakeMotorFX.set(0);
     }
 
-    public Command IN(){
-       return Commands.runOnce(() -> IntakeIN());
+    public Command IntakeRunCommand(){
+       return Commands.runOnce(() -> IntakeIn());
     }
-     public Command OUT(){
-       return Commands.runOnce(() -> IntakeOUT());
+     public Command IntakeOutCommand(){
+       return Commands.runOnce(() -> IntakeOut());
     }
-     public Command STOP(){
-       return Commands.runOnce(() -> IntakeSTOP());
+     public Command IntakeStopCommand(){
+       return Commands.runOnce(() -> IntakeStop());
     }
 
 }
