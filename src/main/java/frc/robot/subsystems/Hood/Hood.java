@@ -4,7 +4,6 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,7 +26,7 @@ public class Hood extends SubsystemBase{
         hoodMotorFx.getConfigurator().apply(Slot0Configs);
     }
 
-    public void HoodToAngle(){
+    public void hoodToAngle(){
 
         // HoodPCT is the hood angle expressed as a percent of the maximum angle.
         // This is the primary method of hood control
@@ -41,7 +40,7 @@ public class Hood extends SubsystemBase{
         hoodMotorFx.setControl(m_hood.withPosition(hoodRaw));
     }
 
-    public void HoodStop(){
+    public void hoodStop(){
         // This stops the hood at its current angle
         hoodMotorFx.setControl(new StaticBrake());
     }
@@ -51,7 +50,7 @@ public class Hood extends SubsystemBase{
 
         return run(
             () -> {
-                HoodToAngle();
+                hoodToAngle();
             }
         );
     }
@@ -60,7 +59,7 @@ public class Hood extends SubsystemBase{
 
         return run(
             () -> {
-                HoodStop();
+                hoodStop();
             }
         );
     }
