@@ -8,29 +8,29 @@ import edu.wpi.first.wpilibj2.command.Commands;
 public class Tower {
     public static TalonFX IntakeMotorFX = new TalonFX(50, "rio");
 
-    public Tower(){
-        
-    }
+    public Tower(){}
 
-    public void TowerON(){
+    public void towerFeed(){
         IntakeMotorFX.set(1);
     }
 
-    public void TowerCLEAR(){
+    public void towerEmpty(){
         IntakeMotorFX.set(-1);
     }
 
-    public void TowerSTOP(){
+    public void towerOff(){
         IntakeMotorFX.set(0);
     }
 
-    public Command UP(){
-       return Commands.runOnce(() -> TowerON());
+    public Command TowerFeedCommand(){
+       return Commands.runOnce(() -> towerOff());
     }
-     public Command CLEAN(){
-       return Commands.runOnce(() -> TowerCLEAR());
+
+    public Command TowerEmptyCommand(){
+       return Commands.runOnce(() -> towerEmpty());
     }
-     public Command TOWERSTOP(){
-       return Commands.runOnce(() -> TowerSTOP());
+
+    public Command TowerOffCommand(){
+       return Commands.runOnce(() -> towerOff());
     }
 }
