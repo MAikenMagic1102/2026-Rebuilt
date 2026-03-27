@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.game_util.FieldConstants.Hub;
@@ -29,6 +30,33 @@ import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Pivot.Pivot;
 import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.Tower.Tower;
+import frc.robot.subsystems.util.CommandCustomXboxController;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
+import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import static edu.wpi.first.units.Units.*;
+
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest;
+import static frc.robot.subsystems.vision.VisionConstants.*;
+
+import javax.xml.crypto.dsig.Transform;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.game_util.FieldConstants.Hub;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.util.CommandCustomXboxController;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
@@ -162,6 +190,8 @@ public class RobotContainer {
             Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
         targetAngle += Math.toRadians(-90);
 
+        SmartDashboard.putNumber("angley", targetAngle);
+
         double distToTgt = robotPos.getDistance(target);
         double shooterAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
         double shooterSpeed = 0.2083 * metersToInches(distToTgt) - 8.5208;
@@ -171,13 +201,19 @@ public class RobotContainer {
             new SwerveRequest.FieldCentricFacingAngle()
                 .withHeadingPID(5, 0, 0); // tune kP
 
-        // In command:
-        Transform2d translotion = new Transform2d(drivetrain.getPose(), Pose2d.kZero);
-        joystick.a().whileTrue(drivetrain.applyRequest(() ->
+                
+
+         // In command:
+  // In command:
+        joystick.a().whileTrue(
+            drivetrain.applyRequest(() ->
             driveAtAngle
-                .withVelocityX(0)
+
                 .withVelocityY(0)
-                .withTargetDirection(translotion.getRotation().minus(Rotation2d.fromDegrees(-90)))) // face 90°
+                .withVelocityX(-joystick.getLeftY() * MaxSpeed)
+                .withTargetDirection(drivetrain.getAngley())
+                .withMaxAbsRotationalRate(MaxAngularRate))
+
         );
 
         // Run SysId routines when holding back/start and X/Y.
