@@ -61,12 +61,9 @@ public class RobotContainer {
                 vision =
                     new Vision(
                         drivetrain::addVisionMeasurement,
-                        // new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
-                        // new VisionIOPhotonVision(camera1Name, robotToCameraCenter),
-                        // new VisionIOPhotonVision(camera2Name, robotToCameraRight));
-                        new VisionIOPhotonVisionSim(camera0Name, robotToCameraLeft, drivetrain::getPose),
-                        new VisionIOPhotonVisionSim(camera1Name, robotToCameraCenter, drivetrain::getPose),
-                        new VisionIOPhotonVisionSim(camera2Name, robotToCameraRight, drivetrain::getPose));
+                        new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
+                        new VisionIOPhotonVision(camera1Name, robotToCameraCenter),
+                        new VisionIOPhotonVision(camera2Name, robotToCameraRight));
                 break;
 
             case SIM:
@@ -158,7 +155,6 @@ public class RobotContainer {
         double distToTgt = robotPos.getDistance(target);
         double shooterAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
         double shooterSpeed = 0.2083 * metersToInches(distToTgt) - 8.5208;
-
 
         final SwerveRequest.FieldCentricFacingAngle driveAtAngle =
             new SwerveRequest.FieldCentricFacingAngle()

@@ -56,6 +56,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
 
+
+    public double distToTgt;
+    public double hoodAngle;
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
         new SysIdRoutine.Config(
@@ -306,8 +309,8 @@ public Rotation2d getAngley(){
     double targetAngle =
         Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
     targetAngle += Math.toRadians(90);
-    double distToTgt = robotPos.getDistance(target);
-    double hoodAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
+    distToTgt = robotPos.getDistance(target);
+    hoodAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
     SmartDashboard.putNumber("HOOD ANGLE!", hoodAngle);
     double shooterSpeed = 0.2083 * metersToInches(distToTgt) - 8.5208;
     SmartDashboard.putNumber("SHOOTER SPEED!", shooterSpeed);
