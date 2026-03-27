@@ -119,6 +119,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         )
     );
 
+    public double distToTgt;
+    public double hoodAngle;
+
     /* The SysId routine to test */
     private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineTranslation;
 
@@ -309,8 +312,8 @@ public Rotation2d getAngley(){
     double targetAngle =
         Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
     targetAngle += Math.toRadians(90);
-    double distToTgt = robotPos.getDistance(target);
-    double hoodAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
+    distToTgt = robotPos.getDistance(target);
+    hoodAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
     SmartDashboard.putNumber("HOOD ANGLE!", hoodAngle);
     double shooterSpeed = 0.2083 * metersToInches(distToTgt) - 8.5208;
     SmartDashboard.putNumber("SHOOTER SPEED!", shooterSpeed);
