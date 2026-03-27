@@ -4,6 +4,10 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import frc.robot.BobotState;
+import frc.robot.RobotContainer;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -12,6 +16,8 @@ public class Shooter extends SubsystemBase{
 
 public static TalonFX shooterMotorFx = new TalonFX(10, "rio");
 final VelocityVoltage m_shooter = new VelocityVoltage(0).withSlot(0);
+
+
 
     public Shooter(){
 
@@ -27,6 +33,9 @@ final VelocityVoltage m_shooter = new VelocityVoltage(0).withSlot(0);
 
         public void ShooterSHOOTCLIMB(){
        shooterMotorFx.setControl(m_shooter.withVelocity(33));
+    }
+            public void ShooterSHOOTSEE(){
+       shooterMotorFx.setControl(m_shooter.withVelocity(BobotState.getShooterSpeed()));
     }
 
     
@@ -63,6 +72,14 @@ final VelocityVoltage m_shooter = new VelocityVoltage(0).withSlot(0);
         return runOnce(
             () -> {
                 ShooterSHOOTHP();
+            }
+        );
+    }
+
+            public Command ShooterSEE(){
+        return runOnce(
+            () -> {
+                ShooterSHOOTSEE();
             }
         );
     }

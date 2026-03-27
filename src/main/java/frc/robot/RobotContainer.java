@@ -10,6 +10,8 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import static frc.robot.subsystems.vision.VisionConstants.*;
 
+import java.awt.Robot;
+
 import javax.xml.crypto.dsig.Transform;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -179,22 +181,23 @@ public class RobotContainer {
 //                 drive));
 //   }
 
-        Pose2d pose = drivetrain.getPose();
-        Translation2d robotPos = pose.getTranslation();
-        double distBlue = robotPos.getDistance(Hub.blueHubCenter2d);
-        double distRed = robotPos.getDistance(Hub.redHubCenter2d);
-        Translation2d target =
-            distBlue < distRed ? Hub.blueHubCenter2d : Hub.redHubCenter2d;
+        // Pose2d pose = drivetrain.getPose();
+        // Translation2d robotPos = pose.getTranslation();
+        // double distBlue = robotPos.getDistance(Hub.blueHubCenter2d);
+        // double distRed = robotPos.getDistance(Hub.redHubCenter2d);
+        // Translation2d target =
+        //     distBlue < distRed ? Hub.blueHubCenter2d : Hub.redHubCenter2d;
 
-        double targetAngle =
-            Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
-        targetAngle += Math.toRadians(-90);
+        // double targetAngle =
+        //     Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
+        // targetAngle += Math.toRadians(-90);
 
-        SmartDashboard.putNumber("angley", targetAngle);
+     
+        // SmartDashboard.putNumber("angley", targetAngle);
 
-        double distToTgt = robotPos.getDistance(target);
-        double shooterAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
-        double shooterSpeed = 0.2083 * metersToInches(distToTgt) - 8.5208;
+        // double distToTgt = robotPos.getDistance(target);
+        // double shooterAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
+        // double shooterSpeed = 0.2083 * metersToInches(distToTgt) - 8.5208;
 
 
         final SwerveRequest.FieldCentricFacingAngle driveAtAngle =
@@ -238,6 +241,8 @@ public class RobotContainer {
 
         joystick.povUp().onTrue(pivot.PUP()).onFalse(pivot.PSTOP());
         joystick.povDown().onTrue(pivot.PDOWN()).onFalse(pivot.PSTOP());
+
+       // joystick2.a().onTrue(shooter.ShooterSEE().alongWith(hood.HoodVision())).onFalse(shooter.ShooterStop().alongWith(hood.HoodNO()));
 
 
 

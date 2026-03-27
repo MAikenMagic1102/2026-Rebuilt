@@ -5,9 +5,11 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.BobotState;
 
 public class Hood extends SubsystemBase{
 
@@ -37,6 +39,19 @@ final PositionVoltage m_hood = new PositionVoltage(0).withSlot(0);
         hoodMotorFx.setControl(m_hood.withPosition(-0.2675));
     }
 
+            public void HoodVIS(){
+        // hoodMotorFx.setControl(m_hood.withPosition(0.175 - (1.475 * BobotState.getHoodAngle())));
+        double hoodRaw = 1.475 * BobotState.getHoodAngle();
+        hoodMotorFx.setControl(m_hood.withPosition((1.475 * BobotState.getHoodAngle())));
+        SmartDashboard.putNumber("Hood Raw", hoodRaw);
+
+    }
+
+        public void HoodStop(){
+        hoodMotorFx.setControl(m_hood.withPosition(0));
+    }
+
+
     public Command HoodGoClimber(){
 
         return run(
@@ -62,6 +77,26 @@ final PositionVoltage m_hood = new PositionVoltage(0).withSlot(0);
         return run(
             () -> {
                 HoodHP();
+            }
+        );
+
+    }
+
+            public Command HoodVision(){
+
+        return run(
+            () -> {
+                HoodVIS();
+            }
+        );
+
+    }
+
+                public Command HoodNO(){
+
+        return run(
+            () -> {
+                HoodStop();
             }
         );
 

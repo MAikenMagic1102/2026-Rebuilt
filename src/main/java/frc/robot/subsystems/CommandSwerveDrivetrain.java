@@ -10,7 +10,7 @@ import org.opencv.core.Mat.Tuple2;
 import edu.wpi.first.math.geometry.Translation2d;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import frc.robot.BobotState;
 import frc.robot.game_util.FieldConstants.Hub;
 
 import com.ctre.phoenix6.SignalLogger;
@@ -121,6 +121,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public double distToTgt;
     public double hoodAngle;
+    public double shooterSpeed;
 
     /* The SysId routine to test */
     private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineTranslation;
@@ -309,15 +310,19 @@ public Rotation2d getAngley(){
     Translation2d robotPos = pose.getTranslation();
     Translation2d target = distToHub();
 
+    BobotState.setGlobalPose(pose);
+    BobotState.setDistanceToHub(target);
+
     double targetAngle =
         Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
     targetAngle += Math.toRadians(90);
     distToTgt = robotPos.getDistance(target);
-    hoodAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
+    shooterSpeed = 0.0729 * metersToInches(distToTgt) + 23.018;
     SmartDashboard.putNumber("HOOD ANGLE!", hoodAngle);
-    double shooterSpeed = 0.2083 * metersToInches(distToTgt) - 8.5208;
+    hoodAngle = 0.2083 * metersToInches(distToTgt) - 8.5208;
     SmartDashboard.putNumber("SHOOTER SPEED!", shooterSpeed);
-
+    BobotState.setShooterSpeed(shooterSpeed);
+    BobotState.setHoodAngle(hoodAngle);
     
     Rotation2d angley = new Rotation2d(targetAngle);
 
