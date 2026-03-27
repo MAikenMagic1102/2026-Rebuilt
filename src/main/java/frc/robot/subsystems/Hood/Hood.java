@@ -1,104 +1,67 @@
 package frc.robot.subsystems.Hood;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.BobotState;
 
 public class Hood extends SubsystemBase{
 
-public static TalonFX hoodMotorFx = new TalonFX(20, "rio");
-final PositionVoltage m_hood = new PositionVoltage(0).withSlot(0);
- public Hood(){
+    public static TalonFX hoodMotorFx = new TalonFX(20, "rio");
+    final PositionVoltage m_hood = new PositionVoltage(0).withSlot(0);
 
-    var Slot0Configs = new Slot0Configs();
+    public Hood(){
+        
+        var Slot0Configs = new Slot0Configs();
 
-    Slot0Configs.kP = 6;
-    Slot0Configs.kI = 3;
-    Slot0Configs.kD = 0;
+        // PID values
+        Slot0Configs.kP = 6;
+        Slot0Configs.kI = 3;
+        Slot0Configs.kD = 0;
 
-    hoodMotorFx.getConfigurator().apply(Slot0Configs);
-    
+        hoodMotorFx.getConfigurator().apply(Slot0Configs);
     }
 
-    public void HoodClimber(){
-        hoodMotorFx.setControl(m_hood.withPosition(-0.12));
-    }
+    public void HoodToAngle(){
 
-    public void HoodTrench(){
-        hoodMotorFx.setControl(m_hood.withPosition(-0.12));
-    }
+        // HoodPCT is the hood angle expressed as a percent of the maximum angle.
+        // This is the primary method of hood control
+        double hoodPCT = BobotState.getHoodAngle();
+        SmartDashboard.putNumber("Hood Percent", hoodPCT);
 
-        public void HoodHP(){
-        hoodMotorFx.setControl(m_hood.withPosition(-0.2675));
-    }
-
-            public void HoodVIS(){
+        // HoodRaw is the raw output sent to the motor. Expressed as rotations
         double hoodRaw = 0.175 - (1.475 * (BobotState.getHoodAngle() / 100));
-        hoodMotorFx.setControl(m_hood.withPosition(hoodRaw));
         SmartDashboard.putNumber("Hood Raw", hoodRaw);
 
+        hoodMotorFx.setControl(m_hood.withPosition(hoodRaw));
     }
 
-        public void HoodStop(){
-        hoodMotorFx.setControl(m_hood.withPosition(0));
+    public void HoodStop(){
+        // This stops the hood at its current angle
+        hoodMotorFx.setControl(new StaticBrake());
     }
 
 
-    public Command HoodGoClimber(){
+    public Command runHood(){
 
         return run(
             () -> {
-                HoodClimber();
+                HoodToAngle();
             }
         );
-
     }
 
-        public Command HoodGoTrench(){
-
-        return run(
-            () -> {
-                HoodTrench();
-            }
-        );
-
-    }
-
-        public Command HoodGoHP(){
-
-        return run(
-            () -> {
-                HoodHP();
-            }
-        );
-
-    }
-
-            public Command HoodVision(){
-
-        return run(
-            () -> {
-                HoodVIS();
-            }
-        );
-
-    }
-
-                public Command HoodNO(){
+    public Command hoodBrake(){
 
         return run(
             () -> {
                 HoodStop();
             }
         );
-
     }
-
 }
