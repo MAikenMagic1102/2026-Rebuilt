@@ -9,9 +9,12 @@ package frc.robot.subsystems.drive;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
@@ -20,7 +23,12 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+
 import org.littletonrobotics.junction.AutoLogOutput;
+
+import com.ctre.phoenix6.swerve.SwerveModuleConstantsFactory;
 
 /**
  * <b>IMPORTANT: This is a simple simulator for a differential drive, and has no support for real
@@ -32,23 +40,21 @@ import org.littletonrobotics.junction.AutoLogOutput;
  * methods is compatible with this project's vision code.
  */
 public class DemoDrive extends SubsystemBase {
-  private final DifferentialDrivetrainSim sim =
-      DifferentialDrivetrainSim.createKitbotSim(
-          KitbotMotor.kDualCIMPerSide, KitbotGearing.k10p71, KitbotWheelSize.kSixInch, null);
-  private final DifferentialDrivePoseEstimator poseEstimator =
-      new DifferentialDrivePoseEstimator(
-          new DifferentialDriveKinematics(Units.inchesToMeters(26)),
+  private final CommandSwerveDrivetrain sim = TunerConstants.createDrivetrain();
+  
+  private final SwerveDrivePoseEstimator poseEstimator =
+      new SwerveDrivePoseEstimator(
+          new SwerveDriveKinematics(TunerConstants.moduleoffsets),
           Rotation2d.kZero,
-          0.0,
-          0.0,
+          TunerConstants.modulePositions,
           Pose2d.kZero);
 
-  @Override
-  public void periodic() {
-    sim.update(0.02);
-    poseEstimator.update(
-        sim.getHeading(), sim.getLeftPositionMeters(), sim.getRightPositionMeters());
-  }
+  // @Override
+  // public void periodic() {
+  //   sim.update(0.02);
+  //   poseEstimator.update(
+  //       sim.getHeading(), sim.getLeftPositionMeters(), sim.getRightPositionMeters());
+  // }
 
   /**
    * Drive open loop with percent out.
@@ -56,9 +62,9 @@ public class DemoDrive extends SubsystemBase {
    * @param xAxis The forward-back axis, where positive is forward.
    * @param zAxis The left-right axis, where positive is left.
    */
-  public void run(double xAxis, double zAxis) {
-    sim.setInputs((xAxis - zAxis) * 12.0, (xAxis + zAxis) * 12.0);
-  }
+  // public void run(double xAxis, double zAxis) {
+  //   sim.setInputs((xAxis - zAxis) * 12.0, (xAxis + zAxis) * 12.0);
+  // }
 
   /** Returns the latest estimated pose from the pose estimator. */
   @AutoLogOutput(key = "EstimatedPose")

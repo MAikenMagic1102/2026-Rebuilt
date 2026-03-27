@@ -10,6 +10,9 @@ import com.ctre.phoenix6.swerve.*;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.*;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.*;
@@ -135,6 +138,9 @@ public class TunerConstants {
 
     private static final Distance kFrontLeftXPos = Inches.of(10.5);
     private static final Distance kFrontLeftYPos = Inches.of(10.5);
+    private static final Translation2d frontLeftOffset = new Translation2d(kFrontLeftXPos, kFrontLeftYPos);
+    private static final SwerveModulePosition frontLeftPosition = new SwerveModulePosition();
+
 
     // Front Right
     private static final int kFrontRightDriveMotorId = 47;
@@ -146,6 +152,8 @@ public class TunerConstants {
 
     private static final Distance kFrontRightXPos = Inches.of(10.5);
     private static final Distance kFrontRightYPos = Inches.of(-10.5);
+    private static final Translation2d frontRightOffset = new Translation2d(kFrontRightXPos, kFrontRightYPos);
+    private static final SwerveModulePosition frontRightPosition = new SwerveModulePosition();
 
     // Back Left
     private static final int kBackLeftDriveMotorId = 2;
@@ -157,6 +165,8 @@ public class TunerConstants {
 
     private static final Distance kBackLeftXPos = Inches.of(-10.5);
     private static final Distance kBackLeftYPos = Inches.of(10.5);
+    private static final Translation2d backLeftOffset = new Translation2d(kBackLeftXPos, kBackLeftYPos);
+    private static final SwerveModulePosition backLeftPosition = new SwerveModulePosition();
 
     // Back Right
     private static final int kBackRightDriveMotorId = 9;
@@ -168,7 +178,11 @@ public class TunerConstants {
 
     private static final Distance kBackRightXPos = Inches.of(-10.5);
     private static final Distance kBackRightYPos = Inches.of(-10.5);
+    private static final Translation2d backRightOffset = new Translation2d(kBackRightXPos, kBackRightYPos);
+    private static final SwerveModulePosition backRightPosition = new SwerveModulePosition();
 
+    public static final Translation2d[] moduleoffsets = {frontLeftOffset, frontRightOffset, backRightOffset, backLeftOffset};
+    public static final SwerveModulePosition[] modulePositions = {frontLeftPosition, frontRightPosition, backLeftPosition, backRightPosition};
 
     public static final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> FrontLeft =
         ConstantCreator.createModuleConstants(
@@ -283,4 +297,4 @@ public class TunerConstants {
             );
         }
     }
-}
+}
