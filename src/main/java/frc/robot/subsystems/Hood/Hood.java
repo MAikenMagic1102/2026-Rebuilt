@@ -31,10 +31,9 @@ public class Hood extends SubsystemBase{
         // HoodPCT is the hood angle expressed as a percent of the maximum angle.
         // This is the primary method of hood control
         double hoodPCT = BobotState.getHoodAngle();
-        SmartDashboard.putNumber("Hood Percent", hoodPCT);
 
         // HoodRaw is the raw output sent to the motor. Expressed as rotations
-        double hoodRaw = 0.175 - (1.475 * (BobotState.getHoodAngle() / 100));
+        double hoodRaw = 0.175 - (1.475 * (hoodPCT / 100));
         SmartDashboard.putNumber("Hood Raw", hoodRaw);
 
         hoodMotorFx.setControl(m_hood.withPosition(hoodRaw));

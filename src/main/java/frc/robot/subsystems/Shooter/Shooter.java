@@ -3,96 +3,53 @@ package frc.robot.subsystems.Shooter;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import frc.robot.BobotState;
-import frc.robot.RobotContainer;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase{
 
-public static TalonFX shooterMotorFx = new TalonFX(10, "rio");
-final VelocityVoltage m_shooter = new VelocityVoltage(0).withSlot(0);
-
-
+    public static TalonFX shooterMotorFx = new TalonFX(10, "rio");
+    final VelocityVoltage m_shooter = new VelocityVoltage(0).withSlot(0);
 
     public Shooter(){
 
-     var Slot0Configs = new Slot0Configs();
+        var Slot0Configs = new Slot0Configs();
 
-    Slot0Configs.kP = 5;
-    Slot0Configs.kI = 10;
-    Slot0Configs.kD = 0;
-        
-    shooterMotorFx.getConfigurator().apply(Slot0Configs);
+        // PID values
+        Slot0Configs.kP = 5;
+        Slot0Configs.kI = 10;
+        Slot0Configs.kD = 0;
 
+        shooterMotorFx.getConfigurator().apply(Slot0Configs);
     }
 
-        public void ShooterSHOOTCLIMB(){
-       shooterMotorFx.setControl(m_shooter.withVelocity(32.5));
-    }
-    
-    public void ShooterSHOOTSEE(){
+
+    public void shooterRun(){
+        // tgtSpeed is a Speed value expressed in rotations per second.
         double tgtSpeed = BobotState.getShooterSpeed();
-       shooterMotorFx.setControl(m_shooter.withVelocity(tgtSpeed));
-        SmartDashboard.putNumber("Shooter Raw", tgtSpeed);
+        shooterMotorFx.setControl(m_shooter.withVelocity(tgtSpeed));
     }
 
-    
-        public void ShooterSHOOTTRENCH(){
-       shooterMotorFx.setControl(m_shooter.withVelocity(33));
-    }
-
-    
-        public void ShooterSHOOTHP(){
-       shooterMotorFx.setControl(m_shooter.withVelocity(36.5));
-    }
-
-        public void ShooterSTOP(){
+  
+    public void shooterStop(){
         shooterMotorFx.set(0);
     }
 
-    public Command ShooterClimb(){
+
+    public Command ShooterRunCommand(){
         return runOnce(
             () -> {
-                ShooterSHOOTCLIMB();
+                shooterRun();
             }
         );
     }
 
-        public Command ShooterTrench(){
-        return runOnce(
+    public Command ShooterStopCommand(){
+    return runOnce(
             () -> {
-                ShooterSHOOTTRENCH();
+                shooterStop();
             }
         );
     }
-
-        public Command ShooterHP(){
-        return runOnce(
-            () -> {
-                ShooterSHOOTHP();
-            }
-        );
-    }
-
-            public Command ShooterSEE(){
-        return runOnce(
-            () -> {
-                ShooterSHOOTSEE();
-            }
-        );
-    }
-        public Command ShooterStop(){
-        return runOnce(
-            () -> {
-                ShooterSTOP();
-            }
-        );
-    }
-
-
 }
