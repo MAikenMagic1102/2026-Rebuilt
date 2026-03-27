@@ -24,6 +24,11 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Hood.Hood;
+import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.Pivot.Pivot;
+import frc.robot.subsystems.Shooter.Shooter;
+import frc.robot.subsystems.Tower.Tower;
 import frc.robot.subsystems.util.CommandCustomXboxController;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
@@ -40,12 +45,22 @@ public class RobotContainer {
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
+    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final CommandCustomXboxController joystick = new CommandCustomXboxController(0);
     private final CommandCustomXboxController joystick2 = new CommandCustomXboxController(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
+    
+    Intake intake = new Intake();
+    Shooter shooter = new Shooter();
+    Tower tower = new Tower();
+    Pivot pivot = new Pivot();
+    Hood hood = new Hood();
 
     private static double metersToInches(double meters){
     double inches = meters / 0.0254;
@@ -176,6 +191,26 @@ public class RobotContainer {
         joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
         drivetrain.registerTelemetry(logger::telemeterize);
+
+                joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+
+        joystick.rightTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
+        joystick.leftTrigger().onTrue(intake.OUT()).onFalse(intake.STOP());
+
+        joystick.povUp().onTrue(pivot.PUP()).onFalse(pivot.PSTOP());
+        joystick.povDown().onTrue(pivot.PDOWN()).onFalse(pivot.PSTOP());
+
+
+
+        joystick2.rightTrigger().onTrue(tower.CLEAN()).onFalse(tower.TOWERSTOP());
+        joystick2.leftTrigger().onTrue(tower.UP()).onFalse(tower.TOWERSTOP());
+
+        joystick2.b().onTrue(shooter.ShooterTrench().alongWith(hood.HoodGoTrench())).onFalse(shooter.ShooterStop());
+        joystick2.y().onTrue(shooter.ShooterClimb().alongWith(hood.HoodGoClimber())).onFalse(shooter.ShooterStop());
+        joystick2.x().onTrue(shooter.ShooterHP().alongWith(hood.HoodGoHP())).onFalse(shooter.ShooterStop());
     }
 
     public Command getAutonomousCommand() {
