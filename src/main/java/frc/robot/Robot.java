@@ -19,7 +19,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
-    private CommandSwerveDrivetrain m_Drivetrain = TunerConstants.createDrivetrain();
+    private CommandSwerveDrivetrain m_Drivetrain = RobotContainer.drivetrain;
 
     private final RobotContainer m_robotContainer;
 
