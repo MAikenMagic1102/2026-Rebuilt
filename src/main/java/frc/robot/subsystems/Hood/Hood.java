@@ -45,7 +45,7 @@ public class Hood extends SubsystemBase{
     }
 
 
-    public Command runHood(){
+    public Command HoodToAngleCommand(){
 
         return run(
             () -> {
@@ -54,7 +54,7 @@ public class Hood extends SubsystemBase{
         );
     }
 
-    public Command hoodBrake(){
+    public Command HoodBrakeCommand(){
 
         return run(
             () -> {

@@ -6,9 +6,6 @@
 // at the root directory of this project.
 
 package frc.robot;
-
-import static edu.wpi.first.units.Units.Hertz;
-
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 

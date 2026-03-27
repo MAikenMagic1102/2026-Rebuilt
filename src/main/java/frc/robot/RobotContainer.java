@@ -43,8 +43,6 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import static frc.robot.subsystems.vision.VisionConstants.*;
 
-import javax.xml.crypto.dsig.Transform;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -85,17 +83,12 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    
+    // Initialize Subsystems
     Intake intake = new Intake();
     Shooter shooter = new Shooter();
     Tower tower = new Tower();
     Pivot pivot = new Pivot();
     Hood hood = new Hood();
-
-    private static double metersToInches(double meters){
-    double inches = meters / 0.0254;
-    return inches;
-  }
 
     public RobotContainer() {
         switch (Constants.currentMode) {
@@ -148,75 +141,18 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-//          @SuppressWarnings("resource")
-//     PIDController hubAimController = new PIDController(1.0, 0.0, 0.0);
-//     hubAimController.enableContinuousInput(-Math.PI, Math.PI);
-//     keyboard
-//         .button(2)
-//         .whileTrue(
-//             Commands.startRun(
-//                 () -> {
-//                   hubAimController.reset();
-//                 },
-//                 () -> {
-//                   Pose2d pose = drive.getPose();
-//                   Translation2d robotPos = pose.getTranslation();
-//                   double distBlue = robotPos.getDistance(Hub.blueHubCenter2d);
-//                   double distRed = robotPos.getDistance(Hub.redHubCenter2d);
-//                   Translation2d target =
-//                       distBlue < distRed ? Hub.blueHubCenter2d : Hub.redHubCenter2d;
-
-//                   double targetAngle =
-//                       Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
-//                   targetAngle += Math.toRadians(-90);
-
-//                   double distToTgt = robotPos.getDistance(target);
-//                   double shooterAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
-//                   double shooterSpeed = 0.2083 * metersToInches(distToTgt) - 8.5208;
-
-//                   hubAimController.setSetpoint(targetAngle);
-//                   drive.run(
-//                       0.0, hubAimController.calculate(pose.getRotation().getRadians()));
-//                 },
-//                 drive));
-//   }
-
-        // Pose2d pose = drivetrain.getPose();
-        // Translation2d robotPos = pose.getTranslation();
-        // double distBlue = robotPos.getDistance(Hub.blueHubCenter2d);
-        // double distRed = robotPos.getDistance(Hub.redHubCenter2d);
-        // Translation2d target =
-        //     distBlue < distRed ? Hub.blueHubCenter2d : Hub.redHubCenter2d;
-
-        // double targetAngle =
-        //     Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
-        // targetAngle += Math.toRadians(-90);
-
-     
-        // SmartDashboard.putNumber("angley", targetAngle);
-
-        // double distToTgt = robotPos.getDistance(target);
-        // double shooterAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
-        // double shooterSpeed = 0.2083 * metersToInches(distToTgt) - 8.5208;
-
-
+        // Auto Aim PID
         final SwerveRequest.FieldCentricFacingAngle driveAtAngle =
-            new SwerveRequest.FieldCentricFacingAngle()
-                .withHeadingPID(5, 0, 0); // tune kP
+            new SwerveRequest.FieldCentricFacingAngle().withHeadingPID(5, 0, 0); // tune kP
 
-                
-
-         // In command:
-  // In command:
+        // Auto Aim
         joystick.a().whileTrue(
             drivetrain.applyRequest(() ->
             driveAtAngle
-
                 .withVelocityY(0)
                 .withVelocityX(-joystick.getLeftY() * MaxSpeed)
-                .withTargetDirection(drivetrain.getAngley())
+                .withTargetDirection(drivetrain.getAngleToHub())
                 .withMaxAbsRotationalRate(MaxAngularRate))
-
         );
 
         // Run SysId routines when holding back/start and X/Y.
@@ -231,27 +167,26 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-                joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        // Move Around
+        joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
         joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        joystick.rightTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
-        joystick.leftTrigger().onTrue(intake.OUT()).onFalse(intake.STOP());
+        // Intake
+        joystick.rightTrigger().onTrue(intake.IntakeRunCommand()).onFalse(intake.IntakeStopCommand());
+        joystick.leftTrigger().onTrue(intake.IntakeOutCommand()).onFalse(intake.IntakeStopCommand());
 
-        joystick.povUp().onTrue(pivot.PUP()).onFalse(pivot.PSTOP());
-        joystick.povDown().onTrue(pivot.PDOWN()).onFalse(pivot.PSTOP());
+        // Pivot
+        joystick.povUp().onTrue(pivot.PivotUpCommand()).onFalse(pivot.PivotStopCommand());
+        joystick.povDown().onTrue(pivot.PivotDownCommand()).onFalse(pivot.PivotStopCommand());
 
-       joystick2.a().onTrue(shooter.ShooterSEE().alongWith(hood.HoodVision())).onFalse(shooter.ShooterStop().alongWith(hood.HoodNO()));
+        // Shooting
+        joystick2.a().onTrue(shooter.ShooterRunCommand().alongWith(hood.HoodToAngleCommand())).onFalse(shooter.ShooterStopCommand().alongWith(hood.HoodBrakeCommand()));
 
-
-
-        joystick2.rightTrigger().onTrue(tower.CLEAN()).onFalse(tower.TOWERSTOP());
-        joystick2.leftTrigger().onTrue(tower.UP()).onFalse(tower.TOWERSTOP());
-
-        joystick2.b().onTrue(shooter.ShooterTrench().alongWith(hood.HoodGoTrench())).onFalse(shooter.ShooterStop());
-        joystick2.y().onTrue(shooter.ShooterClimb().alongWith(hood.HoodGoClimber())).onFalse(shooter.ShooterStop());
-        joystick2.x().onTrue(shooter.ShooterHP().alongWith(hood.HoodGoHP())).onFalse(shooter.ShooterStop());
+        // Tower
+        joystick2.rightTrigger().onTrue(tower.TowerEmptyCommand()).onFalse(tower.TowerOffCommand());
+        joystick2.leftTrigger().onTrue(tower.TowerFeedCommand()).onFalse(tower.TowerOffCommand());
     }
 
     public Command getAutonomousCommand() {
