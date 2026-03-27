@@ -10,12 +10,18 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import static frc.robot.subsystems.vision.VisionConstants.*;
 
+import javax.xml.crypto.dsig.Transform;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-
+import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.util.CommandCustomXboxController;
@@ -40,6 +46,11 @@ public class RobotContainer {
     private final CommandCustomXboxController joystick2 = new CommandCustomXboxController(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
+    private static double metersToInches(double meters){
+    double inches = meters / 0.0254;
+    return inches;
+  }
 
     public RobotContainer() {
         switch (Constants.currentMode) {
@@ -90,6 +101,68 @@ public class RobotContainer {
         final var idle = new SwerveRequest.Idle();
         RobotModeTriggers.disabled().whileTrue(
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
+        );
+
+//          @SuppressWarnings("resource")
+//     PIDController hubAimController = new PIDController(1.0, 0.0, 0.0);
+//     hubAimController.enableContinuousInput(-Math.PI, Math.PI);
+//     keyboard
+//         .button(2)
+//         .whileTrue(
+//             Commands.startRun(
+//                 () -> {
+//                   hubAimController.reset();
+//                 },
+//                 () -> {
+//                   Pose2d pose = drive.getPose();
+//                   Translation2d robotPos = pose.getTranslation();
+//                   double distBlue = robotPos.getDistance(Hub.blueHubCenter2d);
+//                   double distRed = robotPos.getDistance(Hub.redHubCenter2d);
+//                   Translation2d target =
+//                       distBlue < distRed ? Hub.blueHubCenter2d : Hub.redHubCenter2d;
+
+//                   double targetAngle =
+//                       Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
+//                   targetAngle += Math.toRadians(-90);
+
+//                   double distToTgt = robotPos.getDistance(target);
+//                   double shooterAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
+//                   double shooterSpeed = 0.2083 * metersToInches(distToTgt) - 8.5208;
+
+//                   hubAimController.setSetpoint(targetAngle);
+//                   drive.run(
+//                       0.0, hubAimController.calculate(pose.getRotation().getRadians()));
+//                 },
+//                 drive));
+//   }
+
+        Pose2d pose = drivetrain.getPose();
+        Translation2d robotPos = pose.getTranslation();
+        double distBlue = robotPos.getDistance(Hub.blueHubCenter2d);
+        double distRed = robotPos.getDistance(Hub.redHubCenter2d);
+        Translation2d target =
+            distBlue < distRed ? Hub.blueHubCenter2d : Hub.redHubCenter2d;
+
+        double targetAngle =
+            Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
+        targetAngle += Math.toRadians(-90);
+
+        double distToTgt = robotPos.getDistance(target);
+        double shooterAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
+        double shooterSpeed = 0.2083 * metersToInches(distToTgt) - 8.5208;
+
+
+        final SwerveRequest.FieldCentricFacingAngle driveAtAngle =
+            new SwerveRequest.FieldCentricFacingAngle()
+                .withHeadingPID(5, 0, 0); // tune kP
+
+        // In command:
+        Transform2d translotion = new Transform2d(drivetrain.getPose(), Pose2d.kZero);
+        joystick.a().whileTrue(drivetrain.applyRequest(() ->
+            driveAtAngle
+                .withVelocityX(0)
+                .withVelocityY(0)
+                .withTargetDirection(translotion.getRotation().minus(Rotation2d.fromDegrees(-90)))) // face 90°
         );
 
         // Run SysId routines when holding back/start and X/Y.
