@@ -326,7 +326,7 @@ public Rotation2d getAngley(){
     distToTgt = robotPos.getDistance(target);
 
 
-    shooterSpeed = (0.0729 * metersToInches(distToTgt)) + 23.018;
+    shooterSpeed = (0.0729 * metersToInches(distToTgt)) + 23;
     System.out.println(shooterSpeed);
 
     SmartDashboard.putNumber("HOOD ANGLE!", hoodAngle);
