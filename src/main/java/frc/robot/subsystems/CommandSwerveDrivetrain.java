@@ -5,6 +5,8 @@ import static edu.wpi.first.units.Units.*;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import org.opencv.core.Mat.Tuple2;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
@@ -15,6 +17,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -22,10 +25,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
+import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -241,6 +245,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+
     }
 
     private void startSimThread() {
@@ -276,6 +281,43 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     Pose2d pose = state.Pose;
     return pose;
     }
+
+          private static double metersToInches(double meters){
+    double inches = meters / 0.0254;
+    return inches;
+  }
+
+  public Translation2d distToHub(){
+          Pose2d pose = getPose();
+        Translation2d robotPos = pose.getTranslation();
+        double distBlue = robotPos.getDistance(Hub.blueHubCenter2d);
+        double distRed = robotPos.getDistance(Hub.redHubCenter2d);
+        Translation2d target =
+            distBlue < distRed ? Hub.blueHubCenter2d : Hub.redHubCenter2d;
+        return target;
+  }
+
+public Rotation2d getAngley(){
+
+    Pose2d pose = getPose();
+    Translation2d robotPos = pose.getTranslation();
+    Translation2d target = distToHub();
+
+    double targetAngle =
+        Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
+    targetAngle += Math.toRadians(90);
+    double distToTgt = robotPos.getDistance(target);
+    double hoodAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
+    SmartDashboard.putNumber("HOOD ANGLE!", hoodAngle);
+    double shooterSpeed = 0.2083 * metersToInches(distToTgt) - 8.5208;
+    SmartDashboard.putNumber("SHOOTER SPEED!", shooterSpeed);
+
+    
+    Rotation2d angley = new Rotation2d(targetAngle);
+
+    return angley;
+}
+
 
     /**
      * Adds a vision measurement to the Kalman Filter. This will correct the odometry pose estimate

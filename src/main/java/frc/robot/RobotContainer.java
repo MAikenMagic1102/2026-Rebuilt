@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -149,6 +150,7 @@ public class RobotContainer {
         //targetAngle += Math.toRadians(90);
         
         Rotation2d angley = new Rotation2d(targetAngle);
+        SmartDashboard.putNumber("angley", targetAngle);
 
         double distToTgt = robotPos.getDistance(target);
         double shooterAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
@@ -160,13 +162,15 @@ public class RobotContainer {
                 .withHeadingPID(5, 0, 0); // tune kP
 
         // In command:
-        joystick.a().whileTrue(drivetrain.applyRequest(() ->
+        joystick.a().whileTrue(
+            drivetrain.applyRequest(() ->
             driveAtAngle
-                .withVelocityX(0)
                 .withVelocityY(0)
-                .withTargetDirection(angley))
-        );
+                .withVelocityX(-joystick.getLeftY() * MaxSpeed)
+                .withTargetDirection(drivetrain.getAngley())
+                .withMaxAbsRotationalRate(MaxAngularRate))
 
+        );
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
         joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
