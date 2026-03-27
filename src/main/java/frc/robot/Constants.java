@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Hertz;
+
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -18,6 +20,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 public final class Constants {
     public static final boolean tuningMode = true;
     public static boolean disableHAL = false;
+    
 
     public static void disableHAL() {
         disableHAL = true;
