@@ -8,6 +8,9 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+
+import choreo.auto.AutoChooser;
+
 import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import java.awt.Robot;
@@ -26,6 +29,8 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.AutoAlignComand;
+import frc.robot.subsystems.AutoRoutines;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Hood.Hood;
 import frc.robot.subsystems.Intake.Intake;
@@ -38,6 +43,7 @@ import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import static edu.wpi.first.units.Units.*;
+import frc.robot.subsystems.AutoAlignComand;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -66,10 +72,10 @@ import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 
 public class RobotContainer {
+    
     private final Vision vision;
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
@@ -83,9 +89,11 @@ public class RobotContainer {
     private final CommandCustomXboxController joystick = new CommandCustomXboxController(0);
     private final CommandCustomXboxController joystick2 = new CommandCustomXboxController(1);
 
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    public final CommandSwerveDrivetrain drivetrain = BobotState.getM_Drivetrain();
+    private final AutoRoutines autoRoutines;
+    private final AutoChooser autoChooser = new AutoChooser();
 
-    
+    AutoAlignComand autoAlignComand = new AutoAlignComand();
     Intake intake = new Intake();
     Shooter shooter = new Shooter();
     Tower tower = new Tower();
@@ -124,7 +132,27 @@ public class RobotContainer {
                 // (Use same number of dummy implementations as the real robot)
                 vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {}, new VisionIO() {});
                 break;
+
+               
+
+
         }
+        
+        autoRoutines = new AutoRoutines(drivetrain, hood, intake, pivot,  shooter, tower, vision, autoAlignComand);
+        
+        autoChooser.addRoutine("BlueLeft", autoRoutines::BlueLeft);
+          autoChooser.addRoutine("RedLeft", autoRoutines::RedLeft);
+            autoChooser.addRoutine("BlueRight", autoRoutines::BlueRight);
+              autoChooser.addRoutine("RedRight", autoRoutines::RedRight);
+              autoChooser.addRoutine("Blue", autoRoutines::BlueMiddle);
+              autoChooser.addRoutine("Red", autoRoutines::RedMiddle);
+        // autoChooser.addRoutine("Left to One", autoRoutines::LeftToOne);
+        // autoChooser.addRoutine("Left to One Plus", autoRoutines::LeftToOnePlus);
+        // autoChooser.addRoutine("TwoMeters", autoRoutines::TwoMeters);
+        // autoChooser.addRoutine("Right to One Plus", autoRoutines::RightToOnePlus);
+        // autoChooser.addRoutine("WHYYYY", autoRoutines::WTFISBROONABTOT);
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+        
 
         configureBindings();
     }
@@ -206,7 +234,7 @@ public class RobotContainer {
 
                 
 
-         // In command:
+    
   // In command:
         joystick.a().whileTrue(
             drivetrain.applyRequest(() ->
@@ -255,21 +283,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        // Simple drive forward auton
-        final var idle = new SwerveRequest.Idle();
-        return Commands.sequence(
-            // Reset our field centric heading to match the robot
-            // facing away from our alliance station wall (0 deg).
-            drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
-            // Then slowly drive forward (away from us) for 2.8 seconds.
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(-0.5)
-                    .withVelocityY(0)
-                    .withRotationalRate(0)
-            )
-            .withTimeout(2.8),
-            // Finally idle for the rest of auton
-            drivetrain.applyRequest(() -> idle)
-        );
+   /* Run the routine selected from the auto chooser */
+        return autoChooser.selectedCommand();
     }
 }
