@@ -53,7 +53,7 @@ final PositionVoltage m_hood = new PositionVoltage(0).withSlot(0);
 
     public Command HoodGoClimber(){
 
-        return run(
+        return runOnce(
             () -> {
                 HoodClimber();
             }
@@ -63,7 +63,7 @@ final PositionVoltage m_hood = new PositionVoltage(0).withSlot(0);
 
         public Command HoodGoTrench(){
 
-        return run(
+        return runOnce(
             () -> {
                 HoodTrench();
             }
@@ -73,7 +73,7 @@ final PositionVoltage m_hood = new PositionVoltage(0).withSlot(0);
 
         public Command HoodGoHP(){
 
-        return run(
+        return runOnce(
             () -> {
                 HoodHP();
             }
@@ -83,7 +83,7 @@ final PositionVoltage m_hood = new PositionVoltage(0).withSlot(0);
 
             public Command HoodVision(){
 
-        return run(
+        return runOnce(
             () -> {
                 HoodVIS();
             }
@@ -93,7 +93,7 @@ final PositionVoltage m_hood = new PositionVoltage(0).withSlot(0);
 
                 public Command HoodNO(){
 
-        return run(
+        return runOnce(
             () -> {
                 HoodStop();
             }

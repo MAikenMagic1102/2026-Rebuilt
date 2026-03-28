@@ -81,8 +81,6 @@ public class AutoRoutines extends SubsystemBase{
                 blueM.resetOdometry(),
                 blueM.cmd(),
 
-            
-
                  new ParallelCommandGroup(
 
                 m_shooter.ShooterSEE(),
@@ -163,7 +161,7 @@ public class AutoRoutines extends SubsystemBase{
                 blueL2.cmd(),
                 m_intake.IN()
                 ),
-             
+
                 new WaitCommand(4),
 
                 m_intake.STOP(),
@@ -175,7 +173,7 @@ public class AutoRoutines extends SubsystemBase{
                 m_shooter.ShooterSEE(),
                 m_hood.HoodVision(),
                 m_tower.UP()
-                
+
                 ),
 
                 new ParallelCommandGroup(
@@ -216,7 +214,7 @@ public class AutoRoutines extends SubsystemBase{
                 blueR2.cmd(),
                 m_intake.IN()
                 ),
-             
+
                 new WaitCommand(4),
 
                 m_intake.STOP(),
@@ -268,7 +266,7 @@ public class AutoRoutines extends SubsystemBase{
                 redL2.cmd(),
                 m_intake.IN()
                 ),
-             
+
                 new WaitCommand(4),
 
                 m_intake.STOP(),
@@ -320,7 +318,7 @@ public class AutoRoutines extends SubsystemBase{
                 redR2.cmd(),
                 m_intake.IN()
                 ),
-             
+
                 new WaitCommand(4),
 
                 m_intake.STOP(),
@@ -373,8 +371,7 @@ public class AutoRoutines extends SubsystemBase{
         Commands.sequence(
               simple.resetOdometry(),
                    simple.cmd(),
-
-                   
+   
                 new ParallelCommandGroup(
 
                 m_shooter.ShooterSEE(),
