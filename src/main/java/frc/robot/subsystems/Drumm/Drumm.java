@@ -20,7 +20,6 @@ public class Drumm extends SubsystemBase {
     public static TalonFX DrummR = new TalonFX(0, "rio");
     public static TalonFX DrummL = new TalonFX(0, "rio");
 
-    final PositionVoltage m_intakVoltage = new PositionVoltage(0).withSlot(0);
 
     public Drumm(){
 
@@ -36,38 +35,38 @@ public class Drumm extends SubsystemBase {
         DrummR.setControl(new Follower(0, MotorAlignmentValue.Aligned));
     }
 
-    public void pivUP(){
+    public void DrummOut(){
       DrummL.set(0.2);
     }
 
-    public void pivDOWN(){
+    public void DrummStop(){
       DrummL.set(-0.2);
     }
 
-    public void pivSTOP(){
+    public void DrummClean(){
       DrummL.set(0);
     }
 
-    public Command PDOWN(){
+    public Command DRUMMGO(){
       return runOnce(
         () -> {
-            pivDOWN();
+            DrummOut();
         }
 
       );
     }
-     public Command PUP(){
+     public Command DRUMMNO(){
      return runOnce(
         () -> {
-            pivUP();
+            DrummStop();
         }
 
       );
     }
-     public Command PSTOP(){
+     public Command DRUMMCLEAN(){
         return runOnce(
         () -> {
-            pivSTOP();
+            DrummClean();
         }
 
       );
