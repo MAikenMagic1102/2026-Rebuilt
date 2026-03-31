@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drumm extends SubsystemBase {
     
-    public static TalonFX DrummR = new TalonFX(0, "rio");
-    public static TalonFX DrummL = new TalonFX(0, "rio");
+    public static TalonFX DrummR = new TalonFX(21, "rio");
+    public static TalonFX DrummL = new TalonFX(20, "rio");
 
 
     public Drumm(){
@@ -32,19 +32,19 @@ public class Drumm extends SubsystemBase {
         // DrummL.getConfigurator().apply(Slot0Configs);
         // DrummR.getConfigurator().apply(Slot0Configs);
         
-        DrummR.setControl(new Follower(0, MotorAlignmentValue.Aligned));
+        DrummR.setControl(new Follower(0, MotorAlignmentValue.Opposed));
     }
 
     public void DrummOut(){
-      DrummL.set(0.2);
+      DrummL.set(1);
     }
 
     public void DrummStop(){
-      DrummL.set(-0.2);
+      DrummL.set(0);
     }
 
     public void DrummClean(){
-      DrummL.set(0);
+      DrummL.set(-1);
     }
 
     public Command DRUMMGO(){

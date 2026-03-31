@@ -11,7 +11,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import choreo.auto.AutoChooser;
 
-import static frc.robot.subsystems.vision.VisionConstants.*;
+// import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import java.awt.Robot;
 
@@ -29,25 +29,24 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.AutoAlignComand;
-import frc.robot.subsystems.AutoRoutines;
+// import frc.robot.subsystems.AutoAlignComand;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Hood.Hood;
+import frc.robot.subsystems.Drumm.Drumm;
+import frc.robot.subsystems.Feeder.Feeder;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Pivot.Pivot;
 import frc.robot.subsystems.Shooter.Shooter;
-import frc.robot.subsystems.Tower.Tower;
 import frc.robot.subsystems.util.CommandCustomXboxController;
-import frc.robot.subsystems.vision.Vision;
-import frc.robot.subsystems.vision.VisionIO;
-import frc.robot.subsystems.vision.VisionIOPhotonVision;
-import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+// import frc.robot.subsystems.vision.Vision;
+// import frc.robot.subsystems.vision.VisionIO;
+// import frc.robot.subsystems.vision.VisionIOPhotonVision;
+// import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import static edu.wpi.first.units.Units.*;
-import frc.robot.subsystems.AutoAlignComand;
+// import frc.robot.subsystems.AutoAlignComand;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import static frc.robot.subsystems.vision.VisionConstants.*;
+// import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import javax.xml.crypto.dsig.Transform;
 
@@ -66,14 +65,14 @@ import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.util.CommandCustomXboxController;
-import frc.robot.subsystems.vision.Vision;
-import frc.robot.subsystems.vision.VisionIO;
-import frc.robot.subsystems.vision.VisionIOPhotonVision;
-import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+// import frc.robot.subsystems.vision.Vision;
+// import frc.robot.subsystems.vision.VisionIO;
+// import frc.robot.subsystems.vision.VisionIOPhotonVision;
+// import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 
 public class RobotContainer {
     
-    private final Vision vision;
+    // private final Vision vision;
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
     /* Setting up bindings for necessary control of the swerve drive platform */
@@ -90,15 +89,17 @@ public class RobotContainer {
     private final CommandCustomXboxController joystick2 = new CommandCustomXboxController(1);
 
     public final CommandSwerveDrivetrain drivetrain = BobotState.getM_Drivetrain();
-    private final AutoRoutines autoRoutines;
+
     private final AutoChooser autoChooser = new AutoChooser();
 
-    AutoAlignComand autoAlignComand = new AutoAlignComand();
+    // AutoAlignComand autoAlignComand = new AutoAlignComand();
     Intake intake = new Intake();
     Shooter shooter = new Shooter();
-    Tower tower = new Tower();
+    Feeder tower = new Feeder();
     Pivot pivot = new Pivot();
-    Hood hood = new Hood();
+    Drumm drumm = new Drumm();
+    Feeder feeder = new Feeder();
+
 
     private static double metersToInches(double meters){
     double inches = meters / 0.0254;
@@ -106,51 +107,40 @@ public class RobotContainer {
   }
 
     public RobotContainer() {
-        switch (Constants.currentMode) {
-            case REAL:
-                // Real robot, instantiate hardware IO implementations
-                vision =
-                    new Vision(
-                        drivetrain::addVisionMeasurement,
-                        new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
-                        new VisionIOPhotonVision(camera1Name, robotToCameraCenter),
-                        new VisionIOPhotonVision(camera2Name, robotToCameraRight));
-                break;
+        // switch (Constants.currentMode) {
+        //     case REAL:
+        //         // Real robot, instantiate hardware IO implementations
+        //         vision =
+        //             new Vision(
+        //                 drivetrain::addVisionMeasurement,
+        //                 new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
+        //                 new VisionIOPhotonVision(camera1Name, robotToCameraCenter),
+        //                 new VisionIOPhotonVision(camera2Name, robotToCameraRight));
+        //         break;
 
-            case SIM:
-                // Sim robot, instantiate physics sim IO implementations
-                vision =
-                    new Vision(
-                        drivetrain::addVisionMeasurement,
-                        new VisionIOPhotonVisionSim(camera0Name, robotToCameraLeft, drivetrain::getPose),
-                        new VisionIOPhotonVisionSim(camera1Name, robotToCameraCenter, drivetrain::getPose),
-                        new VisionIOPhotonVisionSim(camera2Name, robotToCameraRight, drivetrain::getPose));
-                break;
+        //     case SIM:
+        //         // Sim robot, instantiate physics sim IO implementations
+        //         vision =
+        //             new Vision(
+        //                 drivetrain::addVisionMeasurement,
+        //                 new VisionIOPhotonVisionSim(camera0Name, robotToCameraLeft, drivetrain::getPose),
+        //                 new VisionIOPhotonVisionSim(camera1Name, robotToCameraCenter, drivetrain::getPose),
+        //                 new VisionIOPhotonVisionSim(camera2Name, robotToCameraRight, drivetrain::getPose));
+        //         break;
 
-            default:
-                // Replayed robot, disable IO implementations
-                // (Use same number of dummy implementations as the real robot)
-                vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {}, new VisionIO() {});
-                break;
+            // default:
+            //     // Replayed robot, disable IO implementations
+            //     // (Use same number of dummy implementations as the real robot)
+            //     vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {}, new VisionIO() {});
+            //     break;
 
                
 
 
-        }
+        // }
+  
         
-        autoRoutines = new AutoRoutines(drivetrain, hood, intake, pivot,  shooter, tower, vision, autoAlignComand);
-        
-        autoChooser.addRoutine("BlueLeft", autoRoutines::BlueLeft);
-          autoChooser.addRoutine("RedLeft", autoRoutines::RedLeft);
-            autoChooser.addRoutine("BlueRight", autoRoutines::BlueRight);
-              autoChooser.addRoutine("RedRight", autoRoutines::RedRight);
-              autoChooser.addRoutine("Blue", autoRoutines::BlueMiddle);
-              autoChooser.addRoutine("Red", autoRoutines::RedMiddle);
-        // autoChooser.addRoutine("Left to One", autoRoutines::LeftToOne);
-        // autoChooser.addRoutine("Left to One Plus", autoRoutines::LeftToOnePlus);
-        // autoChooser.addRoutine("TwoMeters", autoRoutines::TwoMeters);
-        // autoChooser.addRoutine("Right to One Plus", autoRoutines::RightToOnePlus);
-        // autoChooser.addRoutine("WHYYYY", autoRoutines::WTFISBROONABTOT);
+      
         SmartDashboard.putData("Auto Chooser", autoChooser);
         
 
@@ -270,16 +260,10 @@ public class RobotContainer {
         joystick.povUp().onTrue(pivot.PUP()).onFalse(pivot.PSTOP());
         joystick.povDown().onTrue(pivot.PDOWN()).onFalse(pivot.PSTOP());
 
-       joystick2.a().onTrue(shooter.ShooterSEE().alongWith(hood.HoodVision())).onFalse(shooter.ShooterStop().alongWith(hood.HoodNO()));
+        joystick.a().onTrue(drumm.DRUMMGO()).onFalse(drumm.DRUMMNO());
+        joystick.b().onTrue(feeder.FeederOut()).onFalse(feeder.FeederStop());
 
 
-
-        joystick2.rightTrigger().onTrue(tower.CLEAN()).onFalse(tower.TOWERSTOP());
-        joystick2.leftTrigger().onTrue(tower.UP()).onFalse(tower.TOWERSTOP());
-
-        joystick2.b().onTrue(shooter.ShooterTrench().alongWith(hood.HoodGoTrench())).onFalse(shooter.ShooterStop());
-        joystick2.y().onTrue(shooter.ShooterClimb().alongWith(hood.HoodGoClimber())).onFalse(shooter.ShooterStop());
-        joystick2.x().onTrue(shooter.ShooterHP().alongWith(hood.HoodGoHP())).onFalse(shooter.ShooterStop());
     }
 
     public Command getAutonomousCommand() {
