@@ -3,6 +3,7 @@ package frc.robot.subsystems.Drumm;
 
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -20,7 +21,6 @@ public class Drumm extends SubsystemBase {
     public static TalonFX DrummR = new TalonFX(21, "rio");
     public static TalonFX DrummL = new TalonFX(20, "rio");
 
-
     public Drumm(){
 
         // var Slot0Configs = new Slot0Configs();
@@ -29,22 +29,26 @@ public class Drumm extends SubsystemBase {
         // Slot0Configs.kI = 0;
         // Slot0Configs.kD = 0;
 
-        // DrummL.getConfigurator().apply(Slot0Configs);
-        // DrummR.getConfigurator().apply(Slot0Configs);
+        TalonFXConfiguration drumConfig = new TalonFXConfiguration();
+        drumConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+        drumConfig.CurrentLimits.SupplyCurrentLimit = 80;
+
+        DrummL.getConfigurator().apply(drumConfig);
+        DrummR.getConfigurator().apply(drumConfig);
         
-        DrummR.setControl(new Follower(0, MotorAlignmentValue.Opposed));
+        DrummR.setControl(new Follower(DrummR.getDeviceID(), MotorAlignmentValue.Opposed));
     }
 
     public void DrummOut(){
-      DrummL.set(1);
+      DrummL.setVoltage(12);
     }
 
     public void DrummStop(){
-      DrummL.set(0);
+      DrummL.setVoltage(0);
     }
 
     public void DrummClean(){
-      DrummL.set(-1);
+      DrummL.setVoltage(-12);
     }
 
     public Command DRUMMGO(){
@@ -55,20 +59,20 @@ public class Drumm extends SubsystemBase {
 
       );
     }
+
      public Command DRUMMNO(){
      return runOnce(
         () -> {
             DrummStop();
         }
-
       );
     }
+
      public Command DRUMMCLEAN(){
         return runOnce(
         () -> {
             DrummClean();
         }
-
       );
     }
 
