@@ -43,7 +43,9 @@ public class Drumm extends SubsystemBase {
 
     @Override
     public void periodic() {
-      SmartDashboard.putNumber("Shooter Speed RPM", DrummL.getVelocity().getValueAsDouble() * 60);
+      SmartDashboard.putNumber("Shooter L Speed RPM", DrummL.getVelocity().getValueAsDouble() * 60);
+      SmartDashboard.putNumber("Shooter L Voltage", DrummL.getMotorVoltage().getValueAsDouble());
+      SmartDashboard.putNumber("Shooter L Current (A)", DrummL.getStatorCurrent().getValueAsDouble());
     }
 
     public void DrummOut(){
