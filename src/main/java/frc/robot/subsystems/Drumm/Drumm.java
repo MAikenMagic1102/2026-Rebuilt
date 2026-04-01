@@ -36,7 +36,7 @@ public class Drumm extends SubsystemBase {
         DrummL.getConfigurator().apply(drumConfig);
         DrummR.getConfigurator().apply(drumConfig);
         
-        DrummR.setControl(new Follower(DrummR.getDeviceID(), MotorAlignmentValue.Opposed));
+        DrummR.setControl(new Follower(DrummL.getDeviceID(), MotorAlignmentValue.Opposed));
     }
 
     public void DrummOut(){
