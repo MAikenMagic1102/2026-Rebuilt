@@ -10,6 +10,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -37,6 +39,11 @@ public class Drumm extends SubsystemBase {
         DrummR.getConfigurator().apply(drumConfig);
         
         DrummR.setControl(new Follower(DrummL.getDeviceID(), MotorAlignmentValue.Opposed));
+    }
+
+    @Override
+    public void periodic() {
+      SmartDashboard.putNumber("Shooter Speed RPM", DrummL.getVelocity().getValueAsDouble() * 60);
     }
 
     public void DrummOut(){
