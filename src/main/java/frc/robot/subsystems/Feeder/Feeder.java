@@ -1,27 +1,41 @@
 package frc.robot.subsystems.Feeder;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Feeder {
-    public static TalonFX IntakeMotorFX = new TalonFX(10, "rio");
+public class Feeder extends SubsystemBase{
+    public static TalonFX feederMotor = new TalonFX(10, "rio");
 
     public Feeder(){
-        
+        TalonFXConfiguration feederConfig = new TalonFXConfiguration();
+        feederConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+        feederConfig.CurrentLimits.SupplyCurrentLimit = 80;
+
+        feederMotor.getConfigurator().apply(feederConfig);
+    }
+
+    @Override
+    public void periodic() {
+      SmartDashboard.putNumber("Shooter L Speed RPM", feederMotor.getVelocity().getValueAsDouble() * 60);
+      SmartDashboard.putNumber("Shooter L Voltage", feederMotor.getMotorVoltage().getValueAsDouble());
+      SmartDashboard.putNumber("Shooter L Current (A)", feederMotor.getStatorCurrent().getValueAsDouble());
     }
 
     public void FeederON(){
-        IntakeMotorFX.set(1);
+        feederMotor.setVoltage(12);
     }
 
     public void FeederCLEAR(){
-        IntakeMotorFX.set(-1);
+        feederMotor.setVoltage(-12);
     }
 
     public void FeederSTOP(){
-        IntakeMotorFX.set(0);
+        feederMotor.setVoltage(0);
     }
 
     public Command FeederOut(){
