@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Pivot extends SubsystemBase {
     
-    public static TalonFX PivotR = new TalonFX(60, "rio");
-    public static TalonFX PivotL = new TalonFX(6, "rio");
+    public static TalonFX PivotR = new TalonFX(44, "rio");
+    public static TalonFX PivotL = new TalonFX(41, "rio");
 
     final PositionVoltage m_intakVoltage = new PositionVoltage(0).withSlot(0);
 

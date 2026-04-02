@@ -6,18 +6,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 public class Feeder {
-    public static TalonFX IntakeMotorFX = new TalonFX(10, "rio");
+    public static TalonFX IntakeMotorFX = new TalonFX(53, "rio");
 
     public Feeder(){
         
     }
 
     public void FeederON(){
-        IntakeMotorFX.set(1);
+        IntakeMotorFX.setVoltage(11);
     }
 
     public void FeederCLEAR(){
-        IntakeMotorFX.set(-1);
+        IntakeMotorFX.setVoltage(-11);
     }
 
     public void FeederSTOP(){

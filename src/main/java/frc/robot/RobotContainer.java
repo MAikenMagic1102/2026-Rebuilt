@@ -35,7 +35,6 @@ import frc.robot.subsystems.Drumm.Drumm;
 import frc.robot.subsystems.Feeder.Feeder;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Pivot.Pivot;
-import frc.robot.subsystems.Shooter.Shooter;
 import frc.robot.subsystems.util.CommandCustomXboxController;
 // import frc.robot.subsystems.vision.Vision;
 // import frc.robot.subsystems.vision.VisionIO;
@@ -71,6 +70,8 @@ import frc.robot.subsystems.util.CommandCustomXboxController;
 // import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 
 public class RobotContainer {
+
+    
     
     // private final Vision vision;
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -90,11 +91,10 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = BobotState.getM_Drivetrain();
 
-    private final AutoChooser autoChooser = new AutoChooser();
+       private final AutoChooser autoChooser = new AutoChooser();
 
     // AutoAlignComand autoAlignComand = new AutoAlignComand();
     Intake intake = new Intake();
-    Shooter shooter = new Shooter();
     Feeder tower = new Feeder();
     Pivot pivot = new Pivot();
     Drumm drumm = new Drumm();
@@ -140,9 +140,8 @@ public class RobotContainer {
         // }
   
         
-      
-        SmartDashboard.putData("Auto Chooser", autoChooser);
-        
+             SmartDashboard.putData("Auto Chooser", autoChooser);
+
 
         configureBindings();
     }
@@ -260,8 +259,8 @@ public class RobotContainer {
         joystick.povUp().onTrue(pivot.PUP()).onFalse(pivot.PSTOP());
         joystick.povDown().onTrue(pivot.PDOWN()).onFalse(pivot.PSTOP());
 
-        joystick.a().onTrue(drumm.DRUMMGO()).onFalse(drumm.DRUMMNO());
-        joystick.b().onTrue(feeder.FeederOut()).onFalse(feeder.FeederStop());
+        joystick.x().onTrue(drumm.DRUMMGO()).onFalse(drumm.DRUMMNO());
+        joystick.y().onTrue(feeder.FeederOut()).onFalse(feeder.FeederStop());
 
 
     }

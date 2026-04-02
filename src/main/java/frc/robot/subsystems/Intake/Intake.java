@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake {
 
-    public static TalonFX IntakeMotorFX = new TalonFX(54, "rio");
+    public static TalonFX IntakeMotorFX = new TalonFX(39, "rio");
 
     public Intake(){
         
