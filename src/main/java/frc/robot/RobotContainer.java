@@ -248,7 +248,7 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-                joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
         joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
@@ -256,8 +256,8 @@ public class RobotContainer {
         joystick.rightTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
         joystick.leftTrigger().onTrue(intake.OUT()).onFalse(intake.STOP());
 
-        joystick.povUp().onTrue(pivot.PUP()).onFalse(pivot.PSTOP());
-        joystick.povDown().onTrue(pivot.PDOWN()).onFalse(pivot.PSTOP());
+        joystick.leftBumper().onTrue(pivot.PUP()).onFalse(pivot.PSTOP());
+        joystick.rightBumper().onTrue(pivot.PDOWN()).onFalse(pivot.PSTOP());
 
         joystick.x().onTrue(drumm.DRUMMGO()).onFalse(drumm.DRUMMNO());
         joystick.y().onTrue(feeder.FeederOut()).onFalse(feeder.FeederStop());

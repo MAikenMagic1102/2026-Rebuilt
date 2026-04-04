@@ -18,15 +18,15 @@ public class Intake {
     }
 
     public void IntakeIN(){
-        IntakeMotorFX.set(0.7);
+        IntakeMotorFX.setVoltage(10);
     }
 
     public void IntakeOUT(){
-        IntakeMotorFX.set(-0.7);
+        IntakeMotorFX.setVoltage(-10);
     }
 
     public void IntakeSTOP(){
-        IntakeMotorFX.set(0);
+        IntakeMotorFX.setVoltage(0);
     }
 
     public Command IN(){
