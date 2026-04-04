@@ -50,24 +50,25 @@ public class Pivot extends SubsystemBase{
     }
 
     public void Pdown(){
-        PivotL.setControl(m_pivot.withPosition(2));
-        PivotR.setControl(m_pivot.withPosition(-2));
+        PivotL.set(0.3);
+        PivotR.set(0.3);
     }
 
     public void Pup(){
-        PivotL.setControl(m_pivot.withPosition(0));
-        PivotR.setControl(m_pivot.withPosition(0));
+        PivotL.set(-0.3);
+        PivotR.set(-0.3);
     }
 
         public void Pstop(){
         PivotL.set(0);
+        PivotR.set(0);
     }
 
 
 
     public Command PDOWN(){
 
-        return run(
+        return runOnce(
             () -> {
                 Pdown();
             }
@@ -77,7 +78,7 @@ public class Pivot extends SubsystemBase{
 
         public Command PUP(){
 
-        return run(
+        return runOnce(
             () -> {
                 Pup();
             }
@@ -87,7 +88,7 @@ public class Pivot extends SubsystemBase{
 
         public Command PSTOP(){
 
-        return run(
+        return runOnce(
             () -> {
                 Pstop();
             }

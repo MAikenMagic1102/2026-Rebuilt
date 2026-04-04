@@ -22,8 +22,10 @@ public class Drumm extends SubsystemBase {
     
     public static TalonFX DrummR = new TalonFX(47, "rio");
     public static TalonFX DrummR2 = new TalonFX(59, "rio");
-    public static TalonFX DrummL = new TalonFX(1, "rio");
+    public static TalonFX DrummL = new TalonFX(50, "rio");
+    public static TalonFX DrummL2 = new TalonFX(32, "rio");
     private final Follower m_follower = new Follower(DrummL.getDeviceID(), MotorAlignmentValue.Opposed);
+    private final Follower m_followerL = new Follower(DrummL.getDeviceID(), MotorAlignmentValue.Aligned);
     private final Follower m_followerR = new Follower(DrummR.getDeviceID(), MotorAlignmentValue.Aligned);
     public double VoltageClosedLoopRampPeriod = 1;
     
@@ -44,6 +46,7 @@ public class Drumm extends SubsystemBase {
         DrummL.getConfigurator().apply(drumConfig);
         DrummR.getConfigurator().apply(drumConfig);
         DrummR2.getConfigurator().apply(drumConfig);
+        DrummL2.getConfigurator().apply(drumConfig);
 
 
         
@@ -55,6 +58,7 @@ public class Drumm extends SubsystemBase {
     public void periodic() {
       DrummR.setControl(m_follower);
       DrummR2.setControl(m_followerR);
+      DrummL2.setControl(m_followerL);
       SmartDashboard.putNumber("Shooter L Speed RPM", DrummL.getVelocity().getValueAsDouble() * 60);
       SmartDashboard.putNumber("Shooter L Voltage", DrummL.getMotorVoltage().getValueAsDouble());
       SmartDashboard.putNumber("Shooter L Current (A)", DrummL.getStatorCurrent().getValueAsDouble());
@@ -69,7 +73,7 @@ public class Drumm extends SubsystemBase {
     }
 
     public void DrummOut(){
-      DrummL.setVoltage(-12);
+      DrummL.setVoltage(-6);
       // DrummR.setVoltage(12);
 
     }
@@ -81,7 +85,7 @@ public class Drumm extends SubsystemBase {
     }
 
     public void DrummClean(){
-      DrummL.setVoltage(12);
+      DrummL.setVoltage(6);
       // DrummR.setVoltage(-12);
 
     }
