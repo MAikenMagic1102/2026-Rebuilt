@@ -21,16 +21,19 @@ public class Pivot extends SubsystemBase{
     private final Follower m_follower = new Follower(PivotL.getDeviceID(), MotorAlignmentValue.Opposed);
 
     
- public Pivot(){
+    public Pivot(){
 
-    var Slot0Configs = new Slot0Configs();
+        var Slot0Configs = new Slot0Configs();
 
-    Slot0Configs.kP = 10;
-    Slot0Configs.kI = 0;
-    Slot0Configs.kD = 0;
+        Slot0Configs.kP = 10;
+        Slot0Configs.kI = 0;
+        Slot0Configs.kD = 0;
 
-    PivotR.getConfigurator().apply(Slot0Configs);
-    PivotL.getConfigurator().apply(Slot0Configs);
+        PivotR.getConfigurator().apply(Slot0Configs);
+        PivotL.getConfigurator().apply(Slot0Configs);
+
+        PivotL.setPosition(0);
+        PivotR.setPosition(0);
     
     }
 
@@ -46,7 +49,6 @@ public class Pivot extends SubsystemBase{
       SmartDashboard.putNumber("Pivot R Pos", PivotR.getPosition().getValueAsDouble());
       SmartDashboard.putNumber("Pivot R Volt", PivotR.getMotorVoltage().getValueAsDouble());
       SmartDashboard.putNumber("Pivot R Amp", PivotR.getStatorCurrent().getValueAsDouble());
-    
     }
 
     public void Pdown(){
@@ -76,7 +78,7 @@ public class Pivot extends SubsystemBase{
 
     }
 
-        public Command PUP(){
+    public Command PUP(){
 
         return runOnce(
             () -> {
@@ -86,7 +88,7 @@ public class Pivot extends SubsystemBase{
 
     }
 
-        public Command PSTOP(){
+    public Command PSTOP(){
 
         return runOnce(
             () -> {
