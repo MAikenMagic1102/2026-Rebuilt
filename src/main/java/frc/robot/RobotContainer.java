@@ -9,8 +9,6 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
-import choreo.auto.AutoChooser;
-
 // import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import java.awt.Robot;
@@ -91,8 +89,6 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = BobotState.getM_Drivetrain();
 
-       private final AutoChooser autoChooser = new AutoChooser();
-
     // AutoAlignComand autoAlignComand = new AutoAlignComand();
     Intake intake = new Intake();
     Feeder tower = new Feeder();
@@ -134,15 +130,9 @@ public class RobotContainer {
             //     vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {}, new VisionIO() {});
             //     break;
 
-               
-
-
         // }
   
         
-             SmartDashboard.putData("Auto Chooser", autoChooser);
-
-
         configureBindings();
     }
 
@@ -267,7 +257,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-   /* Run the routine selected from the auto chooser */
-        return autoChooser.selectedCommand();
+        return Commands.none();
     }
 }
