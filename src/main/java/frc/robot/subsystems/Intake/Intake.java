@@ -18,11 +18,11 @@ public class Intake {
     }
 
     public void IntakeIN(){
-        IntakeMotorFX.setVoltage(10);
+        IntakeMotorFX.setVoltage(4);
     }
 
     public void IntakeOUT(){
-        IntakeMotorFX.setVoltage(-10);
+        IntakeMotorFX.setVoltage(-4);
     }
 
     public void IntakeSTOP(){

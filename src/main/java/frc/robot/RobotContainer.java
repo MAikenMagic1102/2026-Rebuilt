@@ -261,6 +261,7 @@ public class RobotContainer {
 
         joystick.x().onTrue(drumm.DRUMMGO()).onFalse(drumm.DRUMMNO());
         joystick.y().onTrue(feeder.FeederOut()).onFalse(feeder.FeederStop());
+        joystick.b().onTrue(feeder.FeederClean()).onFalse(feeder.FeederStop());
 
 
     }

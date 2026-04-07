@@ -63,13 +63,17 @@ public class Drumm extends SubsystemBase {
       SmartDashboard.putNumber("Shooter L Voltage", DrummL.getMotorVoltage().getValueAsDouble());
       SmartDashboard.putNumber("Shooter L Current (A)", DrummL.getStatorCurrent().getValueAsDouble());
 
+      SmartDashboard.putNumber("Shooter L2 Speed RPM", DrummL2.getVelocity().getValueAsDouble() * 60);
+      SmartDashboard.putNumber("Shooter L2 Voltage", DrummL2.getMotorVoltage().getValueAsDouble());
+      SmartDashboard.putNumber("Shooter L2 Current (A)", DrummL2.getStatorCurrent().getValueAsDouble());
+
       SmartDashboard.putNumber("Shooter R Speed RPM", DrummR.getVelocity().getValueAsDouble() * 60);
       SmartDashboard.putNumber("Shooter R Voltage", DrummR.getMotorVoltage().getValueAsDouble());
       SmartDashboard.putNumber("Shooter R Current (A)", DrummR.getStatorCurrent().getValueAsDouble());
 
-      SmartDashboard.putNumber("Shooter R Speed RPM", DrummR2.getVelocity().getValueAsDouble() * 60);
-      SmartDashboard.putNumber("Shooter R Voltage", DrummR2.getMotorVoltage().getValueAsDouble());
-      SmartDashboard.putNumber("Shooter R Current (A)", DrummR2.getStatorCurrent().getValueAsDouble());
+      SmartDashboard.putNumber("Shooter R2 Speed RPM", DrummR2.getVelocity().getValueAsDouble() * 60);
+      SmartDashboard.putNumber("Shooter R2 Voltage", DrummR2.getMotorVoltage().getValueAsDouble());
+      SmartDashboard.putNumber("Shooter R2 Current (A)", DrummR2.getStatorCurrent().getValueAsDouble());
     }
 
     public void DrummOut(){
