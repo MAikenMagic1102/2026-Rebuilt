@@ -25,8 +25,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.autos.BackupShoot;
 import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.generated.TunerConstants;
+import frc.robot.lib.BLine.FollowPath;
 // import frc.robot.subsystems.AutoAlignComand;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Drumm.Drumm;
@@ -53,6 +55,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -89,6 +92,8 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = BobotState.getM_Drivetrain();
 
+    private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+
     // AutoAlignComand autoAlignComand = new AutoAlignComand();
     Intake intake = new Intake();
     Feeder tower = new Feeder();
@@ -98,11 +103,19 @@ public class RobotContainer {
 
 
     private static double metersToInches(double meters){
-    double inches = meters / 0.0254;
-    return inches;
-  }
+        double inches = meters / 0.0254;
+        return inches;
+    }
 
     public RobotContainer() {
+        // BLINE EVENT TRIGGERS HERE
+        //FollowPath.registerEventTrigger("intakeOn", intakeManager.deployIntake());
+        //FollowPath.registerEventTrigger("intakeOff", intakeManager.stopRoller());
+        FollowPath.registerEventTrigger("ShooterOn", drumm.DRUMMGO());
+        FollowPath.registerEventTrigger("FeederOn", feeder.FeederOut());
+
+        
+
         // switch (Constants.currentMode) {
         //     case REAL:
         //         // Real robot, instantiate hardware IO implementations
@@ -134,6 +147,13 @@ public class RobotContainer {
   
         
         configureBindings();
+        configureAutoChooser();
+    }
+
+    private void configureAutoChooser() {
+        autoChooser.setDefaultOption("Do Nothing", Commands.none());
+        autoChooser.addOption("BackUp Shoot", new BackupShoot(drivetrain).getAutoCommand());
+        SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
     private void configureBindings() {
@@ -257,6 +277,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return Commands.none();
+        return autoChooser.getSelected();
     }
 }

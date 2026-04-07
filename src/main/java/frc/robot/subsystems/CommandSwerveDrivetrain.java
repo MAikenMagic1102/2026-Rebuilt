@@ -19,6 +19,9 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import frc.robot.lib.BLine.FollowPath;
+import frc.robot.lib.BLine.Path;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -137,6 +140,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         )
     );
 
+    private final SwerveRequest.ApplyRobotSpeeds m_pathFollowRequest =
+        new SwerveRequest.ApplyRobotSpeeds();
+
+    private FollowPath.Builder m_pathBuilder;
+
     public double distToTgt;
     public double hoodAngle;
     public double shooterSpeed;
@@ -159,6 +167,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SwerveModuleConstants<?, ?, ?>... modules
     ) {
         super(drivetrainConstants, modules);
+        Path.setDefaultGlobalConstraints(new Path.DefaultGlobalConstraints(
+            4.58,   // maxVelocityMetersPerSec (matches kSpeedAt12Volts)
+            3.0,    // maxAccelerationMetersPerSec2 (conservative start)
+            540,    // maxVelocityDegPerSec
+            720,    // maxAccelerationDegPerSec2
+            0.03,   // endTranslationToleranceMeters
+            2.0,    // endRotationToleranceDeg
+            0.2     // intermediateHandoffRadiusMeters
+        ));
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -316,6 +333,31 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     // pull out the pose estimate
     Pose2d pose = state.Pose;
     return pose;
+    }
+
+    public ChassisSpeeds getChassisSpeeds() {
+        return getState().Speeds;
+    }
+
+    public void drive(ChassisSpeeds speeds) {
+        setControl(m_pathFollowRequest.withSpeeds(speeds));
+    }
+
+    public FollowPath.Builder getPathBuilder() {
+        if (m_pathBuilder == null) {
+            m_pathBuilder = new FollowPath.Builder(
+                this,
+                this::getPose,
+                this::getChassisSpeeds,
+                this::drive,
+                new PIDController(5.0, 0.0, 0.0),  // Translation PID
+                new PIDController(3.0, 0.0, 0.0),  // Rotation PID
+                new PIDController(2.0, 0.0, 0.0)   // Cross-track PID
+            )
+            .withDefaultShouldFlip()
+            .withPoseReset(this::resetPose);
+        }
+        return m_pathBuilder;
     }
 
             private static double metersToInches(double meters){
