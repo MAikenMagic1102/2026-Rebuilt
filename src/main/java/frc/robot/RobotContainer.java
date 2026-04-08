@@ -25,10 +25,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.autos.BackupShoot;
+// import frc.robot.autos.*;
 import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.generated.TunerConstants;
-import frc.robot.lib.BLine.FollowPath;
+// import frc.robot.lib.BLine.FollowPath;
 // import frc.robot.subsystems.AutoAlignComand;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Drumm.Drumm;
@@ -111,8 +111,9 @@ public class RobotContainer {
         // BLINE EVENT TRIGGERS HERE
         //FollowPath.registerEventTrigger("intakeOn", intakeManager.deployIntake());
         //FollowPath.registerEventTrigger("intakeOff", intakeManager.stopRoller());
-        FollowPath.registerEventTrigger("ShooterOn", drumm.DRUMMGO());
-        FollowPath.registerEventTrigger("FeederOn", feeder.FeederOut());
+        // FollowPath.registerEventTrigger("ShooterOn", drumm.DRUMMGO());
+        // FollowPath.registerEventTrigger("FeederOn", feeder.FeederOut());
+        // FollowPath.registerEventTrigger("Shoot10sec", new Shoot10sec( drumm, feeder ));
 
         
 
@@ -151,8 +152,8 @@ public class RobotContainer {
     }
 
     private void configureAutoChooser() {
-        autoChooser.setDefaultOption("Do Nothing", Commands.none());
-        autoChooser.addOption("BackUp Shoot", new BackupShoot(drivetrain).getAutoCommand());
+        // autoChooser.setDefaultOption("Do Nothing", Commands.none());
+        // autoChooser.addOption("BackUpShoot", new BackupShoot(drivetrain).getAutoCommand());
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
