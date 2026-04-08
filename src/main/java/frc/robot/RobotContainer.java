@@ -9,7 +9,7 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
-// import static frc.robot.subsystems.vision.VisionConstants.*;
+import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import java.awt.Robot;
 
@@ -30,23 +30,25 @@ import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.generated.TunerConstants;
 import frc.robot.lib.BLine.FollowPath;
 import frc.robot.lib.BLine.FollowPath;
-// import frc.robot.subsystems.AutoAlignComand;
+import frc.robot.subsystems.AutoAlignComand;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Drumm.Drumm;
 import frc.robot.subsystems.Feeder.Feeder;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Pivot.Pivot;
 import frc.robot.subsystems.util.CommandCustomXboxController;
-// import frc.robot.subsystems.vision.Vision;
-// import frc.robot.subsystems.vision.VisionIO;
-// import frc.robot.subsystems.vision.VisionIOPhotonVision;
-// import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import frc.robot.subsystems.vision.Vision;
+
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
+import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import static edu.wpi.first.units.Units.*;
-// import frc.robot.subsystems.AutoAlignComand;
+import frc.robot.subsystems.AutoAlignComand;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-// import static frc.robot.subsystems.vision.VisionConstants.*;
+import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import javax.xml.crypto.dsig.Transform;
 
@@ -66,16 +68,16 @@ import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.util.CommandCustomXboxController;
-// import frc.robot.subsystems.vision.Vision;
-// import frc.robot.subsystems.vision.VisionIO;
-// import frc.robot.subsystems.vision.VisionIOPhotonVision;
-// import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
+import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 
 public class RobotContainer {
 
     
     
-    // private final Vision vision;
+    private final Vision vision;
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
     /* Setting up bindings for necessary control of the swerve drive platform */
@@ -95,7 +97,7 @@ public class RobotContainer {
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
-    // AutoAlignComand autoAlignComand = new AutoAlignComand();
+    AutoAlignComand autoAlignComand = new AutoAlignComand();
     Intake intake = new Intake();
     Feeder tower = new Feeder();
     Pivot pivot = new Pivot();
@@ -116,34 +118,34 @@ public class RobotContainer {
 
         
 
-        // switch (Constants.currentMode) {
-        //     case REAL:
-        //         // Real robot, instantiate hardware IO implementations
-        //         vision =
-        //             new Vision(
-        //                 drivetrain::addVisionMeasurement,
-        //                 new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
-        //                 new VisionIOPhotonVision(camera1Name, robotToCameraCenter),
-        //                 new VisionIOPhotonVision(camera2Name, robotToCameraRight));
-        //         break;
+        switch (Constants.currentMode) {
+            case REAL:
+                // Real robot, instantiate hardware IO implementations
+                vision =
+                    new Vision(
+                        drivetrain::addVisionMeasurement,
+                        new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
+                        new VisionIOPhotonVision(camera1Name, robotToCameraCenter),
+                        new VisionIOPhotonVision(camera2Name, robotToCameraRight));
+                break;
 
-        //     case SIM:
-        //         // Sim robot, instantiate physics sim IO implementations
-        //         vision =
-        //             new Vision(
-        //                 drivetrain::addVisionMeasurement,
-        //                 new VisionIOPhotonVisionSim(camera0Name, robotToCameraLeft, drivetrain::getPose),
-        //                 new VisionIOPhotonVisionSim(camera1Name, robotToCameraCenter, drivetrain::getPose),
-        //                 new VisionIOPhotonVisionSim(camera2Name, robotToCameraRight, drivetrain::getPose));
-        //         break;
+            case SIM:
+                // Sim robot, instantiate physics sim IO implementations
+                vision =
+                    new Vision(
+                        drivetrain::addVisionMeasurement,
+                        new VisionIOPhotonVisionSim(camera0Name, robotToCameraLeft, drivetrain::getPose),
+                        new VisionIOPhotonVisionSim(camera1Name, robotToCameraCenter, drivetrain::getPose),
+                        new VisionIOPhotonVisionSim(camera2Name, robotToCameraRight, drivetrain::getPose));
+                break;
 
-            // default:
-            //     // Replayed robot, disable IO implementations
-            //     // (Use same number of dummy implementations as the real robot)
-            //     vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {}, new VisionIO() {});
-            //     break;
+            default:
+                // Replayed robot, disable IO implementations
+                // (Use same number of dummy implementations as the real robot)
+                vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {}, new VisionIO() {});
+                break;
 
-        // }
+        }
   
         
         configureBindings();
@@ -235,16 +237,16 @@ public class RobotContainer {
 
     
   // In command:
-        // joystick.a().whileTrue(
-        //     drivetrain.applyRequest(() ->
-        //     driveAtAngle
+        joystick.a().whileTrue(
+            drivetrain.applyRequest(() ->
+            driveAtAngle
 
-        //         .withVelocityY(0)
-        //         .withVelocityX(-joystick.getLeftY() * MaxSpeed)
-        //         .withTargetDirection(drivetrain.getAngley())
-        //         .withMaxAbsRotationalRate(MaxAngularRate))
+                .withVelocityY(0)
+                .withVelocityX(-joystick.getLeftY() * MaxSpeed)
+                .withTargetDirection(drivetrain.getAngley())
+                .withMaxAbsRotationalRate(MaxAngularRate))
 
-        // );
+        );
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
