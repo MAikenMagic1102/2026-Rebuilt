@@ -384,6 +384,8 @@ public Rotation2d getAngley(){
 
     BobotState.setGlobalPose(pose);
     BobotState.setDistanceToHub(target);
+    BobotState.setDrummDistance(robotPos.getDistance(target));
+    
 
     double targetAngle =
         Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
@@ -398,20 +400,21 @@ public Rotation2d getAngley(){
     distToTgt = robotPos.getDistance(target);
 
 
-    shooterSpeed = (0.0715 * metersToInches(distToTgt)) + 22.25;
-    System.out.println(shooterSpeed);
-
-    SmartDashboard.putNumber("HOOD ANGLE!", hoodAngle);
-    hoodAngle = 0.2083 * metersToInches(distToTgt) - 8.5208;
-
-    double hoodRaw = 0.175 - (1.475 * BobotState.getHoodAngle());
-    SmartDashboard.putNumber("Hood Raw", hoodRaw);
-
-
-    SmartDashboard.putNumber("SHOOTER SPEED!", shooterSpeed);
+    // shooterSpeed = (0.0715 * metersToInches(distToTgt)) + 22.25;
+    // System.out.println(shooterSpeed);
     
-    BobotState.setHoodAngle(hoodAngle);
-    BobotState.setShooterSpeed(shooterSpeed);
+
+    // SmartDashboard.putNumber("HOOD ANGLE!", hoodAngle);
+    // hoodAngle = 0.2083 * metersToInches(distToTgt) - 8.5208;
+
+    // double hoodRaw = 0.175 - (1.475 * BobotState.getHoodAngle());
+    // SmartDashboard.putNumber("Hood Raw", hoodRaw);
+
+
+    // SmartDashboard.putNumber("SHOOTER SPEED!", shooterSpeed);
+    
+    // BobotState.setHoodAngle(hoodAngle);
+    // BobotState.setShooterSpeed(shooterSpeed);
 
     Rotation2d angley = new Rotation2d(targetAngle);
 

@@ -18,4 +18,6 @@ public class BobotState {
     private static double hoodAngle = 0.0;
     @Getter @Setter
     private static CommandSwerveDrivetrain m_Drivetrain = TunerConstants.createDrivetrain();
+    @Getter @Setter
+    private static double drummDistance = 0.0;
 }

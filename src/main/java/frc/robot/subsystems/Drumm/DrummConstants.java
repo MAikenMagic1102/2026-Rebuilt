@@ -8,11 +8,9 @@ public class DrummConstants {
     static {
         // PLACEHOLDER VALUES — must be tuned on the real robot!
         // Format: kVoltageMap.put(distanceMeters, voltage);
-        kVoltageMap.put(2.0, 4.0);
-        kVoltageMap.put(3.0, 5.0);
-        kVoltageMap.put(4.0, 6.0);
-        kVoltageMap.put(5.0, 7.0);
-        kVoltageMap.put(6.0, 8.0);
+        kVoltageMap.put(1.889125, -6.0);
+        kVoltageMap.put(2.193925, -7.0);
+        kVoltageMap.put(2.498725, -8.0);
     }
     
    

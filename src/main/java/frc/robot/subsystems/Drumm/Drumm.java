@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.BobotState;
 
 
 
@@ -77,13 +78,13 @@ public class Drumm extends SubsystemBase {
     }
 
     public void DrummOut(){
-      DrummL.setVoltage(-12);
+      DrummL.setVoltage(-9);
       // DrummR.setVoltage(12);
 
     }
     
-    public void DrummAutoRange(double distanceMeters) {
-    double voltage = DrummConstants.kVoltageMap.get(distanceMeters);
+    public void DrummAutoRange() {
+    double voltage = DrummConstants.kVoltageMap.get(BobotState.getDrummDistance());
     DrummL.setVoltage(-voltage);  // negative because DrummOut() uses -6
     }
 
