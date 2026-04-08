@@ -372,6 +372,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         double distRed = robotPos.getDistance(Hub.redHubCenter2d);
         Translation2d target =
             distBlue < distRed ? Hub.blueHubCenter2d : Hub.redHubCenter2d;
+        SmartDashboard.putNumber("Distance to red hub", distRed);
         return target;
   }
 
