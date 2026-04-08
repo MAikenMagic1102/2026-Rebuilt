@@ -85,7 +85,7 @@ public class Drumm extends SubsystemBase {
     
     public void DrummAutoRange() {
     double voltage = DrummConstants.kVoltageMap.get(BobotState.getDrummDistance());
-    DrummL.setVoltage(-voltage);  // negative because DrummOut() uses -6
+    DrummL.setVoltage(voltage);  // positive because we used negative values in points
     }
 
 

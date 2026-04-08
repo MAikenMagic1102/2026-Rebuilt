@@ -245,7 +245,6 @@ public class RobotContainer {
                 .withVelocityX(-joystick.getLeftY() * MaxSpeed)
                 .withTargetDirection(drivetrain.getAngley())
                 .withMaxAbsRotationalRate(MaxAngularRate))
-
         );
 
         // Run SysId routines when holding back/start and X/Y.
@@ -275,7 +274,23 @@ public class RobotContainer {
         joystick.y().onTrue(feeder.FeederOut()).onFalse(feeder.FeederStop());
         joystick.b().onTrue(feeder.FeederClean()).onFalse(feeder.FeederStop());
 
+        // // Drum Vision + Autoalign
+        // joystick.a().whileTrue(
+        //     drivetrain.applyRequest(() ->
+        //     driveAtAngle
 
+        //         .withVelocityY(0)
+        //         .withVelocityX(-joystick.getLeftY() * MaxSpeed)
+        //         .withTargetDirection(drivetrain.getAngley())
+        //         .withMaxAbsRotationalRate(MaxAngularRate)).alongWith(
+        // Commands.run(() -> {
+        //     drumm.DrummAutoRange();
+        // }, drumm)
+        // )).onFalse(
+        //     Commands.runOnce(() -> {
+        //         drumm.DrummStop();
+        //     }, drumm)
+        // );
     }
 
     public Command getAutonomousCommand() {
