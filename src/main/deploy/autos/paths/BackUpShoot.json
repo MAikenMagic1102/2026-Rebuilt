@@ -1,0 +1,32 @@
+{
+  "path_elements": [
+    {
+      "type": "waypoint",
+      "translation_target": {
+        "x_meters": 3.4397580512779085,
+        "y_meters": 3.9872925782418793,
+        "intermediate_handoff_radius_meters": 0.3
+      },
+      "rotation_target": {
+        "rotation_radians": 3.141592653589793,
+        "profiled_rotation": true
+      }
+    },
+    {
+      "type": "event_trigger",
+      "t_ratio": -0.0,
+      "lib_key": "FeederOn"
+    },
+    {
+      "type": "event_trigger",
+      "t_ratio": 1.0,
+      "lib_key": "ShooterOn"
+    },
+    {
+      "type": "translation",
+      "x_meters": 1.946381246010355,
+      "y_meters": 3.9843588657003135,
+      "intermediate_handoff_radius_meters": 0.3
+    }
+  ]
+}

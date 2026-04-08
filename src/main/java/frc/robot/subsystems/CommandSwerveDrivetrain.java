@@ -343,22 +343,22 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         setControl(m_pathFollowRequest.withSpeeds(speeds));
     }
 
-    // public FollowPath.Builder getPathBuilder() {
-    //     if (m_pathBuilder == null) {
-    //         m_pathBuilder = new FollowPath.Builder(
-    //             this,
-    //             this::getPose,
-    //             this::getChassisSpeeds,
-    //             this::drive,
-    //             new PIDController(5.0, 0.0, 0.0),  // Translation PID
-    //             new PIDController(3.0, 0.0, 0.0),  // Rotation PID
-    //             new PIDController(2.0, 0.0, 0.0)   // Cross-track PID
-    //         )
-    //         .withDefaultShouldFlip()
-    //         .withPoseReset(this::resetPose);
-    //     }
-    //     return m_pathBuilder;
-    // }
+    public FollowPath.Builder getPathBuilder() {
+        if (m_pathBuilder == null) {
+            m_pathBuilder = new FollowPath.Builder(
+                this,
+                this::getPose,
+                this::getChassisSpeeds,
+                this::drive,
+                new PIDController(5.0, 0.0, 0.0),  // Translation PID
+                new PIDController(3.0, 0.0, 0.0),  // Rotation PID
+                new PIDController(2.0, 0.0, 0.0)   // Cross-track PID
+            )
+            .withDefaultShouldFlip()
+            .withPoseReset(this::resetPose);
+        }
+        return m_pathBuilder;
+    }
 
             private static double metersToInches(double meters){
     double inches = meters / 0.0254;
