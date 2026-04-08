@@ -388,12 +388,12 @@ public Rotation2d getAngley(){
         Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
 
     
-    System.out.println(DriverStation.getAlliance());
-    if (DriverStation.getAlliance().toString().contains("Red")){
-        targetAngle += Math.toRadians(90);
-    } else {
-        targetAngle -= Math.toRadians(90);
-    }
+    // System.out.println(DriverStation.getAlliance());
+    // if (DriverStation.getAlliance().toString().contains("Red")){
+    //     targetAngle += Math.toRadians(90);
+    // } else {
+    //     targetAngle -= Math.toRadians(90);
+    // }
     distToTgt = robotPos.getDistance(target);
 
 
