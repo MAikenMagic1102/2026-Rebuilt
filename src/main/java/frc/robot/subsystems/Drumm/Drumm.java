@@ -85,6 +85,7 @@ public class Drumm extends SubsystemBase {
     
     public void DrummAutoRange() {
     double voltage = DrummConstants.kVoltageMap.get(BobotState.getDrummDistance());
+    SmartDashboard.putNumber("Drumm Voltage", voltage);
     DrummL.setVoltage(voltage);  // positive because we used negative values in points
     }
 

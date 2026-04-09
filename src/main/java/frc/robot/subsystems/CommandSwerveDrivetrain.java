@@ -385,6 +385,7 @@ public Rotation2d getAngley(){
     BobotState.setGlobalPose(pose);
     BobotState.setDistanceToHub(target);
     BobotState.setDrummDistance(robotPos.getDistance(target));
+    SmartDashboard.putNumber("Drumm Distance", robotPos.getDistance(target));
     
 
     double targetAngle =
