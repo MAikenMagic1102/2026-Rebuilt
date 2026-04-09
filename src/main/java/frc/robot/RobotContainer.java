@@ -236,16 +236,7 @@ public class RobotContainer {
                 
 
     
-  // In command:
-        joystick.a().whileTrue(
-            drivetrain.applyRequest(() ->
-            driveAtAngle
 
-                .withVelocityY(0)
-                .withVelocityX(-joystick.getLeftY() * MaxSpeed)
-                .withTargetDirection(drivetrain.getAngley())
-                .withMaxAbsRotationalRate(MaxAngularRate))
-        );
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -274,7 +265,7 @@ public class RobotContainer {
         joystick.y().onTrue(feeder.FeederOut()).onFalse(feeder.FeederStop());
         joystick.b().onTrue(feeder.FeederClean()).onFalse(feeder.FeederStop());
 
-        // // Drum Vision + Autoalign
+          // Autoalign
         // joystick.a().whileTrue(
         //     drivetrain.applyRequest(() ->
         //     driveAtAngle
@@ -282,15 +273,26 @@ public class RobotContainer {
         //         .withVelocityY(0)
         //         .withVelocityX(-joystick.getLeftY() * MaxSpeed)
         //         .withTargetDirection(drivetrain.getAngley())
-        //         .withMaxAbsRotationalRate(MaxAngularRate)).alongWith(
-        // Commands.run(() -> {
-        //     drumm.DrummAutoRange();
-        // }, drumm)
-        // )).onFalse(
-        //     Commands.runOnce(() -> {
-        //         drumm.DrummStop();
-        //     }, drumm)
+        //         .withMaxAbsRotationalRate(MaxAngularRate))
         // );
+
+        // Drum Vision + Autoalign
+        joystick.a().whileTrue(
+            drivetrain.applyRequest(() ->
+            driveAtAngle
+
+                .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.5)
+                .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.5)
+                .withTargetDirection(drivetrain.getAngley())
+                .withMaxAbsRotationalRate(MaxAngularRate)).alongWith(
+        Commands.run(() -> {
+            drumm.DrummAutoRange();
+        }, drumm)
+        )).onFalse(
+            Commands.runOnce(() -> {
+                drumm.DrummStop();
+            }, drumm)
+        );
     }
 
     public Command getAutonomousCommand() {

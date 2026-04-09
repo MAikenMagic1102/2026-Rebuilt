@@ -78,7 +78,7 @@ public class Drumm extends SubsystemBase {
     }
 
     public void DrummOut(){
-      DrummL.setVoltage(-6.3);
+      DrummL.setVoltage(-9.2);
       // DrummR.setVoltage(12);
 
     }
