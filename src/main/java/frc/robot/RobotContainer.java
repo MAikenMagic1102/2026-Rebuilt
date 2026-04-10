@@ -112,7 +112,7 @@ public class RobotContainer {
 
     public RobotContainer() {
         // BLINE EVENT TRIGGERS HERE
-        FollowPath.registerEventTrigger("ShooterOn", drumm.DRUMMGO());
+        FollowPath.registerEventTrigger("ShooterOn", drumm.DRUMM4());
         FollowPath.registerEventTrigger("FeederOn", feeder.FeederOut());
         FollowPath.registerEventTrigger("Shoot10sec", new Shoot10sec( drumm, feeder ));
 
@@ -155,6 +155,9 @@ public class RobotContainer {
     private void configureAutoChooser() {
         autoChooser.setDefaultOption("Do Nothing", Commands.none());
         autoChooser.addOption("BackUpShoot", new BackupShoot(drivetrain).getAutoCommand());
+             autoChooser.addOption("BlueRight", new BlueRight(drivetrain).getAutoCommand());
+                  autoChooser.addOption("BlueLeft", new BlueLeft(drivetrain).getAutoCommand());
+        autoChooser.addOption("TEST", new TEST(drivetrain).getAutoCommand());
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
@@ -255,26 +258,19 @@ public class RobotContainer {
         joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        joystick.rightTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
-        joystick.leftTrigger().onTrue(intake.OUT()).onFalse(intake.STOP());
+       
+        joystick2.rightBumper().onTrue(drumm.DRUMMCLEAN()).onFalse(drumm.DRUMMNO());
+        joystick2.leftTrigger().onTrue(intake.OUT()).onFalse(intake.STOP());
+        joystick2.rightTrigger().onTrue(feeder.FeederClean()).onFalse(feeder.FeederStop());
 
         joystick.leftBumper().onTrue(pivot.PUP()).onFalse(pivot.PSTOP());
         joystick.rightBumper().onTrue(pivot.PDOWN()).onFalse(pivot.PSTOP());
 
-        joystick.x().onTrue(drumm.DRUMMGO()).onFalse(drumm.DRUMMNO());
-        joystick.y().onTrue(feeder.FeederOut()).onFalse(feeder.FeederStop());
-        joystick.b().onTrue(feeder.FeederClean()).onFalse(feeder.FeederStop());
-
-          // Autoalign
-        // joystick.a().whileTrue(
-        //     drivetrain.applyRequest(() ->
-        //     driveAtAngle
-
-        //         .withVelocityY(0)
-        //         .withVelocityX(-joystick.getLeftY() * MaxSpeed)
-        //         .withTargetDirection(drivetrain.getAngley())
-        //         .withMaxAbsRotationalRate(MaxAngularRate))
-        // );
+        joystick.x().onTrue(drumm.DRUMM4()).onFalse(drumm.DRUMMNO());
+        joystick.y().onTrue(drumm.DRUMM7()).onFalse(drumm.DRUMMNO());
+        joystick.b().onTrue(drumm.DRUMM9()).onFalse(drumm.DRUMMNO());
+        joystick.rightTrigger().onTrue(feeder.FeederOut()).onFalse(feeder.FeederStop());
+        joystick.leftTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
 
         // Drum Vision + Autoalign
         joystick.a().whileTrue(

@@ -77,11 +77,25 @@ public class Drumm extends SubsystemBase {
       SmartDashboard.putNumber("Shooter R2 Current (A)", DrummR2.getStatorCurrent().getValueAsDouble());
     }
 
-    public void DrummOut(){
-      DrummL.setVoltage(-9.2);
+    public void Drumm4(){
+      DrummL.setVoltage(-6.0);
       // DrummR.setVoltage(12);
 
     }
+
+      public void Drumm7(){
+      DrummL.setVoltage(-6.5);
+      // DrummR.setVoltage(12);
+
+    }
+    
+
+      public void Drumm9(){
+      DrummL.setVoltage(-7.75);
+      // DrummR.setVoltage(12);
+
+    }
+    
     
     public void DrummAutoRange() {
     double voltage = DrummConstants.kVoltageMap.get(BobotState.getDrummDistance());
@@ -102,10 +116,27 @@ public class Drumm extends SubsystemBase {
 
     }
 
-    public Command DRUMMGO(){
+    public Command DRUMM4(){
       return runOnce(
         () -> {
-            DrummOut();
+            Drumm4();
+        }
+
+      );
+    }
+
+        public Command DRUMM7(){
+      return runOnce(
+        () -> {
+            Drumm7();
+        }
+
+      );
+    }
+        public Command DRUMM9(){
+      return runOnce(
+        () -> {
+            Drumm9();
         }
 
       );

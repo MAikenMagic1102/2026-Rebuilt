@@ -18,7 +18,7 @@ import frc.robot.subsystems.Pivot.Pivot;
 import frc.robot.autos.Shoot10sec;
 
 
-public class BackupShoot {
+public class TEST {
 
     private final CommandSwerveDrivetrain drive;
 
@@ -28,41 +28,24 @@ public class BackupShoot {
           Drumm drumm = new Drumm();
             Feeder feeder = new Feeder();
 
-    public BackupShoot(CommandSwerveDrivetrain drive) {
+    public TEST(CommandSwerveDrivetrain drive) {
         this.drive = drive;
     }
     
 
-    Path path_1 = new Path("BackUpShoot");
+    Path path_2 = new Path("TEST");
     // Path path_2 = new Path("auto_1_path_2");
 
 
     public Command getAutoCommand() {
-        return Commands.sequence(
-            
-                        new InstantCommand(() -> {
-                            Pose2d startPose = path_1.getStartPose();
-                            if (Util.isRedSide()) {
-                                startPose = FlippingUtil.flipFieldPose(startPose);
-                            }
-                            drive.resetPose(startPose);
-                        }),
-                        drive.getPathBuilder().build(path_1).withName("Path 1")
-                    )
-
-                .withName("Entire sequence");
-    }
-
-    public Command TEST(){
-        
         return Commands.parallel( new InstantCommand(() -> {
-                            Pose2d startPose = path_1.getStartPose();
+                            Pose2d startPose = path_2.getStartPose();
                             if (Util.isRedSide()) {
                                 startPose = FlippingUtil.flipFieldPose(startPose);
                             }
                             drive.resetPose(startPose);
                         }),
-                        drive.getPathBuilder().build(path_1).withName("BackUpShoot"),
+                        drive.getPathBuilder().build(path_2).withName("TEST"),
 
                         new WaitUntilCommand(() -> {
                             return
@@ -82,4 +65,9 @@ public class BackupShoot {
 
 
     }
+
+
+
+        
+        
 }

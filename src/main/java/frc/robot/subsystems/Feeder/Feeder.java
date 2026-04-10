@@ -8,18 +8,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Feeder {
+public class Feeder extends SubsystemBase {
     public static TalonFX feederMotor = new TalonFX(53, "rio");
 
     public Feeder(){
         TalonFXConfiguration feederConfig = new TalonFXConfiguration();
         feederConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         feederConfig.CurrentLimits.SupplyCurrentLimit = 80;
+        feederConfig.CurrentLimits.StatorCurrentLimit = 100;
 
         feederMotor.getConfigurator().apply(feederConfig);
     }
 
-
+    @Override
     public void periodic() {
       SmartDashboard.putNumber("feeder Speed RPM", feederMotor.getVelocity().getValueAsDouble() * 60);
       SmartDashboard.putNumber("feeder Voltage", feederMotor.getMotorVoltage().getValueAsDouble());
