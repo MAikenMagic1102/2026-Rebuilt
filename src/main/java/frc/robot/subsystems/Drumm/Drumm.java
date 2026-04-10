@@ -5,11 +5,13 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -55,10 +57,13 @@ public class Drumm extends SubsystemBase {
         
         drumConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.5;
 
+
         DrummL.getConfigurator().apply(drumConfig);
         DrummR.getConfigurator().apply(drumConfig);
         DrummR2.getConfigurator().apply(drumConfig);
         DrummL2.getConfigurator().apply(drumConfig);
+
+        DrummL.setNeutralMode(NeutralModeValue.Coast);
 
 
 
@@ -109,21 +114,22 @@ public boolean isAtSpeed() {
 }
 
     public void DrummOut(){
-      DrummL.setVoltage(-6.0);
+      // DrummL.setVoltage(-6.0);
       // DrummR.setVoltage(12);
-
+      DrummSetVelocity(-10);
     }
     
 
     public void DrummStop(){
-      DrummL.setVoltage(0);
+      // DrummL.setVoltage(0);
       // DrummR.setVoltage(0);
-
+      DrummL.setControl(new NeutralOut());
     }
 
     public void DrummClean(){
-      DrummL.setVoltage(6);
+      // DrummL.setVoltage(6);
       // DrummR.setVoltage(-12);
+      DrummSetVelocity(10);
 
     }
 
