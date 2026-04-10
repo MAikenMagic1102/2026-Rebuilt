@@ -6,6 +6,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -39,10 +40,20 @@ public class Drumm extends SubsystemBase {
         // Slot0Configs.kI = 0;
         // Slot0Configs.kD = 0;
 
+
+
         TalonFXConfiguration drumConfig = new TalonFXConfiguration();
         drumConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         drumConfig.CurrentLimits.SupplyCurrentLimit = 80;
+
+        drumConfig.Slot0.kP = 0.1;   // Proportional: reacts to error
+        drumConfig.Slot0.kI = 0.0;   // Integral: usually leave at 0 for flywheels
+        drumConfig.Slot0.kD = 0.0;   // Derivative: usually leave at 0 for flywheels
+        drumConfig.Slot0.kV = 0.12;  // Velocity feedforward: the main term for flywheels
+                                    // Approximate: 12V / (max RPS of Falcon) ≈ 12/100 = 0.12
+        drumConfig.Slot0.kS = 0.1;   // Static friction feedforward
         
+        drumConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.5;
 
         DrummL.getConfigurator().apply(drumConfig);
         DrummR.getConfigurator().apply(drumConfig);
@@ -50,7 +61,7 @@ public class Drumm extends SubsystemBase {
         DrummL2.getConfigurator().apply(drumConfig);
 
 
-        
+
         
         // DrummR.setControl(new Follower(1, MotorAlignmentValue.Opposed));
     }
@@ -77,18 +88,32 @@ public class Drumm extends SubsystemBase {
       SmartDashboard.putNumber("Shooter R2 Current (A)", DrummR2.getStatorCurrent().getValueAsDouble());
     }
 
+    private final VelocityVoltage m_velocity = new VelocityVoltage(0).withSlot(0);
+private double targetRPS = 0;
+
+public void DrummSetVelocity(double rps) {
+    targetRPS = rps;
+    DrummL.setControl(m_velocity.withVelocity(rps));
+    // Note: DrummR follows DrummL via Follower, no need to set it separately
+}
+
+public void DrummAutoRange(double distanceMeters) {
+    double rps = DrummConstants.kRPSMap.get(distanceMeters);
+    DrummSetVelocity(-rps);  // negative for your shooting direction
+}
+
+public boolean isAtSpeed() {
+    if (targetRPS == 0) return false;
+    double currentRPS = DrummL.getVelocity().getValueAsDouble();
+    return Math.abs(Math.abs(targetRPS) - Math.abs(currentRPS)) < 2.0;  // ±2 RPS tolerance
+}
+
     public void DrummOut(){
-      DrummL.setVoltage(-9.2);
+      DrummL.setVoltage(-6.0);
       // DrummR.setVoltage(12);
 
     }
     
-    public void DrummAutoRange() {
-    double voltage = DrummConstants.kVoltageMap.get(BobotState.getDrummDistance());
-    SmartDashboard.putNumber("Drumm Voltage", voltage);
-    DrummL.setVoltage(voltage);  // positive because we used negative values in points
-    }
-
 
     public void DrummStop(){
       DrummL.setVoltage(0);
