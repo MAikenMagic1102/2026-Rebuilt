@@ -35,7 +35,7 @@ public class Feeder extends SubsystemBase {
     }
 
     public void FeederCLEAR(){
-        feederMotor.setVoltage(-11);
+        feederMotor.setVoltage(-12);
     }
 
     public void FeederSTOP(){

@@ -18,7 +18,7 @@ import frc.robot.subsystems.Pivot.Pivot;
 import frc.robot.autos.Shoot10sec;
 
 
-public class BlueRight {
+public class RedRight {
 
     private final CommandSwerveDrivetrain drive;
 
@@ -28,28 +28,28 @@ public class BlueRight {
           Drumm drumm = new Drumm();
             Feeder feeder = new Feeder();
 
-    public BlueRight(CommandSwerveDrivetrain drive) {
+    public RedRight(CommandSwerveDrivetrain drive) {
         this.drive = drive;
     }
     
 
-    Path BlueRight = new Path("BlueRight");
+    Path RedRight = new Path("RedRight");
     // Path path_2 = new Path("auto_1_path_2");
 
 
     public Command getAutoCommand() {
         return Commands.parallel( new InstantCommand(() -> {
-                            Pose2d startPose = BlueRight.getStartPose();
+                            Pose2d startPose = RedRight.getStartPose();
                             if (Util.isRedSide()) {
                                 startPose = FlippingUtil.flipFieldPose(startPose);
                             }
                             drive.resetPose(startPose);
                         }),
-                        drive.getPathBuilder().build(BlueRight).withName("BlueRight"),
+                        drive.getPathBuilder().build(RedRight).withName("RedRight"),
 
                         new WaitUntilCommand(() -> {
                             return
-                            drive.getPose().getX() > (3.308);
+                            drive.getPose().getX() > (13.469);
                         }).andThen(
                                 
                                 drumm.DRUMM4().alongWith(new WaitCommand(2)).andThen(feeder.FeederOut().alongWith(drumm.DRUMM4())),
