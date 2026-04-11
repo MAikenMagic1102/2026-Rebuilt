@@ -52,8 +52,8 @@ public class Pivot extends SubsystemBase{
     }
 
     public void Pdown(){
-        PivotL.set(0.3);
-        PivotR.set(0.3);
+        PivotL.set(0.25);
+        PivotR.set(0.25);
     }
 
     public void Pup(){

@@ -4,6 +4,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.RobotContainer;
@@ -57,13 +60,30 @@ public class RedLeft {
                             
                         })).andThen(
                                 
-                                drumm.DRUMM4().alongWith(new WaitCommand(2)).andThen(feeder.FeederOut().alongWith(drumm.DRUMM4())),
-                                new WaitCommand(5),
-                                drumm.DRUMMNO(),
-                                feeder.FeederStop()
-                                                    ) 
-                    )
+                        new ParallelDeadlineGroup( 
+                            new WaitCommand(10),
+                            new ParallelCommandGroup(
+                                drumm.DRUMM4(),
+                                new SequentialCommandGroup(
+                                    new WaitCommand(2),
+                                    feeder.FeederOut()
+                                                          )
+                                                    )
 
+
+                                                 ),
+
+                                                 drumm.DRUMMNO(),
+                                                 feeder.FeederStop()
+                                                 
+                            //  new ParallelDeadlineGroup(new WaitCommand(10), new ParallelCommandGroup( drumm.DRUMM4(),
+                            //      new SequentialCommandGroup( new WaitCommand(2)),
+                            //      feeder.FeederOut()))),
+                            //     drumm.DRUMMNO(),
+                            //     feeder.FeederStop()
+                     )
+                    
+                    )
                 .withName("Entire sequence");
                 
                 
