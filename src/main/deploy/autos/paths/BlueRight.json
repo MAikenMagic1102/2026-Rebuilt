@@ -20,7 +20,7 @@
     },
     {
       "type": "rotation",
-      "rotation_radians": 0.5235987755982988,
+      "rotation_radians": 3.141592653589793,
       "t_ratio": 0.5516334421459665,
       "profiled_rotation": true
     },
@@ -32,7 +32,7 @@
         "intermediate_handoff_radius_meters": 0.2
       },
       "rotation_target": {
-        "rotation_radians": 0.6981317007977318,
+        "rotation_radians": 3.839724354387525,
         "profiled_rotation": true
       }
     }
