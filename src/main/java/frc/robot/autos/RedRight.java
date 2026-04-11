@@ -56,7 +56,7 @@ public class RedRight {
                         }).andThen(
                                 
                         new ParallelDeadlineGroup( 
-                            new WaitCommand(10), 
+                            new WaitCommand(10),
                             new ParallelCommandGroup(
                                 drumm.DRUMM4(),
                                 new SequentialCommandGroup(
