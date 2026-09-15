@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Feeder extends SubsystemBase {
-    public static TalonFX feederMotor = new TalonFX(53, "rio");
+    public static TalonFX feederMotor = new TalonFX(23, "rio");
 
     public Feeder(){
         TalonFXConfiguration feederConfig = new TalonFXConfiguration();
@@ -24,7 +24,7 @@ public class Feeder extends SubsystemBase {
     public void periodic() {
       SmartDashboard.putNumber("feeder Speed RPM", feederMotor.getVelocity().getValueAsDouble() * 60);
       SmartDashboard.putNumber("feeder Voltage", feederMotor.getMotorVoltage().getValueAsDouble());
-      SmartDashboard.putNumber("feeder L Current (A)", feederMotor.getStatorCurrent().getValueAsDouble());
+      SmartDashboard.putNumber("feeder Current (A)", feederMotor.getStatorCurrent().getValueAsDouble());
 
       
     }

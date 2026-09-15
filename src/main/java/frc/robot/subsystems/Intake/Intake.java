@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
 
-    public static TalonFX  IntakeMotorFX = new TalonFX(39, "rio");
+    public static TalonFX  IntakeMotorFX = new TalonFX(2, "can2");
 
     
 

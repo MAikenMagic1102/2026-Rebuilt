@@ -15,10 +15,10 @@ import frc.robot.BobotState;
 
 public class Pivot extends SubsystemBase{
 
-    public static TalonFX PivotL = new TalonFX(41, "rio");
-    public static TalonFX PivotR = new TalonFX(44, "rio");                  
+    public static TalonFX PivotL = new TalonFX(1, "can2");
+    // public static TalonFX PivotR = new TalonFX(44, "rio");                  
     final PositionVoltage m_pivot = new PositionVoltage(0).withSlot(0);
-    private final Follower m_follower = new Follower(PivotL.getDeviceID(), MotorAlignmentValue.Opposed);
+    // private final Follower m_follower = new Follower(PivotL.getDeviceID(), MotorAlignmentValue.Opposed);
 
     
     public Pivot(){
@@ -29,11 +29,11 @@ public class Pivot extends SubsystemBase{
         Slot0Configs.kI = 0;
         Slot0Configs.kD = 0;
 
-        PivotR.getConfigurator().apply(Slot0Configs);
+        // PivotR.getConfigurator().apply(Slot0Configs);
         PivotL.getConfigurator().apply(Slot0Configs);
 
         PivotL.setPosition(0);
-        PivotR.setPosition(0);
+        // PivotR.setPosition(0);
     
     }
 
@@ -46,24 +46,24 @@ public class Pivot extends SubsystemBase{
       SmartDashboard.putNumber("Pivot L Amp", PivotL.getStatorCurrent().getValueAsDouble());
     
 
-      SmartDashboard.putNumber("Pivot R Pos", PivotR.getPosition().getValueAsDouble());
-      SmartDashboard.putNumber("Pivot R Volt", PivotR.getMotorVoltage().getValueAsDouble());
-      SmartDashboard.putNumber("Pivot R Amp", PivotR.getStatorCurrent().getValueAsDouble());
+    //   SmartDashboard.putNumber("Pivot R Pos", PivotR.getPosition().getValueAsDouble());
+    //   SmartDashboard.putNumber("Pivot R Volt", PivotR.getMotorVoltage().getValueAsDouble());
+    //   SmartDashboard.putNumber("Pivot R Amp", PivotR.getStatorCurrent().getValueAsDouble());
     }
 
     public void Pdown(){
         PivotL.set(0.25);
-        PivotR.set(0.25);
+        // PivotR.set(0.25);
     }
 
     public void Pup(){
         PivotL.set(-0.3);
-        PivotR.set(-0.3);
+        // PivotR.set(-0.3);
     }
 
         public void Pstop(){
         PivotL.set(0);
-        PivotR.set(0);
+        // PivotR.set(0);
     }
 
 

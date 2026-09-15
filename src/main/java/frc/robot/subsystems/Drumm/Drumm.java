@@ -21,10 +21,11 @@ import frc.robot.BobotState;
 
 public class Drumm extends SubsystemBase {
     
-    public static TalonFX DrummR = new TalonFX(47, "rio");
-    public static TalonFX DrummR2 = new TalonFX(59, "rio");
-    public static TalonFX DrummL = new TalonFX(50, "rio");
-    public static TalonFX DrummL2 = new TalonFX(32, "rio");
+  // Talon motor drumm right
+    public static TalonFX DrummR = new TalonFX(27, "rio");
+    public static TalonFX DrummR2 = new TalonFX(26, "rio");
+    public static TalonFX DrummL = new TalonFX(24, "rio");
+    public static TalonFX DrummL2 = new TalonFX(25, "rio");
     private final Follower m_follower = new Follower(DrummL.getDeviceID(), MotorAlignmentValue.Opposed);
     private final Follower m_followerL = new Follower(DrummL.getDeviceID(), MotorAlignmentValue.Aligned);
     private final Follower m_followerR = new Follower(DrummR.getDeviceID(), MotorAlignmentValue.Aligned);

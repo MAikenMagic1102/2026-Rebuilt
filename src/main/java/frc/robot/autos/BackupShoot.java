@@ -52,7 +52,7 @@ public class BackUpShoot {
 
                         new WaitUntilCommand(() -> {
                             return
-                            drive.getPose().getX() > (2.562);
+                            drive.getPose().getX() > (2.092);
                         }).andThen(
                                 
                         new ParallelDeadlineGroup( 
