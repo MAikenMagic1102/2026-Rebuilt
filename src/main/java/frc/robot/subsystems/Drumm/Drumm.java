@@ -41,6 +41,11 @@ public class Drumm extends SubsystemBase {
         // Slot0Configs.kD = 0;
 
         TalonFXConfiguration drumConfig = new TalonFXConfiguration();
+        drumConfig.Slot0.kS = 0.1;
+        drumConfig.Slot0.kV = 0.12; // * 2,3,4,5,6,7,8,9;
+        drumConfig.Slot0.kP = 0.11;
+        drumConfig.Slot0.kI = 0;
+        drumConfig.Slot0.kD = 0;
         drumConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         drumConfig.CurrentLimits.SupplyCurrentLimit = 80;
         
