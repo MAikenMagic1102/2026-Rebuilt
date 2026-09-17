@@ -2,8 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,8 +14,4 @@ public class BobotState {
     private static double shooterSpeed = 0.0;
     @Getter @Setter 
     private static double hoodAngle = 0.0;
-    @Getter @Setter
-    private static CommandSwerveDrivetrain m_Drivetrain = TunerConstants.createDrivetrain();
-    @Getter @Setter
-    private static double drummDistance = 0.0;
 }

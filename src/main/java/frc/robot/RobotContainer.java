@@ -8,8 +8,7 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-
-
+import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import java.awt.Robot;
 
@@ -25,27 +24,24 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.autos.*;
 import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.generated.TunerConstants;
-import frc.robot.lib.BLine.FollowPath;
-import frc.robot.subsystems.AutoAlignComand;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Drumm.Drumm;
-import frc.robot.subsystems.Feeder.Feeder;
-import frc.robot.subsystems.Floor.Floor;
+import frc.robot.subsystems.Hood.Hood;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Pivot.Pivot;
+import frc.robot.subsystems.Shooter.Shooter;
+import frc.robot.subsystems.Tower.Tower;
 import frc.robot.subsystems.util.CommandCustomXboxController;
-
-
-
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
+import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import static edu.wpi.first.units.Units.*;
-import frc.robot.subsystems.AutoAlignComand;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-
+import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import javax.xml.crypto.dsig.Transform;
 
@@ -55,7 +51,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -65,14 +60,16 @@ import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.util.CommandCustomXboxController;
-
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
+import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 
 public class RobotContainer {
+    private final Vision vision;
+    private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
-    
-    
-    private double MaxSpeed = 0.25 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond) * 0.5; // 3/4 of a rotation per second max angular velocity
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
@@ -86,46 +83,50 @@ public class RobotContainer {
     private final CommandCustomXboxController joystick = new CommandCustomXboxController(0);
     private final CommandCustomXboxController joystick2 = new CommandCustomXboxController(1);
 
-    public final CommandSwerveDrivetrain drivetrain = BobotState.getM_Drivetrain();
+    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    private final SendableChooser<Command> autoChooser = new SendableChooser<>();
-
-    AutoAlignComand autoAlignComand = new AutoAlignComand();
+    
     Intake intake = new Intake();
-    Feeder tower = new Feeder();
+    Shooter shooter = new Shooter();
+    Tower tower = new Tower();
     Pivot pivot = new Pivot();
-    Drumm drumm = new Drumm();
-    Feeder feeder = new Feeder();
-    Floor floor = new Floor();
-
+    Hood hood = new Hood();
 
     private static double metersToInches(double meters){
-        double inches = meters / 0.0254;
-        return inches;
-    }
+    double inches = meters / 0.0254;
+    return inches;
+  }
 
     public RobotContainer() {
-        // BLINE EVENT TRIGGERS HERE
-        FollowPath.registerEventTrigger("ShooterOn", drumm.DRUMM4());
-        FollowPath.registerEventTrigger("FeederOn", feeder.FeederOut());
-        FollowPath.registerEventTrigger("Shoot10sec", new Shoot10sec( drumm, feeder ));
+        switch (Constants.currentMode) {
+            case REAL:
+                // Real robot, instantiate hardware IO implementations
+                vision =
+                    new Vision(
+                        drivetrain::addVisionMeasurement,
+                        new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
+                        new VisionIOPhotonVision(camera1Name, robotToCameraCenter),
+                        new VisionIOPhotonVision(camera2Name, robotToCameraRight));
+                break;
 
-        
+            case SIM:
+                // Sim robot, instantiate physics sim IO implementations
+                vision =
+                    new Vision(
+                        drivetrain::addVisionMeasurement,
+                        new VisionIOPhotonVisionSim(camera0Name, robotToCameraLeft, drivetrain::getPose),
+                        new VisionIOPhotonVisionSim(camera1Name, robotToCameraCenter, drivetrain::getPose),
+                        new VisionIOPhotonVisionSim(camera2Name, robotToCameraRight, drivetrain::getPose));
+                break;
 
-        
+            default:
+                // Replayed robot, disable IO implementations
+                // (Use same number of dummy implementations as the real robot)
+                vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {}, new VisionIO() {});
+                break;
+        }
+
         configureBindings();
-        configureAutoChooser();
-    }
-
-    private void configureAutoChooser() {
-        autoChooser.setDefaultOption("Do Nothing", Commands.none());
-            autoChooser.addOption("BackupShoot", new BackupShoot(drivetrain).getAutoCommand());
-            autoChooser.addOption("RedRight", new BlueRight(drivetrain).getAutoCommand());
-            autoChooser.addOption("RedLeft", new BlueLeft(drivetrain).getAutoCommand());
-            autoChooser.addOption("BlueLeft", new RedLeft(drivetrain).getAutoCommand());
-            autoChooser.addOption("BlueRight", new RedRight(drivetrain).getAutoCommand());
-        // autoChooser.addOption("TEST", new TEST(drivetrain).getAutoCommand());
-        SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
     private void configureBindings() {
@@ -205,62 +206,70 @@ public class RobotContainer {
 
                 
 
-    
+         // In command:
+  // In command:
+        joystick.a().whileTrue(
+            drivetrain.applyRequest(() ->
+            driveAtAngle
 
+                .withVelocityY(0)
+                .withVelocityX(-joystick.getLeftY() * MaxSpeed)
+                .withTargetDirection(drivetrain.getAngley())
+                .withMaxAbsRotationalRate(MaxAngularRate))
+
+        );
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        // joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        // joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        // joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        // joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-
-        // Reset the field-centric heading on left bumper press.
-        joystick.start().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-
-        drivetrain.registerTelemetry(logger::telemeterize);
-
         joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
         joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-       
-        joystick2.rightBumper().onTrue(drumm.DRUMMCLEAN()).onFalse(drumm.DRUMMNO());
+        // Reset the field-centric heading on left bumper press.
+        joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-        joystick2.leftTrigger().onTrue(intake.OUT()).onFalse(intake.STOP());
-        joystick2.rightTrigger().onTrue(feeder.FeederClean()).onFalse(feeder.FeederStop());
+        drivetrain.registerTelemetry(logger::telemeterize);
 
-        joystick.leftBumper().onTrue(pivot.PUP()).onFalse(pivot.PSTOP());
-        joystick.rightBumper().onTrue(pivot.PDOWN()).onFalse(pivot.PSTOP());
+                joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        joystick.a().onTrue(floor.FloorOn()).onFalse(floor.FloorStop());
-        joystick.x().onTrue(drumm.DRUMM4()).onFalse(drumm.DRUMMNO());
-        joystick.y().onTrue(drumm.DRUMM7()).onFalse(drumm.DRUMMNO());
-        joystick.b().onTrue(drumm.DRUMM9()).onFalse(drumm.DRUMMNO());
-        joystick.rightTrigger().onTrue(feeder.FeederOut()).onFalse(feeder.FeederStop());
-        joystick.leftTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
+        joystick.rightTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
+        joystick.leftTrigger().onTrue(intake.OUT()).onFalse(intake.STOP());
 
-        // Drum Vision + Autoalign
-        // joystick.a().whileTrue(
-        //     drivetrain.applyRequest(() ->
-        //     driveAtAngle
+        joystick.povUp().onTrue(pivot.PUP()).onFalse(pivot.PSTOP());
+        joystick.povDown().onTrue(pivot.PDOWN()).onFalse(pivot.PSTOP());
 
-        //         .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
-        //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
-        //         .withTargetDirection(drivetrain.getAngley())
-        //         .withMaxAbsRotationalRate(MaxAngularRate)).alongWith(
-        // Commands.run(() -> {
-        //     drumm.DrummAutoRange();
-        // }, drumm)
-        // )).onFalse(
-        //     Commands.runOnce(() -> {
-        //         drumm.DrummStop();
-        //     }, drumm)
-        // );
+       joystick2.a().onTrue(shooter.ShooterSEE().alongWith(hood.HoodVision())).onFalse(shooter.ShooterStop().alongWith(hood.HoodNO()));
+
+
+
+        joystick2.rightTrigger().onTrue(tower.CLEAN()).onFalse(tower.TOWERSTOP());
+        joystick2.leftTrigger().onTrue(tower.UP()).onFalse(tower.TOWERSTOP());
+
+        joystick2.b().onTrue(shooter.ShooterTrench().alongWith(hood.HoodGoTrench())).onFalse(shooter.ShooterStop());
+        joystick2.y().onTrue(shooter.ShooterClimb().alongWith(hood.HoodGoClimber())).onFalse(shooter.ShooterStop());
+        joystick2.x().onTrue(shooter.ShooterHP().alongWith(hood.HoodGoHP())).onFalse(shooter.ShooterStop());
     }
 
     public Command getAutonomousCommand() {
-        return autoChooser.getSelected();
+        // Simple drive forward auton
+        final var idle = new SwerveRequest.Idle();
+        return Commands.sequence(
+            // Reset our field centric heading to match the robot
+            // facing away from our alliance station wall (0 deg).
+            drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
+            // Then slowly drive forward (away from us) for 2.8 seconds.
+            drivetrain.applyRequest(() ->
+                drive.withVelocityX(-0.5)
+                    .withVelocityY(0)
+                    .withRotationalRate(0)
+            )
+            .withTimeout(2.8),
+            // Finally idle for the rest of auton
+            drivetrain.applyRequest(() -> idle)
+        );
     }
 }
