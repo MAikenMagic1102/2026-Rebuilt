@@ -9,8 +9,12 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
-
-
+import frc.robot.subsystems.util.CommandCustomXboxController;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
+import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import static frc.robot.subsystems.vision.VisionConstants.*;
 import java.awt.Robot;
 
 import javax.xml.crypto.dsig.Transform;
@@ -97,6 +101,7 @@ public class RobotContainer {
     Drumm drumm = new Drumm();
     Feeder feeder = new Feeder();
     Floor floor = new Floor();
+    private final Vision vision;
 
 
     private static double metersToInches(double meters){
@@ -105,6 +110,33 @@ public class RobotContainer {
     }
 
     public RobotContainer() {
+                switch (Constants.currentMode) {
+            case REAL:
+                // Real robot, instantiate hardware IO implementations
+                vision =
+                    new Vision(
+                        drivetrain::addVisionMeasurement,
+                        new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
+                        new VisionIOPhotonVision(camera1Name, robotToCameraCenter),
+                        new VisionIOPhotonVision(camera2Name, robotToCameraRight));
+                break;
+
+            case SIM:
+                // Sim robot, instantiate physics sim IO implementations
+                vision =
+                    new Vision(
+                        drivetrain::addVisionMeasurement,
+                        new VisionIOPhotonVisionSim(camera0Name, robotToCameraLeft, drivetrain::getPose),
+                        new VisionIOPhotonVisionSim(camera1Name, robotToCameraCenter, drivetrain::getPose),
+                        new VisionIOPhotonVisionSim(camera2Name, robotToCameraRight, drivetrain::getPose));
+                break;
+
+            default:
+                // Replayed robot, disable IO implementations
+                // (Use same number of dummy implementations as the real robot)
+                vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {}, new VisionIO() {});
+                break;
+        }
         // BLINE EVENT TRIGGERS HERE
         FollowPath.registerEventTrigger("ShooterOn", drumm.DRUMM4());
         FollowPath.registerEventTrigger("FeederOn", feeder.FeederOut());
