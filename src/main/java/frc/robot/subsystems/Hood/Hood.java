@@ -1,5 +1,6 @@
 package frc.robot.subsystems.Hood;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -24,6 +25,7 @@ public class Hood extends SubsystemBase{
        Pos1,
        Pos2,
        Pos3,
+       Pos4,
 
     };
 
@@ -33,6 +35,10 @@ public class Hood extends SubsystemBase{
 
     boolean closedLoop = false;
 
+                public void HoodAngle(){
+        SmartDashboard.putNumber("Hood Raw", getAngleDegrees());
+
+    }
 
     public double getAngleDegrees(){
         return Units.rotationsToDegrees(hoodCANcoder.getPosition().getValueAsDouble() / HoodConstants.hoodCANcoderGearing);
