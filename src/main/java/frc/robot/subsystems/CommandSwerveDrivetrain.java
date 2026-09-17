@@ -19,6 +19,9 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import frc.robot.lib.BLine.FollowPath;
+import frc.robot.lib.BLine.Path;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -35,6 +38,22 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.BobotState;
+import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
+
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
@@ -54,6 +73,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
     /* Keep track if we've ever applied the operator perspective before or not */
     private boolean m_hasAppliedOperatorPerspective = false;
+
+
 
     /* Swerve requests to apply during SysId characterization */
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
@@ -119,6 +140,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         )
     );
 
+    private final SwerveRequest.ApplyRobotSpeeds m_pathFollowRequest =
+        new SwerveRequest.ApplyRobotSpeeds();
+
+    private FollowPath.Builder m_pathBuilder;
+
     public double distToTgt;
     public double hoodAngle;
     public double shooterSpeed;
@@ -141,10 +167,27 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SwerveModuleConstants<?, ?, ?>... modules
     ) {
         super(drivetrainConstants, modules);
+        Path.setDefaultGlobalConstraints(new Path.DefaultGlobalConstraints(
+            4.58,   // maxVelocityMetersPerSec (matches kSpeedAt12Volts)
+            3.0,    // maxAccelerationMetersPerSec2 (conservative start)
+            540,    // maxVelocityDegPerSec
+            720,    // maxAccelerationDegPerSec2
+            0.03,   // endTranslationToleranceMeters
+            2.0,    // endRotationToleranceDeg
+            0.2     // intermediateHandoffRadiusMeters
+        ));
         if (Utils.isSimulation()) {
             startSimThread();
         }
     }
+
+    
+
+
+       public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
+        return run(() -> this.setControl(requestSupplier.get()));
+    }
+
 
     /**
      * Constructs a CTRE SwerveDrivetrain using the specified constants.
@@ -208,9 +251,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      * @param request Function returning the request to apply
      * @return Command to run
      */
-    public Command applyRequest(Supplier<SwerveRequest> request) {
-        return run(() -> this.setControl(request.get()));
-    }
+    // public Command applyRequest(Supplier<SwerveRequest> request) {
+    //     return run(() -> this.setControl(request.get()));
+    // }
+    //TODO: AHHHHH IDK WHAT THIS DOES
 
     /**
      * Runs the SysId Quasistatic test in the given direction for the routine
@@ -255,6 +299,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
     }
 
+    
+
     private void startSimThread() {
         m_lastSimTime = Utils.getCurrentTimeSeconds();
 
@@ -289,6 +335,31 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     return pose;
     }
 
+    public ChassisSpeeds getChassisSpeeds() {
+        return getState().Speeds;
+    }
+
+    public void drive(ChassisSpeeds speeds) {
+        setControl(m_pathFollowRequest.withSpeeds(speeds));
+    }
+
+    public FollowPath.Builder getPathBuilder() {
+        if (m_pathBuilder == null) {
+            m_pathBuilder = new FollowPath.Builder(
+                this,
+                this::getPose,
+                this::getChassisSpeeds,
+                this::drive,
+                new PIDController(5.0, 0.0, 0.0),  // Translation PID
+                new PIDController(3.0, 0.0, 0.0),  // Rotation PID
+                new PIDController(2.0, 0.0, 0.0)   // Cross-track PID
+            )
+            .withDefaultShouldFlip()
+            .withPoseReset(this::resetPose);
+        }
+        return m_pathBuilder;
+    }
+
             private static double metersToInches(double meters){
     double inches = meters / 0.0254;
     return inches;
@@ -301,6 +372,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         double distRed = robotPos.getDistance(Hub.redHubCenter2d);
         Translation2d target =
             distBlue < distRed ? Hub.blueHubCenter2d : Hub.redHubCenter2d;
+        SmartDashboard.putNumber("Distance to red hub", distRed);
         return target;
   }
 
@@ -312,38 +384,44 @@ public Rotation2d getAngley(){
 
     BobotState.setGlobalPose(pose);
     BobotState.setDistanceToHub(target);
+    BobotState.setDrummDistance(robotPos.getDistance(target));
+    SmartDashboard.putNumber("Drumm Distance", robotPos.getDistance(target));
+    
 
     double targetAngle =
         Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
 
     
-    System.out.println(DriverStation.getAlliance());
-    if (DriverStation.getAlliance().toString().contains("Red")){
-        targetAngle += Math.toRadians(90);
-    } else {
-        targetAngle -= Math.toRadians(90);
-    }
+    // System.out.println(DriverStation.getAlliance());
+    // if (DriverStation.getAlliance().toString().contains("Red")){
+    //     targetAngle += Math.toRadians(180);
+    // } else {
+    //     targetAngle -= Math.toRadians(180);
+    // }
     distToTgt = robotPos.getDistance(target);
 
 
-    shooterSpeed = (0.0729 * metersToInches(distToTgt)) + 23;
-    System.out.println(shooterSpeed);
-
-    SmartDashboard.putNumber("HOOD ANGLE!", hoodAngle);
-    hoodAngle = 0.2083 * metersToInches(distToTgt) - 8.5208;
-
-    double hoodRaw = 0.175 - (1.475 * BobotState.getHoodAngle());
-    SmartDashboard.putNumber("Hood Raw", hoodRaw);
-
-
-    SmartDashboard.putNumber("SHOOTER SPEED!", shooterSpeed);
+    // shooterSpeed = (0.0715 * metersToInches(distToTgt)) + 22.25;
+    // System.out.println(shooterSpeed);
     
-    BobotState.setHoodAngle(hoodAngle);
-    BobotState.setShooterSpeed(shooterSpeed);
+
+    // SmartDashboard.putNumber("HOOD ANGLE!", hoodAngle);
+    // hoodAngle = 0.2083 * metersToInches(distToTgt) - 8.5208;
+
+    // double hoodRaw = 0.175 - (1.475 * BobotState.getHoodAngle());
+    // SmartDashboard.putNumber("Hood Raw", hoodRaw);
+
+
+    // SmartDashboard.putNumber("SHOOTER SPEED!", shooterSpeed);
+    
+    // BobotState.setHoodAngle(hoodAngle);
+    // BobotState.setShooterSpeed(shooterSpeed);
 
     Rotation2d angley = new Rotation2d(targetAngle);
 
     return angley;
+
+    
 }
     /**
      * Adds a vision measurement to the Kalman Filter. This will correct the odometry pose estimate

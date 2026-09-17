@@ -1,104 +1,77 @@
 package frc.robot.subsystems.Hood;
-
-import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.hardware.TalonFX;
-
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.BobotState;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
+
 public class Hood extends SubsystemBase{
-
-public static TalonFX hoodMotorFx = new TalonFX(20, "rio");
-final PositionVoltage m_hood = new PositionVoltage(0).withSlot(0);
- public Hood(){
-
-    var Slot0Configs = new Slot0Configs();
-
-    Slot0Configs.kP = 6;
-    Slot0Configs.kI = 3;
-    Slot0Configs.kD = 0;
-
-    hoodMotorFx.getConfigurator().apply(Slot0Configs);
+    public static TalonFX hood_motor = new TalonFX(0 ,"rio");
+    public static CANcoder hoodCANcoder = new CANcoder(0,"rio");
     
-    }
-
-    public void HoodClimber(){
-        hoodMotorFx.setControl(m_hood.withPosition(-0.12));
-    }
-
-    public void HoodTrench(){
-        hoodMotorFx.setControl(m_hood.withPosition(-0.12));
-    }
-
-        public void HoodHP(){
-        hoodMotorFx.setControl(m_hood.withPosition(-0.2675));
-    }
-
-            public void HoodVIS(){
-        double hoodRaw = 0.175 - (1.475 * (BobotState.getHoodAngle() / 100));
-        hoodMotorFx.setControl(m_hood.withPosition(hoodRaw));
-        SmartDashboard.putNumber("Hood Raw", hoodRaw);
-
-    }
-
-        public void HoodStop(){
-        hoodMotorFx.setControl(m_hood.withPosition(0));
-    }
+    
+    private DutyCycleOut dutyOut = new DutyCycleOut(0);
+    private PositionVoltage posVoltage = new PositionVoltage(0);
+    private MotionMagicVoltage mmVoltage = new MotionMagicVoltage(0);
 
 
-    public Command HoodGoClimber(){
+    private enum scoreTarget {
+       Home,
+       Pos1,
+       Pos2,
+       Pos3,
+       Pos4,
 
-        return run(
-            () -> {
-                HoodClimber();
-            }
-        );
+    };
+
+    private scoreTarget currentAngleTarget = scoreTarget.Home;
+
+    private double HoodTargetAngle = 0.0;
+
+    boolean closedLoop = false;
+
+                public void HoodAngle(){
+        SmartDashboard.putNumber("Hood Raw", getAngleDegrees());
 
     }
 
-        public Command HoodGoTrench(){
-
-        return run(
-            () -> {
-                HoodTrench();
-            }
-        );
-
+    public double getAngleDegrees(){
+        return Units.rotationsToDegrees(hoodCANcoder.getPosition().getValueAsDouble() / HoodConstants.hoodCANcoderGearing);
+    }
+    public boolean HoodAtScoring(){
+        return getAngleDegrees() < 15;
     }
 
-        public Command HoodGoHP(){
+  public boolean HoodAtHome(){
+    return getAngleDegrees() > 10 && getAngleDegrees() < 12;
+  }
+  
+  public boolean atGoal(){
+    return Math.abs(HoodTargetAngle - getAngleDegrees()) < HoodConstants.positionTolerence;
+  }
 
-        return run(
-            () -> {
-                HoodHP();
-            }
-        );
+  public void setOpenLoop(double demand){
+    dutyOut.withOutput(demand);
+    hood_motor.setControl(dutyOut);
+    closedLoop = false;
+  }
 
-    }
+  public void setAnglePosition(double angle){
+    HoodTargetAngle = angle;
+    posVoltage.withPosition(Units.degreesToRotations(angle));
+    hood_motor.setControl(posVoltage);
+    closedLoop = true;
+  }
 
-            public Command HoodVision(){
-
-        return run(
-            () -> {
-                HoodVIS();
-            }
-        );
-
-    }
-
-                public Command HoodNO(){
-
-        return run(
-            () -> {
-                HoodStop();
-            }
-        );
-
-    }
+  public Command setAngle(double angle){
+    return runOnce(() -> setAnglePosition(angle));
+  }
+  
 
 }
