@@ -21,7 +21,7 @@ import frc.robot.subsystems.Pivot.Pivot;
 import frc.robot.autos.Shoot10sec;
 
 
-public class BackUpShoot {
+public class BackupShoot {
 
     private final CommandSwerveDrivetrain drive;
 
@@ -31,7 +31,7 @@ public class BackUpShoot {
           Drumm drumm = new Drumm();
             Feeder feeder = new Feeder();
 
-    public BackUpShoot(CommandSwerveDrivetrain drive) {
+    public BackupShoot(CommandSwerveDrivetrain drive) {
         this.drive = drive;
     }
     
