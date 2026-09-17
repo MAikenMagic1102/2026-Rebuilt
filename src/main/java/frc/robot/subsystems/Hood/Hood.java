@@ -12,8 +12,8 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 public class Hood extends SubsystemBase{
-    public static TalonFX hood_motor = new TalonFX(0 ,"rio");
-    public static CANcoder hoodCANcoder = new CANcoder(0,"rio");
+    public static TalonFX hood_motor = new TalonFX(28 ,"rio");
+    public static CANcoder hoodCANcoder = new CANcoder(22,"rio");
     
     
     private DutyCycleOut dutyOut = new DutyCycleOut(0);

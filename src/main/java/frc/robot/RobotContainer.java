@@ -119,7 +119,7 @@ public class RobotContainer {
 
     private void configureAutoChooser() {
         autoChooser.setDefaultOption("Do Nothing", Commands.none());
-          autoChooser.addOption("BackupShoot", new BackUpShoot(drivetrain).getAutoCommand());
+          autoChooser.addOption("BackupShoot", new BackupShoot(drivetrain).getAutoCommand());
             autoChooser.addOption("RedRight", new BlueRight(drivetrain).getAutoCommand());
              autoChooser.addOption("RedLeft", new BlueLeft(drivetrain).getAutoCommand());
                 autoChooser.addOption("BlueLeft", new RedLeft(drivetrain).getAutoCommand());
