@@ -7,6 +7,7 @@ public class HoodConstants {
     public static double HoodMinAngle = Units.degreesToRadians(10.5);
     public static double hoodGearing = 6.667;
     public static double hoodCANcoderGearing = 2.5;
+    public static double HoodStartingAngle =  10.5;
 
     public static double positionTolerence = 5;
 

@@ -32,7 +32,7 @@ public class Hood extends SubsystemBase{
 
     private scoreTarget currentAngleTarget = scoreTarget.Home;
 
-    private double HoodTargetAngle = 0.0;
+    private double HoodTargetAngle = 10.5;
 
     boolean closedLoop = false;
 
