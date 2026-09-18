@@ -25,7 +25,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void IntakeIN(){
-        IntakeMotorFX.setVoltage(4);
+        IntakeMotorFX.setVoltage(6);
     }
 
     public void IntakeOUT(){
