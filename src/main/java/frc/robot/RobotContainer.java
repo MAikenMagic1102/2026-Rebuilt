@@ -9,10 +9,14 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
-
-
+import frc.robot.subsystems.util.CommandCustomXboxController;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
+import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import static frc.robot.subsystems.vision.VisionConstants.*;
 import java.awt.Robot;
-
+import frc.robot.subsystems.AutoAlignComand;
 import javax.xml.crypto.dsig.Transform;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -74,6 +78,7 @@ public class RobotContainer {
     private double MaxSpeed = 0.25 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond) * 0.5; // 3/4 of a rotation per second max angular velocity
     /* Setting up bindings for necessary control of the swerve drive platform */
+    private AutoAlignComand auoalignCommand = new AutoAlignComand();
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
@@ -97,6 +102,7 @@ public class RobotContainer {
     Drumm drumm = new Drumm();
     Feeder feeder = new Feeder();
     Floor floor = new Floor();
+    private final Vision vision;
 
 
     private static double metersToInches(double meters){
@@ -105,9 +111,34 @@ public class RobotContainer {
     }
 
     public RobotContainer() {
+                switch (Constants.currentMode) {
+            case REAL:
+                // Real robot, instantiate hardware IO implementations
+                vision =
+                    new Vision(
+                        drivetrain::addVisionMeasurement,
+                        new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
+                        new VisionIOPhotonVision(camera1Name, robotToCameraRight));
+                break;
+
+            case SIM:
+                // Sim robot, instantiate physics sim IO implementations
+                vision =
+                    new Vision(
+                        drivetrain::addVisionMeasurement,
+                        new VisionIOPhotonVisionSim(camera0Name, robotToCameraLeft, drivetrain::getPose),
+                        new VisionIOPhotonVisionSim(camera1Name, robotToCameraRight, drivetrain::getPose));
+                break;
+
+            default:
+                // Replayed robot, disable IO implementations
+                // (Use same number of dummy implementations as the real robot)
+                vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {}, new VisionIO() {});
+                break;
+        }
         // BLINE EVENT TRIGGERS HERE
         FollowPath.registerEventTrigger("ShooterOn", drumm.DRUMM4());
-        FollowPath.registerEventTrigger("FeederOn", feeder.FeederOut());
+        FollowPath.registerEventTrigger("FeederOn", feeder.FeederFeed());
         FollowPath.registerEventTrigger("Shoot10sec", new Shoot10sec( drumm, feeder ));
 
         
@@ -150,8 +181,8 @@ public class RobotContainer {
 //          @SuppressWarnings("resource")
 //     PIDController hubAimController = new PIDController(1.0, 0.0, 0.0);
 //     hubAimController.enableContinuousInput(-Math.PI, Math.PI);
-//     keyboard
-//         .button(2)
+
+//         j.button(2)
 //         .whileTrue(
 //             Commands.startRun(
 //                 () -> {
@@ -229,36 +260,68 @@ public class RobotContainer {
         joystick2.rightBumper().onTrue(drumm.DRUMMCLEAN()).onFalse(drumm.DRUMMNO());
 
         joystick2.leftTrigger().onTrue(intake.OUT()).onFalse(intake.STOP());
-        joystick2.rightTrigger().onTrue(feeder.FeederClean()).onFalse(feeder.FeederStop());
+        joystick2.rightTrigger().onTrue(feeder.FeederFeed()).onFalse(feeder.FeederStop());
 
         joystick.leftBumper().onTrue(pivot.PUP()).onFalse(pivot.PSTOP());
-        joystick.rightBumper().onTrue(pivot.PDOWN()).onFalse(pivot.PSTOP());
+        joystick.rightBumper().onTrue(pivot.PDOWN().alongWith(floor.FloorOn())).onFalse(pivot.PSTOP().alongWith(floor.FloorStop()));
 
-        joystick.a().onTrue(floor.FloorOn()).onFalse(floor.FloorStop());
-        joystick.x().onTrue(drumm.DRUMM4()).onFalse(drumm.DRUMMNO());
-        joystick.y().onTrue(drumm.DRUMM7()).onFalse(drumm.DRUMMNO());
-        joystick.b().onTrue(drumm.DRUMM9()).onFalse(drumm.DRUMMNO());
-        joystick.rightTrigger().onTrue(feeder.FeederOut()).onFalse(feeder.FeederStop());
-        joystick.leftTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
-
-        // Drum Vision + Autoalign
-        // joystick.a().whileTrue(
+        joystick.x().onTrue(drumm.DRUMM4())
+        // THIS STUFF IS VISION CODE
+        // I know its sloppy, but you have to uncomment this stuff for EACH place it appears
+        // .whileTrue(
         //     drivetrain.applyRequest(() ->
         //     driveAtAngle
-
         //         .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
         //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
         //         .withTargetDirection(drivetrain.getAngley())
-        //         .withMaxAbsRotationalRate(MaxAngularRate)).alongWith(
-        // Commands.run(() -> {
-        //     drumm.DrummAutoRange();
-        // }, drumm)
-        // )).onFalse(
-        //     Commands.runOnce(() -> {
-        //         drumm.DrummStop();
-        //     }, drumm)
-        // );
+        //         .withMaxAbsRotationalRate(MaxAngularRate)))
+        .onFalse(drumm.DRUMMNO());
+
+        joystick.y().onTrue(drumm.DRUMM7())
+        // .whileTrue(
+        //     drivetrain.applyRequest(() ->
+        //     driveAtAngle
+        //         .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
+        //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
+        //         .withTargetDirection(drivetrain.getAngley())
+        //         .withMaxAbsRotationalRate(MaxAngularRate))
+        // )
+        .onFalse(drumm.DRUMMNO());
+
+        joystick.b().onTrue(drumm.DRUMM9())
+        // .whileTrue(
+        //     drivetrain.applyRequest(() ->
+        //     driveAtAngle
+        //         .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
+        //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
+        //         .withTargetDirection(drivetrain.getAngley())
+        //         .withMaxAbsRotationalRate(MaxAngularRate))
+
+        // )
+        .onFalse(drumm.DRUMMNO());
+
+        joystick.rightTrigger().onTrue(feeder.FeederFeed()).onFalse(feeder.FeederStop());
+        joystick.leftTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
+        // joystick.a().whileTrue(Commands.runOnce(() -> autoAlignComand.AutoAlignCommand()));
     }
+        // Drum Vision + Autoalign
+    //     joystick.a().whileTrue(
+    //         drivetrain.applyRequest(() ->
+    //         driveAtAngle
+
+    //             .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
+    //             .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
+    //             .withTargetDirection(drivetrain.getAngley())
+    //             .withMaxAbsRotationalRate(MaxAngularRate)).alongWith(
+    //     Commands.run(() -> {
+    //         drumm.DrummAutoRange();
+    //     }, drumm)
+    //     )).onFalse(
+    //         Commands.runOnce(() -> {
+    //             drumm.DrummStop();
+    //         }, drumm)
+    //     );
+    // }
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();

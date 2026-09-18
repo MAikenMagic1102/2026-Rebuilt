@@ -52,7 +52,7 @@ public class TEST {
                             drive.getPose().getX() > (2.562);
                         }).andThen(
                                 
-                                drumm.DRUMM4().alongWith(new WaitCommand(2)).andThen(feeder.FeederOut().alongWith(drumm.DRUMM4())),
+                                drumm.DRUMM4().alongWith(new WaitCommand(2)).andThen(feeder.FeederFeed().alongWith(drumm.DRUMM4())),
                                 new WaitCommand(5),
                                 drumm.DRUMMNO(),
                                 feeder.FeederStop()

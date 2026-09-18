@@ -19,7 +19,7 @@ public class AutoAlignComand extends SubsystemBase {
     return inches;
   }
     public Command AutoAlignCommand(){
-        CommandSwerveDrivetrain drivetrain = BobotState.getM_Drivetrain();
+    CommandSwerveDrivetrain drivetrain = BobotState.getM_Drivetrain();
     Pose2d pose = BobotState.getGlobalPose();
     Translation2d robotPos = pose.getTranslation();
     double distBlue = robotPos.getDistance(Hub.blueHubCenter2d);
@@ -36,28 +36,28 @@ public class AutoAlignComand extends SubsystemBase {
     
     System.out.println(DriverStation.getAlliance());
     if (DriverStation.getAlliance().toString().contains("Red")){
-        targetAngle += Math.toRadians(90);
+        targetAngle += Math.toRadians(0);
     } else {
-        targetAngle -= Math.toRadians(90);
+        targetAngle -= Math.toRadians(0);
     }
     double distToTgt = robotPos.getDistance(target);
 
 
-    double shooterSpeed = (0.0729 * metersToInches(distToTgt)) + 22.5;
-    System.out.println(shooterSpeed);
-    double hoodAngle = 0.2083 * metersToInches(distToTgt) - 8.5208;
+    // double shooterSpeed = (0.0729 * metersToInches(distToTgt)) + 22.5;
+    // System.out.println(shooterSpeed);
+    // double hoodAngle = 0.2083 * metersToInches(distToTgt) - 8.5208;
 
-    SmartDashboard.putNumber("HOOD ANGLE!", hoodAngle);
+    // SmartDashboard.putNumber("HOOD ANGLE!", hoodAngle);
     
 
-    double hoodRaw = 0.175 - (1.475 * BobotState.getHoodAngle());
-    SmartDashboard.putNumber("Hood Raw", hoodRaw);
+    // double hoodRaw = 0.175 - (1.475 * BobotState.getHoodAngle());
+    // SmartDashboard.putNumber("Hood Raw", hoodRaw);
 
 
-    SmartDashboard.putNumber("SHOOTER SPEED!", shooterSpeed);
+    // SmartDashboard.putNumber("SHOOTER SPEED!", shooterSpeed);
     
-    BobotState.setHoodAngle(hoodAngle);
-    BobotState.setShooterSpeed(shooterSpeed);
+    // BobotState.setHoodAngle(hoodAngle);
+    // BobotState.setShooterSpeed(shooterSpeed);
 
     Rotation2d angley = new Rotation2d(targetAngle);
 
@@ -71,12 +71,12 @@ public class AutoAlignComand extends SubsystemBase {
   // In command:
         return runOnce(
             () -> {
-
+            
             drivetrain.applyRequest(() ->
             driveAtAngle
                 .withVelocityY(0)
                 .withVelocityX(0)
-                .withTargetDirection(drivetrain.getAngley())
+                .withTargetDirection(angley)
                 .withMaxAbsRotationalRate(0.5));
             }
         );

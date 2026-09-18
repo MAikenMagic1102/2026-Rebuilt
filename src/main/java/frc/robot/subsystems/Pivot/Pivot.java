@@ -17,7 +17,7 @@ public class Pivot extends SubsystemBase{
 
     public static TalonFX PivotL = new TalonFX(1, "can2");
     // public static TalonFX PivotR = new TalonFX(44, "rio");                  
-    final PositionVoltage m_pivot = new PositionVoltage(0).withSlot(0);
+    // final PositionVoltage m_pivot = new PositionVoltage(0).withSlot(0);
     // private final Follower m_follower = new Follower(PivotL.getDeviceID(), MotorAlignmentValue.Opposed);
 
     
@@ -52,12 +52,12 @@ public class Pivot extends SubsystemBase{
     }
 
     public void Pdown(){
-        PivotL.set(0.25);
+        PivotL.setVoltage(12);
         // PivotR.set(0.25);
     }
 
     public void Pup(){
-        PivotL.set(-0.3);
+        PivotL.set(-12);
         // PivotR.set(-0.3);
     }
 

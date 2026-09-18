@@ -61,7 +61,7 @@ public class BackupShoot {
                                 drumm.DRUMM4(),
                                 new SequentialCommandGroup(
                                     new WaitCommand(2),
-                                    feeder.FeederOut()
+                                    feeder.FeederFeed()
                                                           )
                                                     )
 
@@ -73,7 +73,7 @@ public class BackupShoot {
                                                  
                             //  new ParallelDeadlineGroup(new WaitCommand(10), new ParallelCommandGroup( drumm.DRUMM4(),
                             //      new SequentialCommandGroup( new WaitCommand(2)),
-                            //      feeder.FeederOut()))),
+                            //      feeder.FeederFeed()))),
                             //     drumm.DRUMMNO(),
                             //     feeder.FeederStop()
                      )
