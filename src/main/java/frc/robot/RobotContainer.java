@@ -75,7 +75,7 @@ public class RobotContainer {
 
     
     
-    private double MaxSpeed = 0.25 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond) * 0.5; // 3/4 of a rotation per second max angular velocity
     /* Setting up bindings for necessary control of the swerve drive platform */
     private AutoAlignComand auoalignCommand = new AutoAlignComand();
@@ -259,11 +259,11 @@ public class RobotContainer {
        
         joystick2.rightBumper().onTrue(drumm.DRUMMCLEAN()).onFalse(drumm.DRUMMNO());
 
-        joystick2.leftTrigger().onTrue(intake.OUT()).onFalse(intake.STOP());
-        joystick2.rightTrigger().onTrue(feeder.FeederFeed()).onFalse(feeder.FeederStop());
+        joystick.leftTrigger().onTrue(intake.OUT()).onFalse(intake.STOP());
+        joystick.rightTrigger().onTrue(feeder.FeederFeed().alongWith(floor.FloorOn())).onFalse(feeder.FeederStop().alongWith(floor.FloorStop()));
 
         joystick.leftBumper().onTrue(pivot.PUP()).onFalse(pivot.PSTOP());
-        joystick.rightBumper().onTrue(pivot.PDOWN().alongWith(floor.FloorOn())).onFalse(pivot.PSTOP().alongWith(floor.FloorStop()));
+        joystick.rightBumper().onTrue(pivot.PDOWN()).onFalse(pivot.PSTOP());
 
         joystick.x().onTrue(drumm.DRUMM4())
         // THIS STUFF IS VISION CODE
