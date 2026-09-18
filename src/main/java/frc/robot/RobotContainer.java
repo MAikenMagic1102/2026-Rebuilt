@@ -138,7 +138,7 @@ public class RobotContainer {
         }
         // BLINE EVENT TRIGGERS HERE
         FollowPath.registerEventTrigger("ShooterOn", drumm.DRUMM4());
-        FollowPath.registerEventTrigger("FeederOn", feeder.FeederOut());
+        FollowPath.registerEventTrigger("FeederOn", feeder.FeederFeed());
         FollowPath.registerEventTrigger("Shoot10sec", new Shoot10sec( drumm, feeder ));
 
         
@@ -260,41 +260,47 @@ public class RobotContainer {
         joystick2.rightBumper().onTrue(drumm.DRUMMCLEAN()).onFalse(drumm.DRUMMNO());
 
         joystick2.leftTrigger().onTrue(intake.OUT()).onFalse(intake.STOP());
-        joystick2.rightTrigger().onTrue(feeder.FeederClean()).onFalse(feeder.FeederStop());
+        joystick2.rightTrigger().onTrue(feeder.FeederFeed()).onFalse(feeder.FeederStop());
 
         joystick.leftBumper().onTrue(pivot.PUP()).onFalse(pivot.PSTOP());
-        joystick.rightBumper().onTrue(pivot.PDOWN()).onFalse(pivot.PSTOP());
+        joystick.rightBumper().onTrue(pivot.PDOWN().alongWith(floor.FloorOn())).onFalse(pivot.PSTOP().alongWith(floor.FloorStop()));
 
-        // joystick.a().onTrue(floor.FloorOn()).onFalse(floor.FloorStop());
-        joystick.x().onTrue(drumm.DRUMM4()).whileTrue(
-            drivetrain.applyRequest(() ->
-            driveAtAngle
-                .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
-                .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
-                .withTargetDirection(drivetrain.getAngley())
-                .withMaxAbsRotationalRate(MaxAngularRate))
-        ).onFalse(drumm.DRUMMNO());
+        joystick.x().onTrue(drumm.DRUMM4())
+        // THIS STUFF IS VISION CODE
+        // I know its sloppy, but you have to uncomment this stuff for EACH place it appears
+        // .whileTrue(
+        //     drivetrain.applyRequest(() ->
+        //     driveAtAngle
+        //         .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
+        //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
+        //         .withTargetDirection(drivetrain.getAngley())
+        //         .withMaxAbsRotationalRate(MaxAngularRate)))
+        .onFalse(drumm.DRUMMNO());
 
-        joystick.y().onTrue(drumm.DRUMM7()).whileTrue(
-            drivetrain.applyRequest(() ->
-            driveAtAngle
-                .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
-                .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
-                .withTargetDirection(drivetrain.getAngley())
-                .withMaxAbsRotationalRate(MaxAngularRate))
-        ).onFalse(drumm.DRUMMNO());
+        joystick.y().onTrue(drumm.DRUMM7())
+        // .whileTrue(
+        //     drivetrain.applyRequest(() ->
+        //     driveAtAngle
+        //         .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
+        //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
+        //         .withTargetDirection(drivetrain.getAngley())
+        //         .withMaxAbsRotationalRate(MaxAngularRate))
+        // )
+        .onFalse(drumm.DRUMMNO());
 
-        joystick.b().onTrue(drumm.DRUMM9()).whileTrue(
-            drivetrain.applyRequest(() ->
-            driveAtAngle
-                .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
-                .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
-                .withTargetDirection(drivetrain.getAngley())
-                .withMaxAbsRotationalRate(MaxAngularRate))
+        joystick.b().onTrue(drumm.DRUMM9())
+        // .whileTrue(
+        //     drivetrain.applyRequest(() ->
+        //     driveAtAngle
+        //         .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
+        //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
+        //         .withTargetDirection(drivetrain.getAngley())
+        //         .withMaxAbsRotationalRate(MaxAngularRate))
 
-        ).onFalse(drumm.DRUMMNO());
+        // )
+        .onFalse(drumm.DRUMMNO());
 
-        joystick.rightTrigger().onTrue(feeder.FeederOut()).onFalse(feeder.FeederStop());
+        joystick.rightTrigger().onTrue(feeder.FeederFeed()).onFalse(feeder.FeederStop());
         joystick.leftTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
         // joystick.a().whileTrue(Commands.runOnce(() -> autoAlignComand.AutoAlignCommand()));
     }

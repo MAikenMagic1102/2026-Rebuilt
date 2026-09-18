@@ -28,7 +28,7 @@ public class Shoot10sec extends SequentialCommandGroup {
       
     // drum.DRUMM4()
 
-    // new WaitCommand(5).andThen(feed.FeederOut()),
+    // new WaitCommand(5).andThen(feed.FeederFeed()),
 
     // new WaitCommand(10),
 
@@ -37,7 +37,7 @@ public class Shoot10sec extends SequentialCommandGroup {
 
 
       // new WaitCommand(10).alongWith(drum.DRUMM4()),
-      // feed.FeederOut().alongWith(drum.DRUMM4()),
+      // feed.FeederFeed().alongWith(drum.DRUMM4()),
       // new WaitCommand(10),
       // drum.DRUMMNO(),
       // feed.FeederStop()
