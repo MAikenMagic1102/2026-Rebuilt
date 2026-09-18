@@ -78,7 +78,7 @@ public class RobotContainer {
     private double MaxSpeed = 0.25 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond) * 0.5; // 3/4 of a rotation per second max angular velocity
     /* Setting up bindings for necessary control of the swerve drive platform */
-    private AutoAlignComand autoAlignCommand = new AutoAlignComand();
+    private AutoAlignComand auoalignCommand = new AutoAlignComand();
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
@@ -266,30 +266,56 @@ public class RobotContainer {
         joystick.rightBumper().onTrue(pivot.PDOWN()).onFalse(pivot.PSTOP());
 
         // joystick.a().onTrue(floor.FloorOn()).onFalse(floor.FloorStop());
-        // joystick.a().whileTrue(autoAlignComand.AutoAlignCommand());
-        joystick.x().onTrue(drumm.DRUMM4()).onFalse(drumm.DRUMMNO());
-        joystick.y().onTrue(drumm.DRUMM7()).onFalse(drumm.DRUMMNO());
-        joystick.b().onTrue(drumm.DRUMM9()).onFalse(drumm.DRUMMNO());
-        joystick.rightTrigger().onTrue(feeder.FeederOut()).onFalse(feeder.FeederStop());
-        joystick.leftTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
-    // }
-        // Drum Vision + Autoalign
-        joystick.a().whileTrue(
+        joystick.x().onTrue(drumm.DRUMM4()).whileTrue(
             drivetrain.applyRequest(() ->
             driveAtAngle
                 .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
                 .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
                 .withTargetDirection(drivetrain.getAngley())
-                .withMaxAbsRotationalRate(MaxAngularRate)).alongWith(
-        Commands.run(() -> {
-            // drumm.DrummAutoRange();
-        }, drumm)
-        )).onFalse(
-            Commands.runOnce(() -> {
-                drumm.DrummStop();
-            }, drumm)
-        );
+                .withMaxAbsRotationalRate(MaxAngularRate))
+        ).onFalse(drumm.DRUMMNO());
+
+        joystick.y().onTrue(drumm.DRUMM7()).whileTrue(
+            drivetrain.applyRequest(() ->
+            driveAtAngle
+                .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
+                .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
+                .withTargetDirection(drivetrain.getAngley())
+                .withMaxAbsRotationalRate(MaxAngularRate))
+        ).onFalse(drumm.DRUMMNO());
+
+        joystick.b().onTrue(drumm.DRUMM9()).whileTrue(
+            drivetrain.applyRequest(() ->
+            driveAtAngle
+                .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
+                .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
+                .withTargetDirection(drivetrain.getAngley())
+                .withMaxAbsRotationalRate(MaxAngularRate))
+
+        ).onFalse(drumm.DRUMMNO());
+
+        joystick.rightTrigger().onTrue(feeder.FeederOut()).onFalse(feeder.FeederStop());
+        joystick.leftTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
+        // joystick.a().whileTrue(Commands.runOnce(() -> autoAlignComand.AutoAlignCommand()));
     }
+        // Drum Vision + Autoalign
+    //     joystick.a().whileTrue(
+    //         drivetrain.applyRequest(() ->
+    //         driveAtAngle
+
+    //             .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
+    //             .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
+    //             .withTargetDirection(drivetrain.getAngley())
+    //             .withMaxAbsRotationalRate(MaxAngularRate)).alongWith(
+    //     Commands.run(() -> {
+    //         drumm.DrummAutoRange();
+    //     }, drumm)
+    //     )).onFalse(
+    //         Commands.runOnce(() -> {
+    //             drumm.DrummStop();
+    //         }, drumm)
+    //     );
+    // }
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();

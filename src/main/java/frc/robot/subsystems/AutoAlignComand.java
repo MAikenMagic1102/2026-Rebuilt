@@ -19,7 +19,7 @@ public class AutoAlignComand extends SubsystemBase {
     return inches;
   }
     public Command AutoAlignCommand(){
-        CommandSwerveDrivetrain drivetrain = BobotState.getM_Drivetrain();
+    CommandSwerveDrivetrain drivetrain = BobotState.getM_Drivetrain();
     Pose2d pose = BobotState.getGlobalPose();
     Translation2d robotPos = pose.getTranslation();
     double distBlue = robotPos.getDistance(Hub.blueHubCenter2d);
@@ -71,7 +71,7 @@ public class AutoAlignComand extends SubsystemBase {
   // In command:
         return runOnce(
             () -> {
-
+            
             drivetrain.applyRequest(() ->
             driveAtAngle
                 .withVelocityY(0)
