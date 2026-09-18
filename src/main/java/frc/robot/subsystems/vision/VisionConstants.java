@@ -22,9 +22,8 @@ public class VisionConstants {
       AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
   // Camera names, must match names configured on coprocessor
-  public static String camera0Name = "cameraLeftWide";
-  public static String camera1Name = "cameraCenterNarrow";
-  public static String camera2Name = "cameraRightWide";
+  public static String camera0Name = "LeftCamera";
+  public static String camera1Name = "RightCamera";
 
   private static double inchesToMeters(double inches){
     double meters = inches * 0.0254;
@@ -42,14 +41,12 @@ public class VisionConstants {
 //       new Transform3d(0.0, 0.0, 0.0, new Rotation3d(0.0, 0.0, -Math.PI));
  
   public static Transform3d robotToCameraLeft =
-      new Transform3d(inchesToMeters(1.5 + 3.25), inchesToMeters(-1.5), inchesToMeters(16 + 5.75), 
-      new Rotation3d(0.0, 0, Units.degreesToRadians(90 + 60)));
-  public static Transform3d robotToCameraCenter =
-      new Transform3d(inchesToMeters(1.5), inchesToMeters(-1.5 + 2.75), inchesToMeters(16 + 6.5),
-      (new Rotation3d(0.0, 0, Units.degreesToRadians(90))));
-  public static Transform3d robotToCameraRight = 
-      new Transform3d(inchesToMeters(-1.5 - 3.25), inchesToMeters(-1.5), inchesToMeters(16 + 5.75),
-      new Rotation3d(0.0, 0, Units.degreesToRadians(90 - 60)));
+      new Transform3d(inchesToMeters(16.484 - 1.5), inchesToMeters(-9.427), inchesToMeters(10.619), 
+      new Rotation3d(0.0, Units.degreesToRadians(115), Units.degreesToRadians(180 - 10)));
+  public static Transform3d robotToCameraRight =
+      new Transform3d(inchesToMeters(-15.356 + 1.5), inchesToMeters(11.523), inchesToMeters(10.619),
+      (new Rotation3d(0.0, Units.degreesToRadians(115), Units.degreesToRadians(180 + 10))));
+
 
   // Basic filtering thresholds
   public static double maxAmbiguity = 0.3;
@@ -66,7 +63,6 @@ public class VisionConstants {
       new double[] {
         1.0, // Camera 0
         1.0, // Camera 1
-        1.0 // Camera 3
       };
 
   // Multipliers to apply for MegaTag 2 observations
