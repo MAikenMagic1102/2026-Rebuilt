@@ -10,11 +10,11 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import frc.robot.subsystems.util.CommandCustomXboxController;
-import frc.robot.subsystems.vision.Vision;
-import frc.robot.subsystems.vision.VisionIO;
-import frc.robot.subsystems.vision.VisionIOPhotonVision;
-import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
-import static frc.robot.subsystems.vision.VisionConstants.*;
+// import frc.robot.subsystems.vision.Vision;
+// import frc.robot.subsystems.vision.VisionIO;
+// import frc.robot.subsystems.vision.VisionIOPhotonVision;
+// import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+// import static frc.robot.subsystems.vision.VisionConstants.*;
 import java.awt.Robot;
 import frc.robot.subsystems.AutoAlignComand;
 import javax.xml.crypto.dsig.Transform;
@@ -38,6 +38,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Drumm.Drumm;
 import frc.robot.subsystems.Feeder.Feeder;
 import frc.robot.subsystems.Floor.Floor;
+import frc.robot.subsystems.Hood.Hood;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Pivot.Pivot;
 import frc.robot.subsystems.util.CommandCustomXboxController;
@@ -102,7 +103,8 @@ public class RobotContainer {
     Drumm drumm = new Drumm();
     Feeder feeder = new Feeder();
     Floor floor = new Floor();
-    private final Vision vision;
+    Hood hood =  new Hood();
+    //private final Vision vision;
 
 
     private static double metersToInches(double meters){
@@ -111,31 +113,31 @@ public class RobotContainer {
     }
 
     public RobotContainer() {
-                switch (Constants.currentMode) {
-            case REAL:
-                // Real robot, instantiate hardware IO implementations
-                vision =
-                    new Vision(
-                        drivetrain::addVisionMeasurement,
-                        new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
-                        new VisionIOPhotonVision(camera1Name, robotToCameraRight));
-                break;
+        //         switch (Constants.currentMode) {
+        //     case REAL:
+        //         // Real robot, instantiate hardware IO implementations
+        //         vision =
+        //             new Vision(
+        //                 drivetrain::addVisionMeasurement,
+        //                 new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
+        //                 new VisionIOPhotonVision(camera1Name, robotToCameraRight));
+        //         break;
 
-            case SIM:
-                // Sim robot, instantiate physics sim IO implementations
-                vision =
-                    new Vision(
-                        drivetrain::addVisionMeasurement,
-                        new VisionIOPhotonVisionSim(camera0Name, robotToCameraLeft, drivetrain::getPose),
-                        new VisionIOPhotonVisionSim(camera1Name, robotToCameraRight, drivetrain::getPose));
-                break;
+        //     case SIM:
+        //         // Sim robot, instantiate physics sim IO implementations
+        //         vision =
+        //             new Vision(
+        //                 drivetrain::addVisionMeasurement,
+        //                 new VisionIOPhotonVisionSim(camera0Name, robotToCameraLeft, drivetrain::getPose),
+        //                 new VisionIOPhotonVisionSim(camera1Name, robotToCameraRight, drivetrain::getPose));
+        //         break;
 
-            default:
-                // Replayed robot, disable IO implementations
-                // (Use same number of dummy implementations as the real robot)
-                vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {}, new VisionIO() {});
-                break;
-        }
+        //     default:
+        //         // Replayed robot, disable IO implementations
+        //         // (Use same number of dummy implementations as the real robot)
+        //         vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {}, new VisionIO() {});
+        //         break;
+        // }
         // BLINE EVENT TRIGGERS HERE
         FollowPath.registerEventTrigger("ShooterOn", drumm.DRUMM4());
         FollowPath.registerEventTrigger("FeederOn", feeder.FeederFeed());
@@ -264,6 +266,10 @@ public class RobotContainer {
 
         joystick.leftBumper().onTrue(pivot.PUP()).onFalse(pivot.PSTOP());
         joystick.rightBumper().onTrue(pivot.PDOWN()).onFalse(pivot.PSTOP());
+
+        joystick.povUp().onTrue(hood.Pos3());
+        joystick.povRight().onTrue(hood.Pos2());
+        joystick.povDown().onTrue(hood.HOMEPOS());
 
         joystick.x().onTrue(drumm.DRUMM4())
         // THIS STUFF IS VISION CODE

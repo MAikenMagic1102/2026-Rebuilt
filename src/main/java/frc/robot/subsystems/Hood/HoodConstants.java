@@ -9,8 +9,11 @@ public class HoodConstants {
     public static double hoodCANcoderGearing = 2.5;
     public static double HoodStartingAngle =  10.5;
 
+    public static double HoodTotalGearRatio = 4.21;
+
     public static double positionTolerence = 5;
 
+    public static double HoodHome = 10.5;
     public static double HoodPos1 = 20.5;
     public static double HoodPos2 = 30.5;
     public static double HoodPos3 = 40.5;
