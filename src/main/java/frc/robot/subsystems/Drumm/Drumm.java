@@ -41,11 +41,11 @@ public class Drumm extends SubsystemBase {
         // Slot0Configs.kD = 0;
 
         TalonFXConfiguration drumConfig = new TalonFXConfiguration();
-        drumConfig.Slot0.kS = 0.1;
-        drumConfig.Slot0.kV = 0.12; // * 2,3,4,5,6,7,8,9;
-        drumConfig.Slot0.kP = 0.11;
-        drumConfig.Slot0.kI = 0;
-        drumConfig.Slot0.kD = 0;
+        // drumConfig.Slot0.kS = 0.1;
+        // drumConfig.Slot0.kV = 0.12; // * 2,3,4,5,6,7,8,9;
+        // drumConfig.Slot0.kP = 0.11;
+        // drumConfig.Slot0.kI = 0;
+        // drumConfig.Slot0.kD = 0;
         drumConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         drumConfig.CurrentLimits.SupplyCurrentLimit = 80;
         
@@ -82,73 +82,63 @@ public class Drumm extends SubsystemBase {
       SmartDashboard.putNumber("Shooter R2 Voltage", DrummR2.getMotorVoltage().getValueAsDouble());
       SmartDashboard.putNumber("Shooter R2 Current (A)", DrummR2.getStatorCurrent().getValueAsDouble());
     }
+    
+    public void DrummStop(){
+      DrummL.setVoltage(0);
+      // DrummR.setVoltage(0);
+    }
 
-    public void Drumm4(){
+    public void DrummClean(){
+      DrummL.setVoltage(6);
+      // DrummR.setVoltage(6);
+    }
+
+    public void DrummNear(){
       DrummL.setVoltage(-4.0);
       // DrummR.setVoltage(12);
-
     }
 
-      public void Drumm7(){
+      public void DrummFar(){
       DrummL.setVoltage(-5.0);
       // DrummR.setVoltage(12);
-
     }
     
 
-      public void Drumm9(){
+      public void DrummShuttle(){
       DrummL.setVoltage(-9.0);
       // DrummR.setVoltage(12);
-
     }
-    
     
     // public void DrummAutoRange() {
     // double voltage = DrummConstants.kVoltageMap.get(BobotState.getDrummDistance());
     // SmartDashboard.putNumber("Drumm Voltage", voltage);
     // DrummL.setVoltage(voltage);  // positive because we used negative values in points
     // }
-
-
-    public void DrummStop(){
-      DrummL.setVoltage(0);
-      // DrummR.setVoltage(0);
-
-    }
-
-    public void DrummClean(){
-      DrummL.setVoltage(6);
-      // DrummR.setVoltage(-12);
-
-    }
-
-    public Command DRUMM4(){
+    
+    public Command DRUMMNear(){
       return runOnce(
         () -> {
-            Drumm4();
+            DrummNear();
         }
-
       );
     }
 
-        public Command DRUMM7(){
+        public Command DRUMMFar(){
       return runOnce(
         () -> {
-            Drumm7();
+            DrummFar();
         }
-
       );
     }
-        public Command DRUMM9(){
+        public Command DRUMMShuttle(){
       return runOnce(
         () -> {
-            Drumm9();
+            DrummShuttle();
         }
-
       );
     }
 
-     public Command DRUMMNO(){
+     public Command DRUMMStop(){
      return runOnce(
         () -> {
             DrummStop();
@@ -156,7 +146,7 @@ public class Drumm extends SubsystemBase {
       );
     }
 
-     public Command DRUMMCLEAN(){
+     public Command DRUMMClean(){
         return runOnce(
         () -> {
             DrummClean();

@@ -1,5 +1,7 @@
 package frc.robot.subsystems.Pivot;
 
+import static edu.wpi.first.units.Units.Volts;
+
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
@@ -15,7 +17,7 @@ import frc.robot.BobotState;
 
 public class Pivot extends SubsystemBase{
 
-    public static TalonFX PivotL = new TalonFX(1, "can2");
+    public static TalonFX Pivot = new TalonFX(1, "can2");
     // public static TalonFX PivotR = new TalonFX(44, "rio");                  
     // final PositionVoltage m_pivot = new PositionVoltage(0).withSlot(0);
     // private final Follower m_follower = new Follower(PivotL.getDeviceID(), MotorAlignmentValue.Opposed);
@@ -30,9 +32,9 @@ public class Pivot extends SubsystemBase{
         Slot0Configs.kD = 0;
 
         // PivotR.getConfigurator().apply(Slot0Configs);
-        PivotL.getConfigurator().apply(Slot0Configs);
+        Pivot.getConfigurator().apply(Slot0Configs);
 
-        PivotL.setPosition(0);
+        Pivot.setPosition(0);
         // PivotR.setPosition(0);
     
     }
@@ -41,9 +43,9 @@ public class Pivot extends SubsystemBase{
     @Override
     public void periodic() {
     //PivotR.setControl(m_follower);
-      SmartDashboard.putNumber("Pivot L Pos", PivotL.getPosition().getValueAsDouble());
-      SmartDashboard.putNumber("Pivot L Volt", PivotL.getMotorVoltage().getValueAsDouble());
-      SmartDashboard.putNumber("Pivot L Amp", PivotL.getStatorCurrent().getValueAsDouble());
+      SmartDashboard.putNumber("Pivot Pos", Pivot.getPosition().getValueAsDouble());
+      SmartDashboard.putNumber("Pivot Volt", Pivot.getMotorVoltage().getValueAsDouble());
+      SmartDashboard.putNumber("Pivot Amp", Pivot.getStatorCurrent().getValueAsDouble());
     
 
     //   SmartDashboard.putNumber("Pivot R Pos", PivotR.getPosition().getValueAsDouble());
@@ -51,52 +53,45 @@ public class Pivot extends SubsystemBase{
     //   SmartDashboard.putNumber("Pivot R Amp", PivotR.getStatorCurrent().getValueAsDouble());
     }
 
-    public void Pdown(){
-        PivotL.setVoltage(12);
+    public void PIVOTDown(){
+        Pivot.setVoltage(12);
         // PivotR.set(0.25);
     }
 
-    public void Pup(){
-        PivotL.set(-12);
+    public void PIVOTUp(){
+        Pivot.setVoltage(-12);
         // PivotR.set(-0.3);
     }
 
-        public void Pstop(){
-        PivotL.set(0);
+    public void PIVOTStop(){
+        Pivot.setVoltage(0);
         // PivotR.set(0);
     }
 
 
 
-    public Command PDOWN(){
-
+    public Command PivotDown(){
         return runOnce(
             () -> {
-                Pdown();
+                PIVOTDown();
             }
         );
-
     }
 
-    public Command PUP(){
-
+    public Command PivotUp(){
         return runOnce(
             () -> {
-                Pup();
+                PIVOTUp();
             }
         );
-
     }
 
-    public Command PSTOP(){
-
+    public Command PivotStop(){
         return runOnce(
             () -> {
-                Pstop();
+                PIVOTStop();
             }
         );
-
     }
-
 
 }

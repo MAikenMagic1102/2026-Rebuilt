@@ -15,7 +15,6 @@ import frc.robot.subsystems.Drumm.Drumm;
 import frc.robot.subsystems.Feeder.Feeder;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Pivot.Pivot;
-import frc.robot.autos.Shoot10sec;
 
 
 public class TEST {
@@ -23,7 +22,6 @@ public class TEST {
     private final CommandSwerveDrivetrain drive;
 
        Intake intake = new Intake();
-        Feeder tower = new Feeder();
          Pivot pivot = new Pivot();
           Drumm drumm = new Drumm();
             Feeder feeder = new Feeder();
@@ -52,9 +50,9 @@ public class TEST {
                             drive.getPose().getX() > (2.562);
                         }).andThen(
                                 
-                                drumm.DRUMM4().alongWith(new WaitCommand(2)).andThen(feeder.FeederFeed().alongWith(drumm.DRUMM4())),
+                                drumm.DRUMMNear().alongWith(new WaitCommand(2)).andThen(feeder.FeederFeed().alongWith(drumm.DRUMMNear())),
                                 new WaitCommand(5),
-                                drumm.DRUMMNO(),
+                                drumm.DRUMMStop(),
                                 feeder.FeederStop()
                                                     ) 
                     )
