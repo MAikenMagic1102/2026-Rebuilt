@@ -94,12 +94,9 @@ public class Hood extends SubsystemBase{
 
  @Override
     public void periodic() {
-            double HOODPOS = (hoodCANcoder.getPosition().getValueAsDouble()*HoodConstants.hoodCANcoderGearing+(32/19));
-
-            
+            double HOODPOS = (hoodCANcoder.getPosition().getValueAsDouble()*HoodConstants.hoodCANcoderGearing+(32.0/19.0));
 
             SmartDashboard.putNumber("Hood angle", HOODPOS);
-
 
     }
 
@@ -114,14 +111,13 @@ public class Hood extends SubsystemBase{
         hoodMotorFx.setControl(m_hood.withPosition(-4));
     }
 
-    public Command HOMEPOS(){
+    public Command HOODNear(){
 
         return runOnce(
             () -> {
-                HoodHomePos();
+                HoodNear();
             }
         );
-
     }
 
         public Command MIDDLEPOS(){
@@ -131,7 +127,6 @@ public class Hood extends SubsystemBase{
                 MiddleHoodPos();
             }
         );
-
     }
 
         public Command MaxHOODPOS(){

@@ -29,7 +29,6 @@ public class Floor extends SubsystemBase {
       
     }
     
-
     public void FloorON(){
         floorMotor.setVoltage(-2.5);
     }

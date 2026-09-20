@@ -18,7 +18,6 @@ import frc.robot.subsystems.Drumm.Drumm;
 import frc.robot.subsystems.Feeder.Feeder;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Pivot.Pivot;
-import frc.robot.autos.Shoot10sec;
 
 
 public class RedRight {
@@ -26,7 +25,6 @@ public class RedRight {
     private final CommandSwerveDrivetrain drive;
 
        Intake intake = new Intake();
-        Feeder tower = new Feeder();
          Pivot pivot = new Pivot();
           Drumm drumm = new Drumm();
             Feeder feeder = new Feeder();
@@ -58,7 +56,7 @@ public class RedRight {
                         new ParallelDeadlineGroup( 
                             new WaitCommand(10),
                             new ParallelCommandGroup(
-                                drumm.DRUMM4(),
+                                drumm.DRUMMNear(),
                                 new SequentialCommandGroup(
                                     new WaitCommand(2),
                                     feeder.FeederFeed()
@@ -68,7 +66,7 @@ public class RedRight {
 
                                                  ),
 
-                                                 drumm.DRUMMNO(),
+                                                 drumm.DRUMMStop(),
                                                  feeder.FeederStop()
                                                  
                             //  new ParallelDeadlineGroup(new WaitCommand(10), new ParallelCommandGroup( drumm.DRUMM4(),

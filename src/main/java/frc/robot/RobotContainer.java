@@ -15,9 +15,7 @@ import frc.robot.subsystems.util.CommandCustomXboxController;
 // import frc.robot.subsystems.vision.VisionIOPhotonVision;
 // import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 // import static frc.robot.subsystems.vision.VisionConstants.*;
-import java.awt.Robot;
-import frc.robot.subsystems.AutoAlignComand;
-import javax.xml.crypto.dsig.Transform;
+import frc.robot.subsystems.AutoAlignCommand;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -38,7 +36,6 @@ import frc.robot.commands.SystemOff;
 import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.generated.TunerConstants;
 import frc.robot.lib.BLine.FollowPath;
-import frc.robot.subsystems.AutoAlignComand;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Drumm.Drumm;
 import frc.robot.subsystems.Feeder.Feeder;
@@ -46,35 +43,10 @@ import frc.robot.subsystems.Floor.Floor;
 import frc.robot.subsystems.Hood.Hood;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Pivot.Pivot;
-import frc.robot.subsystems.util.CommandCustomXboxController;
 
-
-
-import static edu.wpi.first.units.Units.*;
-import frc.robot.subsystems.AutoAlignComand;
-
-import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.swerve.SwerveRequest;
-
-
-import javax.xml.crypto.dsig.Transform;
-
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.game_util.FieldConstants.Hub;
-import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.util.CommandCustomXboxController;
 
 
 public class RobotContainer {
@@ -84,7 +56,6 @@ public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond) * 0.75; // 3/4 of a rotation per second max angular velocity
     /* Setting up bindings for necessary control of the swerve drive platform */
-    private AutoAlignComand auoalignCommand = new AutoAlignComand();
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
@@ -101,24 +72,26 @@ public class RobotContainer {
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
-    AutoAlignComand autoAlignComand = new AutoAlignComand();
     Intake intake = new Intake();
-    Feeder tower = new Feeder();
     Pivot pivot = new Pivot();
     Drumm drumm = new Drumm();
     Feeder feeder = new Feeder();
     Floor floor = new Floor();
     Hood hood =  new Hood();
+<<<<<<< HEAD
 
 
 
+=======
+    // AutoAlignCommand autoAlignCommand = new AutoAlignCommand();
+>>>>>>> 72a8f58e1b6df2a870b88bb2015f5a21d95b66c1
     //private final Vision vision;
 
 
-    private static double metersToInches(double meters){
-        double inches = meters / 0.0254;
-        return inches;
-    }
+    // private static double metersToInches(double meters){
+    //     double inches = meters / 0.0254;
+    //     return inches;
+    // }
 
     public RobotContainer() {
         //         switch (Constants.currentMode) {
@@ -147,9 +120,8 @@ public class RobotContainer {
         //         break;
         // }
         // BLINE EVENT TRIGGERS HERE
-        FollowPath.registerEventTrigger("ShooterOn", drumm.DRUMM4());
-        FollowPath.registerEventTrigger("FeederOn", feeder.FeederFeed());
-        FollowPath.registerEventTrigger("Shoot10sec", new Shoot10sec( drumm, feeder ));
+        // FollowPath.registerEventTrigger("ShooterOn", drumm.DRUMMNear());
+        // FollowPath.registerEventTrigger("FeederOn", feeder.FeederFeed());
 
         
 
@@ -161,10 +133,10 @@ public class RobotContainer {
     private void configureAutoChooser() {
         autoChooser.setDefaultOption("Do Nothing", Commands.none());
             autoChooser.addOption("BackupShoot", new BackupShoot(drivetrain).getAutoCommand());
-            autoChooser.addOption("RedRight", new BlueRight(drivetrain).getAutoCommand());
-            autoChooser.addOption("RedLeft", new BlueLeft(drivetrain).getAutoCommand());
-            autoChooser.addOption("BlueLeft", new RedLeft(drivetrain).getAutoCommand());
-            autoChooser.addOption("BlueRight", new RedRight(drivetrain).getAutoCommand());
+            autoChooser.addOption("RedRight", new RedRight(drivetrain).getAutoCommand());
+            autoChooser.addOption("RedLeft", new RedLeft(drivetrain).getAutoCommand());
+            autoChooser.addOption("BlueLeft", new BlueLeft(drivetrain).getAutoCommand());
+            autoChooser.addOption("BlueRight", new BlueRight(drivetrain).getAutoCommand());
         // autoChooser.addOption("TEST", new TEST(drivetrain).getAutoCommand());
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
@@ -240,13 +212,9 @@ public class RobotContainer {
         // double shooterSpeed = 0.2083 * metersToInches(distToTgt) - 8.5208;
 
 
-        final SwerveRequest.FieldCentricFacingAngle driveAtAngle =
-            new SwerveRequest.FieldCentricFacingAngle()
-                .withHeadingPID(5, 0, 0); // tune kP
-
-                
-
-    
+        // final SwerveRequest.FieldCentricFacingAngle driveAtAngle =
+        //     new SwerveRequest.FieldCentricFacingAngle()
+        //         .withHeadingPID(5, 0, 0); // tune kP
 
 
         // Run SysId routines when holding back/start and X/Y.
@@ -266,14 +234,17 @@ public class RobotContainer {
         joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
+<<<<<<< HEAD
        
         //joystick2.rightBumper().onTrue(drumm.DRUMMCLEAN()).onFalse(drumm.DRUMMNO());
+=======
+>>>>>>> 72a8f58e1b6df2a870b88bb2015f5a21d95b66c1
 
         joystick.leftTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
         joystick.rightBumper().onTrue(new OutTake(floor, intake)).onFalse(intake.OUT().alongWith(floor.FloorStop()));
 
-        joystick.leftBumper().onTrue(pivot.PUP()).onFalse(pivot.PSTOP());
-        joystick.rightBumper().onTrue(pivot.PDOWN()).onFalse(pivot.PSTOP());
+        joystick.leftBumper().onTrue(pivot.PivotUp()).onFalse(pivot.PivotStop());
+        joystick.rightBumper().onTrue(pivot.PivotDown()).onFalse(pivot.PivotStop());
 
         joystick.a().toggleOnTrue(new CloseShot(drumm, hood, feeder, floor));
         joystick.b().toggleOnTrue(new MidRangeShot(drumm, hood, feeder, floor));

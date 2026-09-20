@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.BobotState;
 import frc.robot.game_util.FieldConstants.Hub;
 
-public class AutoAlignComand extends SubsystemBase {
+public class AutoAlignCommand extends SubsystemBase {
 
         private static double metersToInches(double meters){
     double inches = meters / 0.0254;
