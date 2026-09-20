@@ -92,9 +92,6 @@ public class Hood extends SubsystemBase{
     
 }
 
-// 32/19 motor
-//10/25 hood positioning
-
  @Override
     public void periodic() {
             double HOODPOS = (hoodCANcoder.getPosition().getValueAsDouble()*HoodConstants.hoodCANcoderGearing+(32/19));
@@ -107,26 +104,15 @@ public class Hood extends SubsystemBase{
     }
 
     public void HoodHomePos(){
-        hoodMotorFx.setControl(m_hood.withPosition(-0.20));
+        hoodMotorFx.setControl(m_hood.withPosition(-0.30));
     }
 
-    public void HoodPos1(){
-        hoodMotorFx.setControl(m_hood.withPosition(-0.12));
+    public void MiddleHoodPos(){
+        hoodMotorFx.setControl(m_hood.withPosition(-1.5));
     }
-
-    public void HoodPos2(){
-        hoodMotorFx.setControl(m_hood.withPosition(-2));
+    public void MaxHoodPos(){
+        hoodMotorFx.setControl(m_hood.withPosition(-4));
     }
-    public void HoodPos3(){
-        hoodMotorFx.setControl(m_hood.withPosition(-4.5));
-    }
-
-   
-  
-        public void HoodStop(){
-        hoodMotorFx.setControl(m_hood.withPosition(0));
-    }
-
 
     public Command HOMEPOS(){
 
@@ -138,44 +124,23 @@ public class Hood extends SubsystemBase{
 
     }
 
-        public Command POS1(){
+        public Command MIDDLEPOS(){
 
-        return run(
+        return runOnce(
             () -> {
-                HoodPos1();
+                MiddleHoodPos();
             }
         );
 
     }
 
-        public Command Pos2(){
+        public Command MaxHOODPOS(){
 
-        return run(
+        return runOnce(
             () -> {
-                HoodPos2();
+                MaxHoodPos();
             }
         );
 
     }
-      public Command Pos3(){
-
-        return run(
-            () -> {
-                HoodPos3();
-            }
-        );
-
-    }
-    
-
-    public Command HoodNO(){
-
-        return run(
-            () -> {
-                HoodStop();
-            }
-        );
-
-    }
-
 }

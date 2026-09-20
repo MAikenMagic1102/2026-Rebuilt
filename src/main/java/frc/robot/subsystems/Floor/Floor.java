@@ -41,9 +41,7 @@ public class Floor extends SubsystemBase {
     public void FloorSTOP(){
         floorMotor.setVoltage(0);
     }
-    public void FloorIDLE(){
-        floorMotor.set(4);
-    }
+
 
     public Command FloorOut(){
        return Commands.runOnce(() -> FloorREVERSE());
@@ -53,8 +51,5 @@ public class Floor extends SubsystemBase {
     }
      public Command FloorStop(){
        return Commands.runOnce(() -> FloorSTOP());
-    }
-    public Command FloorIdle() {
-        return Commands.runOnce(() -> FloorIDLE());
     }
 }

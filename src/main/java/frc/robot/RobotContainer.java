@@ -30,6 +30,11 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.autos.*;
+import frc.robot.commands.CloseShot;
+import frc.robot.commands.MidRangeShot;
+import frc.robot.commands.OutTake;
+import frc.robot.commands.Shuttle;
+import frc.robot.commands.SystemOff;
 import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.generated.TunerConstants;
 import frc.robot.lib.BLine.FollowPath;
@@ -104,6 +109,9 @@ public class RobotContainer {
     Feeder feeder = new Feeder();
     Floor floor = new Floor();
     Hood hood =  new Hood();
+
+
+
     //private final Vision vision;
 
 
@@ -259,19 +267,21 @@ public class RobotContainer {
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
        
-        joystick2.rightBumper().onTrue(drumm.DRUMMCLEAN()).onFalse(drumm.DRUMMNO());
+        //joystick2.rightBumper().onTrue(drumm.DRUMMCLEAN()).onFalse(drumm.DRUMMNO());
 
-        joystick.leftTrigger().onTrue(intake.OUT()).onFalse(intake.STOP());
-        joystick.rightTrigger().onTrue(feeder.FeederFeed().alongWith(floor.FloorOn())).onFalse(feeder.FeederStop().alongWith(floor.FloorStop()));
+        joystick.leftTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
+        joystick.rightBumper().onTrue(new OutTake(floor, intake)).onFalse(intake.OUT().alongWith(floor.FloorStop()));
 
         joystick.leftBumper().onTrue(pivot.PUP()).onFalse(pivot.PSTOP());
         joystick.rightBumper().onTrue(pivot.PDOWN()).onFalse(pivot.PSTOP());
 
-        joystick.povUp().onTrue(hood.Pos3());
-        joystick.povRight().onTrue(hood.Pos2());
-        joystick.povDown().onTrue(hood.HOMEPOS());
+        joystick.a().toggleOnTrue(new CloseShot(drumm, hood, feeder, floor));
+        joystick.b().toggleOnTrue(new MidRangeShot(drumm, hood, feeder, floor));
+        joystick.y().toggleOnTrue(new Shuttle(drumm, hood, feeder, floor));
+        joystick.x().toggleOnTrue(new SystemOff(drumm, feeder, floor));
 
-        joystick.x().onTrue(drumm.DRUMM4())
+
+        // joystick.x().onTrue(drumm.DRUMM4())
         // THIS STUFF IS VISION CODE
         // I know its sloppy, but you have to uncomment this stuff for EACH place it appears
         // .whileTrue(
@@ -281,33 +291,31 @@ public class RobotContainer {
         //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
         //         .withTargetDirection(drivetrain.getAngley())
         //         .withMaxAbsRotationalRate(MaxAngularRate)))
-        .onFalse(drumm.DRUMMNO());
+        // .onFalse(drumm.DRUMMNO());
 
-        joystick.y().onTrue(drumm.DRUMM7())
-        // .whileTrue(
-        //     drivetrain.applyRequest(() ->
-        //     driveAtAngle
-        //         .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
-        //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
-        //         .withTargetDirection(drivetrain.getAngley())
-        //         .withMaxAbsRotationalRate(MaxAngularRate))
-        // )
-        .onFalse(drumm.DRUMMNO());
+        // joystick.y().onTrue(drumm.DRUMM7())
+        // // .whileTrue(
+        // //     drivetrain.applyRequest(() ->
+        // //     driveAtAngle
+        // //         .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
+        // //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
+        // //         .withTargetDirection(drivetrain.getAngley())
+        // //         .withMaxAbsRotationalRate(MaxAngularRate))
+        // // )
+        // .onFalse(drumm.DRUMMNO());
 
-        joystick.b().onTrue(drumm.DRUMM9())
-        // .whileTrue(
-        //     drivetrain.applyRequest(() ->
-        //     driveAtAngle
-        //         .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
-        //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
-        //         .withTargetDirection(drivetrain.getAngley())
-        //         .withMaxAbsRotationalRate(MaxAngularRate))
+        // joystick.b().onTrue(drumm.DRUMM9())
+        // // .whileTrue(
+        // //     drivetrain.applyRequest(() ->
+        // //     driveAtAngle
+        // //         .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
+        // //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
+        // //         .withTargetDirection(drivetrain.getAngley())
+        // //         .withMaxAbsRotationalRate(MaxAngularRate))
 
-        // )
-        .onFalse(drumm.DRUMMNO());
+        // // )
+        // .onFalse(drumm.DRUMMNO());
 
-        joystick.rightTrigger().onTrue(feeder.FeederFeed()).onFalse(feeder.FeederStop());
-        joystick.leftTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
         // joystick.a().whileTrue(Commands.runOnce(() -> autoAlignComand.AutoAlignCommand()));
     }
         // Drum Vision + Autoalign

@@ -26,21 +26,21 @@ public class Shoot10sec extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       
-    // drum.DRUMM4()
+    drum.DRUMM4(),
 
-    // new WaitCommand(5).andThen(feed.FeederFeed()),
+    new WaitCommand(5).andThen(feed.FeederFeed()),
 
-    // new WaitCommand(10),
+    new WaitCommand(10),
 
-    // drum.DRUMMNO().alongWith(feed.FeederStop())
+    drum.DRUMMNO().alongWith(feed.FeederStop()),
 
 
 
-      // new WaitCommand(10).alongWith(drum.DRUMM4()),
-      // feed.FeederFeed().alongWith(drum.DRUMM4()),
-      // new WaitCommand(10),
-      // drum.DRUMMNO(),
-      // feed.FeederStop()
+      new WaitCommand(10).alongWith(drum.DRUMM4()),
+      feed.FeederFeed().alongWith(drum.DRUMM4()),
+      new WaitCommand(10),
+      drum.DRUMMNO(),
+      feed.FeederStop()
     );
   }
 }
