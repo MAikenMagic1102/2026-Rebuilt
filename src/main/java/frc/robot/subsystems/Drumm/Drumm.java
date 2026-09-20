@@ -82,18 +82,6 @@ public class Drumm extends SubsystemBase {
       SmartDashboard.putNumber("Shooter R2 Voltage", DrummR2.getMotorVoltage().getValueAsDouble());
       SmartDashboard.putNumber("Shooter R2 Current (A)", DrummR2.getStatorCurrent().getValueAsDouble());
     }
-<<<<<<< HEAD
-
-    public void Drumm4(){
-      DrummL.setVoltage(-4.0);
-      // DrummR.setVoltage(12);
-
-    }
-
-      public void Drumm7(){
-      DrummL.setVoltage(-5.0);
-      // DrummR.setVoltage(12);
-=======
     
     public void DrummStop(){
       DrummL.setVoltage(0);
@@ -104,7 +92,6 @@ public class Drumm extends SubsystemBase {
       DrummL.setVoltage(6);
       // DrummR.setVoltage(6);
     }
->>>>>>> 72a8f58e1b6df2a870b88bb2015f5a21d95b66c1
 
     public void DrummNear(){
       DrummL.setVoltage(-4.0);
@@ -117,13 +104,8 @@ public class Drumm extends SubsystemBase {
     }
     
 
-<<<<<<< HEAD
-      public void Drumm9(){
-      DrummL.setVoltage(-9);
-=======
       public void DrummShuttle(){
       DrummL.setVoltage(-9.0);
->>>>>>> 72a8f58e1b6df2a870b88bb2015f5a21d95b66c1
       // DrummR.setVoltage(12);
     }
     

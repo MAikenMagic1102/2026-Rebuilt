@@ -19,7 +19,7 @@ public class Shuttle extends SequentialCommandGroup{
 
     public Shuttle(Drumm drumm, Hood hood, Feeder feeder, Floor floor) {
         addCommands(
-            hood.MaxHOODPOS().alongWith(drumm.DRUMM9()),
+            hood.MaxHOODPOS().alongWith(drumm.DRUMMShuttle()),
             new WaitCommand(1.5),
             floor.FloorOn().alongWith(feeder.FeederFeed())
         );

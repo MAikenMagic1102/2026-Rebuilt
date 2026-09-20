@@ -19,7 +19,7 @@ public class SystemOff extends ParallelCommandGroup{
    
   public SystemOff(Drumm drumm, Feeder feeder, Floor floor) {
     addCommands(
-      drumm.DRUMMNO(),
+      drumm.DRUMMStop(),
       feeder.FeederStop(),
        floor.FloorStop()
     );

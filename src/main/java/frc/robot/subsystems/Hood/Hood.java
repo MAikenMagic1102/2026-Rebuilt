@@ -115,7 +115,7 @@ public class Hood extends SubsystemBase{
 
         return runOnce(
             () -> {
-                HoodNear();
+                HoodHomePos();
             }
         );
     }
