@@ -230,11 +230,8 @@ public class RobotContainer {
         joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-<<<<<<< HEAD
        
         //joystick2.rightBumper().onTrue(drumm.DRUMMCLEAN()).onFalse(drumm.DRUMMNO());
-=======
->>>>>>> 72a8f58e1b6df2a870b88bb2015f5a21d95b66c1
 
         joystick.leftTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
         joystick.rightBumper().onTrue(new OutTake(floor, intake)).onFalse(intake.OUT().alongWith(floor.FloorStop()));
