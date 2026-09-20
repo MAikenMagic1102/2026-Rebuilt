@@ -78,13 +78,9 @@ public class RobotContainer {
     Feeder feeder = new Feeder();
     Floor floor = new Floor();
     Hood hood =  new Hood();
-<<<<<<< HEAD
 
 
 
-=======
-    // AutoAlignCommand autoAlignCommand = new AutoAlignCommand();
->>>>>>> 72a8f58e1b6df2a870b88bb2015f5a21d95b66c1
     //private final Vision vision;
 
 
