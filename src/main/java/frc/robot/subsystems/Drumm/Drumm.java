@@ -94,7 +94,7 @@ public class Drumm extends SubsystemBase {
     }
 
     public void DrummNear(){
-      DrummL.setVoltage(-4.0);
+      DrummL.setVoltage(-6.0);
       // DrummR.setVoltage(12);
     }
 

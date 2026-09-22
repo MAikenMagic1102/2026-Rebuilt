@@ -234,7 +234,10 @@ public class RobotContainer {
         //joystick2.rightBumper().onTrue(drumm.DRUMMCLEAN()).onFalse(drumm.DRUMMNO());
 
         joystick.leftTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
-        joystick.rightBumper().onTrue(new OutTake(floor, intake)).onFalse(intake.OUT().alongWith(floor.FloorStop()));
+        joystick.rightTrigger().onTrue(new OutTake(floor, intake)).onFalse(intake.STOP().alongWith(floor.FloorStop()));
+
+        joystick.povUp().toggleOnTrue(hood.HOODNear());
+
 
         joystick.leftBumper().onTrue(pivot.PivotUp()).onFalse(pivot.PivotStop());
         joystick.rightBumper().onTrue(pivot.PivotDown()).onFalse(pivot.PivotStop());
