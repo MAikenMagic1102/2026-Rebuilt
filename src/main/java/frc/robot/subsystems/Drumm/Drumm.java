@@ -1,27 +1,16 @@
 package frc.robot.subsystems.Drumm;
 
-
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.BobotState;
-
-
 
 public class Drumm extends SubsystemBase {
     
-  // Talon motor drumm right
     public static TalonFX DrummR = new TalonFX(27, "rio");
     public static TalonFX DrummR2 = new TalonFX(26, "rio");
     public static TalonFX DrummL = new TalonFX(24, "rio");
@@ -54,11 +43,6 @@ public class Drumm extends SubsystemBase {
         DrummR.getConfigurator().apply(drumConfig);
         DrummR2.getConfigurator().apply(drumConfig);
         DrummL2.getConfigurator().apply(drumConfig);
-
-
-        
-        
-        // DrummR.setControl(new Follower(1, MotorAlignmentValue.Opposed));
     }
 
     @Override
@@ -66,6 +50,7 @@ public class Drumm extends SubsystemBase {
       DrummR.setControl(m_follower);
       DrummR2.setControl(m_followerR);
       DrummL2.setControl(m_followerL);
+
       SmartDashboard.putNumber("Shooter L Speed RPM", DrummL.getVelocity().getValueAsDouble() * 60);
       SmartDashboard.putNumber("Shooter L Voltage", DrummL.getMotorVoltage().getValueAsDouble());
       SmartDashboard.putNumber("Shooter L Current (A)", DrummL.getStatorCurrent().getValueAsDouble());
@@ -85,35 +70,24 @@ public class Drumm extends SubsystemBase {
     
     public void DrummStop(){
       DrummL.setVoltage(0);
-      // DrummR.setVoltage(0);
     }
 
     public void DrummClean(){
       DrummL.setVoltage(6);
-      // DrummR.setVoltage(6);
     }
 
     public void DrummNear(){
       DrummL.setVoltage(-4.0);
-      // DrummR.setVoltage(12);
     }
 
       public void DrummFar(){
       DrummL.setVoltage(-5.0);
-      // DrummR.setVoltage(12);
     }
     
 
       public void DrummShuttle(){
       DrummL.setVoltage(-9.0);
-      // DrummR.setVoltage(12);
     }
-    
-    // public void DrummAutoRange() {
-    // double voltage = DrummConstants.kVoltageMap.get(BobotState.getDrummDistance());
-    // SmartDashboard.putNumber("Drumm Voltage", voltage);
-    // DrummL.setVoltage(voltage);  // positive because we used negative values in points
-    // }
     
     public Command DRUMMNear(){
       return runOnce(
@@ -153,5 +127,4 @@ public class Drumm extends SubsystemBase {
         }
       );
     }
-
 }

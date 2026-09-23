@@ -7,11 +7,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
-// import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.counter.UpDownCounter;
 
 public class IntakeConstants {
 

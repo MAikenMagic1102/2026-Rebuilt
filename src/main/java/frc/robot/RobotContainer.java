@@ -10,18 +10,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import frc.robot.subsystems.util.CommandCustomXboxController;
-// import frc.robot.subsystems.vision.Vision;
-// import frc.robot.subsystems.vision.VisionIO;
-// import frc.robot.subsystems.vision.VisionIOPhotonVision;
-// import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
-// import static frc.robot.subsystems.vision.VisionConstants.*;
-import frc.robot.subsystems.AutoAlignCommand;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
@@ -33,9 +22,7 @@ import frc.robot.commands.MidRangeShot;
 import frc.robot.commands.OutTake;
 import frc.robot.commands.Shuttle;
 import frc.robot.commands.SystemOff;
-import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.generated.TunerConstants;
-import frc.robot.lib.BLine.FollowPath;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Drumm.Drumm;
 import frc.robot.subsystems.Feeder.Feeder;
@@ -44,14 +31,11 @@ import frc.robot.subsystems.Hood.Hood;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Pivot.Pivot;
 
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class RobotContainer {
-
-    
+public class RobotContainer {    
     
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond) * 0.75; // 3/4 of a rotation per second max angular velocity
@@ -60,13 +44,9 @@ public class RobotContainer {
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
-    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final CommandCustomXboxController joystick = new CommandCustomXboxController(0);
-    private final CommandCustomXboxController joystick2 = new CommandCustomXboxController(1);
 
     public final CommandSwerveDrivetrain drivetrain = BobotState.getM_Drivetrain();
 
@@ -80,48 +60,7 @@ public class RobotContainer {
     Hood hood =  new Hood();
 
 
-
-    //private final Vision vision;
-
-
-    // private static double metersToInches(double meters){
-    //     double inches = meters / 0.0254;
-    //     return inches;
-    // }
-
     public RobotContainer() {
-        //         switch (Constants.currentMode) {
-        //     case REAL:
-        //         // Real robot, instantiate hardware IO implementations
-        //         vision =
-        //             new Vision(
-        //                 drivetrain::addVisionMeasurement,
-        //                 new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
-        //                 new VisionIOPhotonVision(camera1Name, robotToCameraRight));
-        //         break;
-
-        //     case SIM:
-        //         // Sim robot, instantiate physics sim IO implementations
-        //         vision =
-        //             new Vision(
-        //                 drivetrain::addVisionMeasurement,
-        //                 new VisionIOPhotonVisionSim(camera0Name, robotToCameraLeft, drivetrain::getPose),
-        //                 new VisionIOPhotonVisionSim(camera1Name, robotToCameraRight, drivetrain::getPose));
-        //         break;
-
-        //     default:
-        //         // Replayed robot, disable IO implementations
-        //         // (Use same number of dummy implementations as the real robot)
-        //         vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {}, new VisionIO() {});
-        //         break;
-        // }
-        // BLINE EVENT TRIGGERS HERE
-        // FollowPath.registerEventTrigger("ShooterOn", drumm.DRUMMNear());
-        // FollowPath.registerEventTrigger("FeederOn", feeder.FeederFeed());
-
-        
-
-        
         configureBindings();
         configureAutoChooser();
     }
@@ -133,7 +72,6 @@ public class RobotContainer {
             autoChooser.addOption("RedLeft", new RedLeft(drivetrain).getAutoCommand());
             autoChooser.addOption("BlueLeft", new BlueLeft(drivetrain).getAutoCommand());
             autoChooser.addOption("BlueRight", new BlueRight(drivetrain).getAutoCommand());
-        // autoChooser.addOption("TEST", new TEST(drivetrain).getAutoCommand());
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
@@ -155,71 +93,7 @@ public class RobotContainer {
         RobotModeTriggers.disabled().whileTrue(
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
-
-//          @SuppressWarnings("resource")
-//     PIDController hubAimController = new PIDController(1.0, 0.0, 0.0);
-//     hubAimController.enableContinuousInput(-Math.PI, Math.PI);
-
-//         j.button(2)
-//         .whileTrue(
-//             Commands.startRun(
-//                 () -> {
-//                   hubAimController.reset();
-//                 },
-//                 () -> {
-//                   Pose2d pose = drive.getPose();
-//                   Translation2d robotPos = pose.getTranslation();
-//                   double distBlue = robotPos.getDistance(Hub.blueHubCenter2d);
-//                   double distRed = robotPos.getDistance(Hub.redHubCenter2d);
-//                   Translation2d target =
-//                       distBlue < distRed ? Hub.blueHubCenter2d : Hub.redHubCenter2d;
-
-//                   double targetAngle =
-//                       Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
-//                   targetAngle += Math.toRadians(-90);
-
-//                   double distToTgt = robotPos.getDistance(target);
-//                   double shooterAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
-//                   double shooterSpeed = 0.2083 * metersToInches(distToTgt) - 8.5208;
-
-//                   hubAimController.setSetpoint(targetAngle);
-//                   drive.run(
-//                       0.0, hubAimController.calculate(pose.getRotation().getRadians()));
-//                 },
-//                 drive));
-//   }
-
-        // Pose2d pose = drivetrain.getPose();
-        // Translation2d robotPos = pose.getTranslation();
-        // double distBlue = robotPos.getDistance(Hub.blueHubCenter2d);
-        // double distRed = robotPos.getDistance(Hub.redHubCenter2d);
-        // Translation2d target =
-        //     distBlue < distRed ? Hub.blueHubCenter2d : Hub.redHubCenter2d;
-
-        // double targetAngle =
-        //     Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
-        // targetAngle += Math.toRadians(-90);
-
-     
-        // SmartDashboard.putNumber("angley", targetAngle);
-
-        // double distToTgt = robotPos.getDistance(target);
-        // double shooterAngle = 0.0729 * metersToInches(distToTgt) + 23.018;
-        // double shooterSpeed = 0.2083 * metersToInches(distToTgt) - 8.5208;
-
-
-        // final SwerveRequest.FieldCentricFacingAngle driveAtAngle =
-        //     new SwerveRequest.FieldCentricFacingAngle()
-        //         .withHeadingPID(5, 0, 0); // tune kP
-
-
-        // Run SysId routines when holding back/start and X/Y.
-        // Note that each routine should be run exactly once in a single log.
-        // joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        // joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        // joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        // joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-
+        
         // Reset the field-centric heading on left bumper press.
         joystick.start().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
@@ -229,7 +103,6 @@ public class RobotContainer {
         joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-
        
         //joystick2.rightBumper().onTrue(drumm.DRUMMCLEAN()).onFalse(drumm.DRUMMNO());
 
@@ -244,62 +117,7 @@ public class RobotContainer {
         joystick.y().toggleOnTrue(new Shuttle(drumm, hood, feeder, floor));
         joystick.x().toggleOnTrue(new SystemOff(drumm, feeder, floor));
 
-
-        // joystick.x().onTrue(drumm.DRUMM4())
-        // THIS STUFF IS VISION CODE
-        // I know its sloppy, but you have to uncomment this stuff for EACH place it appears
-        // .whileTrue(
-        //     drivetrain.applyRequest(() ->
-        //     driveAtAngle
-        //         .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
-        //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
-        //         .withTargetDirection(drivetrain.getAngley())
-        //         .withMaxAbsRotationalRate(MaxAngularRate)))
-        // .onFalse(drumm.DRUMMNO());
-
-        // joystick.y().onTrue(drumm.DRUMM7())
-        // // .whileTrue(
-        // //     drivetrain.applyRequest(() ->
-        // //     driveAtAngle
-        // //         .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
-        // //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
-        // //         .withTargetDirection(drivetrain.getAngley())
-        // //         .withMaxAbsRotationalRate(MaxAngularRate))
-        // // )
-        // .onFalse(drumm.DRUMMNO());
-
-        // joystick.b().onTrue(drumm.DRUMM9())
-        // // .whileTrue(
-        // //     drivetrain.applyRequest(() ->
-        // //     driveAtAngle
-        // //         .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
-        // //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
-        // //         .withTargetDirection(drivetrain.getAngley())
-        // //         .withMaxAbsRotationalRate(MaxAngularRate))
-
-        // // )
-        // .onFalse(drumm.DRUMMNO());
-
-        // joystick.a().whileTrue(Commands.runOnce(() -> autoAlignComand.AutoAlignCommand()));
     }
-        // Drum Vision + Autoalign
-    //     joystick.a().whileTrue(
-    //         drivetrain.applyRequest(() ->
-    //         driveAtAngle
-
-    //             .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
-    //             .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
-    //             .withTargetDirection(drivetrain.getAngley())
-    //             .withMaxAbsRotationalRate(MaxAngularRate)).alongWith(
-    //     Commands.run(() -> {
-    //         drumm.DrummAutoRange();
-    //     }, drumm)
-    //     )).onFalse(
-    //         Commands.runOnce(() -> {
-    //             drumm.DrummStop();
-    //         }, drumm)
-    //     );
-    // }
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();

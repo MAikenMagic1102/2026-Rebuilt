@@ -181,10 +181,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
     }
 
-    
+    /**
+     * Returns a command that applies the specified control request to this swerve drivetrain.
+     *
+     * @param request Function returning the request to apply
+     * @return Command to run
+     */
 
-
-       public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
+    public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));
     }
 
@@ -245,16 +249,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
     }
 
-    /**
-     * Returns a command that applies the specified control request to this swerve drivetrain.
-     *
-     * @param request Function returning the request to apply
-     * @return Command to run
-     */
-    // public Command applyRequest(Supplier<SwerveRequest> request) {
-    //     return run(() -> this.setControl(request.get()));
-    // }
-    //TODO: AHHHHH IDK WHAT THIS DOES
+
 
     /**
      * Runs the SysId Quasistatic test in the given direction for the routine
@@ -360,69 +355,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return m_pathBuilder;
     }
 
-            private static double metersToInches(double meters){
-    double inches = meters / 0.0254;
-    return inches;
-  }
-
-  public Translation2d distToHub(){
-          Pose2d pose = getPose();
-        Translation2d robotPos = pose.getTranslation();
-        double distBlue = robotPos.getDistance(Hub.blueHubCenter2d);
-        double distRed = robotPos.getDistance(Hub.redHubCenter2d);
-        Translation2d target =
-            distBlue < distRed ? Hub.blueHubCenter2d : Hub.redHubCenter2d;
-        SmartDashboard.putNumber("Distance to red hub", distRed);
-        return target;
-  }
-
-public Rotation2d getAngley(){
-
-    Pose2d pose = getPose();
-    Translation2d robotPos = pose.getTranslation();
-    Translation2d target = distToHub();
-
-    BobotState.setGlobalPose(pose);
-    BobotState.setDistanceToHub(target);
-    BobotState.setDrummDistance(robotPos.getDistance(target));
-    SmartDashboard.putNumber("Drumm Distance", robotPos.getDistance(target));
-    
-
-    double targetAngle =
-        Math.atan2(target.getY() - robotPos.getY(), target.getX() - robotPos.getX());
-
-    
-    // System.out.println(DriverStation.getAlliance());
-    // if (DriverStation.getAlliance().toString().contains("Red")){
-    //     targetAngle += Math.toRadians(180);
-    // } else {
-    //     targetAngle -= Math.toRadians(180);
-    // }
-    distToTgt = robotPos.getDistance(target);
-
-
-    // shooterSpeed = (0.0715 * metersToInches(distToTgt)) + 22.25;
-    // System.out.println(shooterSpeed);
-    
-
-    // SmartDashboard.putNumber("HOOD ANGLE!", hoodAngle);
-    // hoodAngle = 0.2083 * metersToInches(distToTgt) - 8.5208;
-
-    // double hoodRaw = 0.175 - (1.475 * BobotState.getHoodAngle());
-    // SmartDashboard.putNumber("Hood Raw", hoodRaw);
-
-
-    // SmartDashboard.putNumber("SHOOTER SPEED!", shooterSpeed);
-    
-    // BobotState.setHoodAngle(hoodAngle);
-    // BobotState.setShooterSpeed(shooterSpeed);
-
-    Rotation2d angley = new Rotation2d(targetAngle);
-
-    return angley;
-
-    
-}
     /**
      * Adds a vision measurement to the Kalman Filter. This will correct the odometry pose estimate
      * while still accounting for measurement noise.
@@ -459,7 +391,5 @@ public Rotation2d getAngley(){
     public Optional<Pose2d> samplePoseAt(double timestampSeconds) {
         return super.samplePoseAt(Utils.fpgaToCurrentTime(timestampSeconds));
     }
-
-
-    
+   
 }
