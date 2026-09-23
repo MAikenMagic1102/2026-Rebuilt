@@ -150,7 +150,9 @@ public class Util {
     }
 
     /**
-     * Returns the middle of two rotations, but chooses the middle that is on the same side as the given side rotation.
+     * Returns the middle of two rotations, but chooses the middle that is on the
+     * same side as the given side rotation.
+     * 
      * @param a
      * @param b
      * @param side
@@ -159,10 +161,12 @@ public class Util {
     public static Rotation2d getMiddleRotationChoosingSide(Rotation2d a, Rotation2d b, Rotation2d side) {
         var middle = a.plus(b).times(0.5);
         if (middle.minus(side).getCos() > 0) {
-            // middle and side are pointing in approximately the same direction, so we can return middle as is.
+            // middle and side are pointing in approximately the same direction, so we can
+            // return middle as is.
             return middle;
         } else {
-            // middle and side are pointing in approximately opposite directions, so we need to flip middle around to
+            // middle and side are pointing in approximately opposite directions, so we need
+            // to flip middle around to
             // return the middle of a and b closer to side.
             return middle.plus(new Rotation2d(Math.PI));
         }

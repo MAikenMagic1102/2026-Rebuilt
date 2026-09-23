@@ -18,74 +18,61 @@ import frc.robot.subsystems.Feeder.Feeder;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Pivot.Pivot;
 
-
 public class BlueRight {
 
     private final CommandSwerveDrivetrain drive;
 
-       Intake intake = new Intake();
-         Pivot pivot = new Pivot();
-          Drum drumm = new Drum();
-            Feeder feeder = new Feeder();
+    Intake intake = new Intake();
+    Pivot pivot = new Pivot();
+    Drum drumm = new Drum();
+    Feeder feeder = new Feeder();
 
     public BlueRight(CommandSwerveDrivetrain drive) {
         this.drive = drive;
     }
-    
 
     Path BlueRight = new Path("BlueRight");
     // Path path_2 = new Path("auto_1_path_2");
 
-
     public Command getAutoCommand() {
-        return Commands.parallel( new InstantCommand(() -> {
-                            Pose2d startPose = BlueRight.getStartPose();
-                            if (Util.isRedSide()) {
-                                startPose = FlippingUtil.flipFieldPose(startPose);
-                            }
-                            drive.resetPose(startPose);
-                        }),
-                        drive.getPathBuilder().build(BlueRight).withName("BlueRight"),
+        return Commands.parallel(new InstantCommand(() -> {
+            Pose2d startPose = BlueRight.getStartPose();
+            if (Util.isRedSide()) {
+                startPose = FlippingUtil.flipFieldPose(startPose);
+            }
+            drive.resetPose(startPose);
+        }),
+                drive.getPathBuilder().build(BlueRight).withName("BlueRight"),
 
-                        new WaitUntilCommand(() -> {
-                            return
-                            drive.getPose().getX() > (3.308);
-                        }).andThen(
-                                
-                        new ParallelDeadlineGroup( 
-                            new WaitCommand(10),
-                            new ParallelCommandGroup(
-                                drumm.DRUMNear(),
-                                new SequentialCommandGroup(
-                                    new WaitCommand(2),
-                                    feeder.FeederFeed()
-                                                          )
-                                                    )
+                new WaitUntilCommand(() -> {
+                    return drive.getPose().getX() > (3.308);
+                }).andThen(
 
+                        new ParallelDeadlineGroup(
+                                new WaitCommand(10),
+                                new ParallelCommandGroup(
+                                        drumm.DRUMNear(),
+                                        new SequentialCommandGroup(
+                                                new WaitCommand(2),
+                                                feeder.FeederFeed()))
 
-                                                 ),
+                        ),
 
-                                                 drumm.DRUMStop(),
-                                                 feeder.FeederStop()
-                                                 
-                            //  new ParallelDeadlineGroup(new WaitCommand(10), new ParallelCommandGroup( drumm.DRUM4(),
-                            //      new SequentialCommandGroup( new WaitCommand(2)),
-                            //      feeder.FeederFeed()))),
-                            //     drumm.DRUMNO(),
-                            //     feeder.FeederStop()
-                     )
-                    
-                    )
+                        drumm.DRUMStop(),
+                        feeder.FeederStop()
+
+                // new ParallelDeadlineGroup(new WaitCommand(10), new ParallelCommandGroup(
+                // drumm.DRUM4(),
+                // new SequentialCommandGroup( new WaitCommand(2)),
+                // feeder.FeederFeed()))),
+                // drumm.DRUMNO(),
+                // feeder.FeederStop()
+                )
+
+        )
 
                 .withName("Entire sequence");
-                
-                
-
 
     }
 
-
-
-        
-        
 }

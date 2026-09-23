@@ -9,9 +9,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
 
-    public static TalonFX  IntakeMotorFX = new TalonFX(2, "can2");
+    public static TalonFX IntakeMotorFX = new TalonFX(2, "can2");
 
-    //TODO: Move the voltage control values to IntakeConstants (CAN IDs as well)
+    // TODO: Move the voltage control values to IntakeConstants (CAN IDs as well)
 
     public void periodic() {
         SmartDashboard.putNumber("Intake Speed RPM", IntakeMotorFX.getVelocity().getValueAsDouble() * 60);
@@ -19,26 +19,28 @@ public class Intake extends SubsystemBase {
         SmartDashboard.putNumber("Intake Current (A)", IntakeMotorFX.getStatorCurrent().getValueAsDouble());
     }
 
-    public void IntakeIN(){
+    public void IntakeIN() {
         IntakeMotorFX.setVoltage(12);
     }
 
-    public void IntakeOUT(){
+    public void IntakeOUT() {
         IntakeMotorFX.setVoltage(-8);
     }
 
-    public void IntakeSTOP(){
+    public void IntakeSTOP() {
         IntakeMotorFX.setVoltage(0);
     }
 
-    public Command IN(){
-       return Commands.runOnce(() -> IntakeIN());
+    public Command IN() {
+        return Commands.runOnce(() -> IntakeIN());
     }
-     public Command OUT(){
-       return Commands.runOnce(() -> IntakeOUT());
+
+    public Command OUT() {
+        return Commands.runOnce(() -> IntakeOUT());
     }
-     public Command STOP(){
-       return Commands.runOnce(() -> IntakeSTOP());
+
+    public Command STOP() {
+        return Commands.runOnce(() -> IntakeSTOP());
     }
 
 }

@@ -11,9 +11,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Floor extends SubsystemBase {
     public static TalonFX floorMotor = new TalonFX(21, "rio");
 
-    //TODO: Move configurations, can IDs, and voltage control values to a FloorConstants.java
+    // TODO: Move configurations, can IDs, and voltage control values to a
+    // FloorConstants.java
 
-    public Floor(){
+    public Floor() {
         TalonFXConfiguration feederConfig = new TalonFXConfiguration();
         feederConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         feederConfig.CurrentLimits.SupplyCurrentLimit = 80;
@@ -24,33 +25,33 @@ public class Floor extends SubsystemBase {
 
     @Override
     public void periodic() {
-      SmartDashboard.putNumber("Floor Speed RPM", floorMotor.getVelocity().getValueAsDouble() * 60);
-      SmartDashboard.putNumber("Floor Voltage", floorMotor.getMotorVoltage().getValueAsDouble());
-      SmartDashboard.putNumber("Floor Current (A)", floorMotor.getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("Floor Speed RPM", floorMotor.getVelocity().getValueAsDouble() * 60);
+        SmartDashboard.putNumber("Floor Voltage", floorMotor.getMotorVoltage().getValueAsDouble());
+        SmartDashboard.putNumber("Floor Current (A)", floorMotor.getStatorCurrent().getValueAsDouble());
 
-      
     }
-    
-    public void FloorON(){
+
+    public void FloorON() {
         floorMotor.setVoltage(-2.5);
     }
 
-    public void FloorREVERSE(){
+    public void FloorREVERSE() {
         floorMotor.setVoltage(-12);
     }
 
-    public void FloorSTOP(){
+    public void FloorSTOP() {
         floorMotor.setVoltage(0);
     }
 
+    public Command FloorOut() {
+        return Commands.runOnce(() -> FloorREVERSE());
+    }
 
-    public Command FloorOut(){
-       return Commands.runOnce(() -> FloorREVERSE());
+    public Command FloorOn() {
+        return Commands.runOnce(() -> FloorON());
     }
-     public Command FloorOn(){
-       return Commands.runOnce(() -> FloorON());
-    }
-     public Command FloorStop(){
-       return Commands.runOnce(() -> FloorSTOP());
+
+    public Command FloorStop() {
+        return Commands.runOnce(() -> FloorSTOP());
     }
 }

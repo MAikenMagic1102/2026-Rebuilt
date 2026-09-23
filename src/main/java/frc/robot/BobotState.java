@@ -8,16 +8,22 @@ import lombok.Getter;
 import lombok.Setter;
 
 public class BobotState {
-    @Getter @Setter
+    @Getter
+    @Setter
     private static Pose2d globalPose = new Pose2d();
-    @Getter @Setter
+    @Getter
+    @Setter
     private static Translation2d distanceToHub = new Translation2d();
-    @Getter @Setter
+    @Getter
+    @Setter
     private static double shooterSpeed = 0.0;
-    @Getter @Setter 
+    @Getter
+    @Setter
     private static double hoodAngle = 0.0;
-    @Getter @Setter
+    @Getter
+    @Setter
     private static CommandSwerveDrivetrain m_Drivetrain = TunerConstants.createDrivetrain();
-    @Getter @Setter
+    @Getter
+    @Setter
     private static double drummDistance = 0.0;
 }

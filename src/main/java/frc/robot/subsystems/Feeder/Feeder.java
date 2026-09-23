@@ -11,9 +11,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Feeder extends SubsystemBase {
     public static TalonFX feederMotor = new TalonFX(23, "rio");
 
-    //TODO: Move voltage control values, configurations, and CAN ids to a FeederConstants.Java
+    // TODO: Move voltage control values, configurations, and CAN ids to a
+    // FeederConstants.Java
 
-    public Feeder(){
+    public Feeder() {
         TalonFXConfiguration feederConfig = new TalonFXConfiguration();
         feederConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         feederConfig.CurrentLimits.SupplyCurrentLimit = 80;
@@ -24,33 +25,33 @@ public class Feeder extends SubsystemBase {
 
     @Override
     public void periodic() {
-      SmartDashboard.putNumber("feeder Speed RPM", feederMotor.getVelocity().getValueAsDouble() * 60);
-      SmartDashboard.putNumber("feeder Voltage", feederMotor.getMotorVoltage().getValueAsDouble());
-      SmartDashboard.putNumber("feeder Current (A)", feederMotor.getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("feeder Speed RPM", feederMotor.getVelocity().getValueAsDouble() * 60);
+        SmartDashboard.putNumber("feeder Voltage", feederMotor.getMotorVoltage().getValueAsDouble());
+        SmartDashboard.putNumber("feeder Current (A)", feederMotor.getStatorCurrent().getValueAsDouble());
 
-      
     }
-    
 
-    public void FeederON(){
+    public void FeederON() {
         feederMotor.setVoltage(-11);
     }
 
-    public void FeederCLEAR(){
+    public void FeederCLEAR() {
         feederMotor.setVoltage(-12);
     }
 
-    public void FeederSTOP(){
+    public void FeederSTOP() {
         feederMotor.setVoltage(0);
     }
 
-    public Command FeederFeed(){
-       return Commands.runOnce(() -> FeederON());
+    public Command FeederFeed() {
+        return Commands.runOnce(() -> FeederON());
     }
-     public Command FeederClean(){
-       return Commands.runOnce(() -> FeederCLEAR());
+
+    public Command FeederClean() {
+        return Commands.runOnce(() -> FeederCLEAR());
     }
-     public Command FeederStop(){
-       return Commands.runOnce(() -> FeederSTOP());
+
+    public Command FeederStop() {
+        return Commands.runOnce(() -> FeederSTOP());
     }
 }

@@ -34,11 +34,12 @@ import frc.robot.subsystems.Pivot.Pivot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+public class RobotContainer {
 
-public class RobotContainer {    
-    
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond) * 0.75; // 3/4 of a rotation per second max angular velocity
+    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond) * 0.75; // 3/4 of a rotation per
+                                                                                             // second max angular
+                                                                                             // velocity
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
@@ -57,8 +58,7 @@ public class RobotContainer {
     Drum drumm = new Drum();
     Feeder feeder = new Feeder();
     Floor floor = new Floor();
-    Hood hood =  new Hood();
-
+    Hood hood = new Hood();
 
     public RobotContainer() {
         configureBindings();
@@ -67,11 +67,11 @@ public class RobotContainer {
 
     private void configureAutoChooser() {
         autoChooser.setDefaultOption("Do Nothing", Commands.none());
-            autoChooser.addOption("BackupShoot", new BackupShoot(drivetrain).getAutoCommand());
-            autoChooser.addOption("RedRight", new RedRight(drivetrain).getAutoCommand());
-            autoChooser.addOption("RedLeft", new RedLeft(drivetrain).getAutoCommand());
-            autoChooser.addOption("BlueLeft", new BlueLeft(drivetrain).getAutoCommand());
-            autoChooser.addOption("BlueRight", new BlueRight(drivetrain).getAutoCommand());
+        autoChooser.addOption("BackupShoot", new BackupShoot(drivetrain).getAutoCommand());
+        autoChooser.addOption("RedRight", new RedRight(drivetrain).getAutoCommand());
+        autoChooser.addOption("RedLeft", new RedLeft(drivetrain).getAutoCommand());
+        autoChooser.addOption("BlueLeft", new BlueLeft(drivetrain).getAutoCommand());
+        autoChooser.addOption("BlueRight", new BlueRight(drivetrain).getAutoCommand());
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
@@ -79,21 +79,21 @@ public class RobotContainer {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
-            // Drivetrain will execute this command periodically
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-            )
-        );
+                // Drivetrain will execute this command periodically
+                drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with
+                                                                                                   // negative Y
+                                                                                                   // (forward)
+                        .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                        .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with
+                                                                                    // negative X (left)
+                ));
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
         final var idle = new SwerveRequest.Idle();
         RobotModeTriggers.disabled().whileTrue(
-            drivetrain.applyRequest(() -> idle).ignoringDisable(true)
-        );
-        
+                drivetrain.applyRequest(() -> idle).ignoringDisable(true));
+
         // Reset the field-centric heading on left bumper press.
         joystick.start().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
@@ -103,8 +103,8 @@ public class RobotContainer {
         joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-       
-        //joystick2.rightBumper().onTrue(drumm.DRUMCLEAN()).onFalse(drumm.DRUMNO());
+
+        // joystick2.rightBumper().onTrue(drumm.DRUMCLEAN()).onFalse(drumm.DRUMNO());
 
         joystick.leftTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
         joystick.rightBumper().onTrue(new OutTake(floor, intake)).onFalse(intake.OUT().alongWith(floor.FloorStop()));

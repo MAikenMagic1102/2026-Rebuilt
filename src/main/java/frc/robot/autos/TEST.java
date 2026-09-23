@@ -15,56 +15,44 @@ import frc.robot.subsystems.Feeder.Feeder;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Pivot.Pivot;
 
-
 public class TEST {
 
     private final CommandSwerveDrivetrain drive;
 
-       Intake intake = new Intake();
-         Pivot pivot = new Pivot();
-          Drum drumm = new Drum();
-            Feeder feeder = new Feeder();
+    Intake intake = new Intake();
+    Pivot pivot = new Pivot();
+    Drum drumm = new Drum();
+    Feeder feeder = new Feeder();
 
     public TEST(CommandSwerveDrivetrain drive) {
         this.drive = drive;
     }
-    
 
     Path path_2 = new Path("TEST");
     // Path path_2 = new Path("auto_1_path_2");
 
-
     public Command getAutoCommand() {
-        return Commands.parallel( new InstantCommand(() -> {
-                            Pose2d startPose = path_2.getStartPose();
-                            if (Util.isRedSide()) {
-                                startPose = FlippingUtil.flipFieldPose(startPose);
-                            }
-                            drive.resetPose(startPose);
-                        }),
-                        drive.getPathBuilder().build(path_2).withName("TEST"),
+        return Commands.parallel(new InstantCommand(() -> {
+            Pose2d startPose = path_2.getStartPose();
+            if (Util.isRedSide()) {
+                startPose = FlippingUtil.flipFieldPose(startPose);
+            }
+            drive.resetPose(startPose);
+        }),
+                drive.getPathBuilder().build(path_2).withName("TEST"),
 
-                        new WaitUntilCommand(() -> {
-                            return
-                            drive.getPose().getX() > (2.562);
-                        }).andThen(
-                                
-                                drumm.DRUMNear().alongWith(new WaitCommand(2)).andThen(feeder.FeederFeed().alongWith(drumm.DRUMNear())),
-                                new WaitCommand(5),
-                                drumm.DRUMStop(),
-                                feeder.FeederStop()
-                                                    ) 
-                    )
+                new WaitUntilCommand(() -> {
+                    return drive.getPose().getX() > (2.562);
+                }).andThen(
+
+                        drumm.DRUMNear().alongWith(new WaitCommand(2))
+                                .andThen(feeder.FeederFeed().alongWith(drumm.DRUMNear())),
+                        new WaitCommand(5),
+                        drumm.DRUMStop(),
+                        feeder.FeederStop()))
 
                 .withName("Entire sequence");
-                
-                
-
 
     }
 
-
-
-        
-        
 }

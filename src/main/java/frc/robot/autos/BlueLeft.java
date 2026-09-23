@@ -22,69 +22,57 @@ public class BlueLeft {
 
     private final CommandSwerveDrivetrain drive;
 
-       Intake intake = new Intake();
-         Pivot pivot = new Pivot();
-          Drum drumm = new Drum();
-            Feeder feeder = new Feeder();
+    Intake intake = new Intake();
+    Pivot pivot = new Pivot();
+    Drum drumm = new Drum();
+    Feeder feeder = new Feeder();
 
     public BlueLeft(CommandSwerveDrivetrain drive) {
         this.drive = drive;
     }
-    
 
     Path BlueLeft = new Path("BlueLeft");
     // Path path_2 = new Path("auto_1_path_2");
 
-
     public Command getAutoCommand() {
-        return Commands.parallel( new InstantCommand(() -> {
-                            Pose2d startPose = BlueLeft.getStartPose();
-                            if (Util.isRedSide()) {
-                                startPose = FlippingUtil.flipFieldPose(startPose);
-                            }
-                            drive.resetPose(startPose);
-                        }),
-                        drive.getPathBuilder().build(BlueLeft).withName("BlueLeft"),
+        return Commands.parallel(new InstantCommand(() -> {
+            Pose2d startPose = BlueLeft.getStartPose();
+            if (Util.isRedSide()) {
+                startPose = FlippingUtil.flipFieldPose(startPose);
+            }
+            drive.resetPose(startPose);
+        }),
+                drive.getPathBuilder().build(BlueLeft).withName("BlueLeft"),
 
-                        new WaitUntilCommand(() -> {
-                            return
-                            drive.getPose().getX() > (2.928);
-                        }).andThen(
-                                
-                        new ParallelDeadlineGroup( 
-                            new WaitCommand(10),
-                            new ParallelCommandGroup(
-                                drumm.DRUMNear(),
-                                new SequentialCommandGroup(
-                                    new WaitCommand(2),
-                                    feeder.FeederFeed()
-                                                          )
-                                                    )
+                new WaitUntilCommand(() -> {
+                    return drive.getPose().getX() > (2.928);
+                }).andThen(
 
+                        new ParallelDeadlineGroup(
+                                new WaitCommand(10),
+                                new ParallelCommandGroup(
+                                        drumm.DRUMNear(),
+                                        new SequentialCommandGroup(
+                                                new WaitCommand(2),
+                                                feeder.FeederFeed()))
 
-                                                 ),
+                        ),
 
-                                                 drumm.DRUMStop(),
-                                                 feeder.FeederStop()
-                                                 
-                            //  new ParallelDeadlineGroup(new WaitCommand(10), new ParallelCommandGroup( drumm.DRUM4(),
-                            //      new SequentialCommandGroup( new WaitCommand(2)),
-                            //      feeder.FeederFeed()))),
-                            //     drumm.DRUMNO(),
-                            //     feeder.FeederStop()
-                     )
-                    
-                    )
+                        drumm.DRUMStop(),
+                        feeder.FeederStop()
+
+                // new ParallelDeadlineGroup(new WaitCommand(10), new ParallelCommandGroup(
+                // drumm.DRUM4(),
+                // new SequentialCommandGroup( new WaitCommand(2)),
+                // feeder.FeederFeed()))),
+                // drumm.DRUMNO(),
+                // feeder.FeederStop()
+                )
+
+        )
 
                 .withName("Entire sequence");
-                
-                
-
 
     }
 
-
-
-        
-        
 }

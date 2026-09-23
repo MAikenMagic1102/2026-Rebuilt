@@ -11,12 +11,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 
-
 public class CommandCustomXboxController extends CommandXboxController {
   /**
    * Construct an instance of a command controller.
    *
-   * @param port The port on Driver Station where the controller is connected.
+   * @param port
+   *          The port on Driver Station where the controller is connected.
    */
   public CommandCustomXboxController(int port) {
     super(port);
@@ -85,11 +85,14 @@ public class CommandCustomXboxController extends CommandXboxController {
   public Trigger rightY() {
     return new Trigger(() -> getRightY() != 0);
   }
-/**
+
+  /**
    * Constructs a Trigger instance around the left bumper button's digital signal.
    *
-   * @return a Trigger instance representing the left bumper button's digital signal attached
-   *     to the {@link CommandScheduler#getDefaultButtonLoop() default scheduler button loop}.
+   * @return a Trigger instance representing the left bumper button's digital
+   *         signal attached
+   *         to the {@link CommandScheduler#getDefaultButtonLoop() default
+   *         scheduler button loop}.
    * @see #leftBumper(EventLoop)
    */
   public Trigger leftBumper() {
@@ -99,19 +102,24 @@ public class CommandCustomXboxController extends CommandXboxController {
   /**
    * Constructs a Trigger instance around the left bumper button's digital signal.
    *
-   * @param loop the event loop instance to attach the event to.
-   * @return a Trigger instance representing the left bumper button's digital signal attached
-   *     to the given loop.
+   * @param loop
+   *          the event loop instance to attach the event to.
+   * @return a Trigger instance representing the left bumper button's digital
+   *         signal attached
+   *         to the given loop.
    */
   public Trigger leftBumper(EventLoop loop) {
     return button(XboxController.Button.kLeftBumper.value, loop);
   }
 
   /**
-   * Constructs a Trigger instance around the right bumper button's digital signal.
+   * Constructs a Trigger instance around the right bumper button's digital
+   * signal.
    *
-   * @return a Trigger instance representing the right bumper button's digital signal attached
-   *     to the {@link CommandScheduler#getDefaultButtonLoop() default scheduler button loop}.
+   * @return a Trigger instance representing the right bumper button's digital
+   *         signal attached
+   *         to the {@link CommandScheduler#getDefaultButtonLoop() default
+   *         scheduler button loop}.
    * @see #rightBumper(EventLoop)
    */
   public Trigger rightBumper() {
@@ -119,17 +127,22 @@ public class CommandCustomXboxController extends CommandXboxController {
   }
 
   /**
-   * Constructs a Trigger instance around the right bumper button's digital signal.
+   * Constructs a Trigger instance around the right bumper button's digital
+   * signal.
    *
-   * @param loop the event loop instance to attach the event to.
-   * @return a Trigger instance representing the right bumper button's digital signal attached
-   *     to the given loop.
+   * @param loop
+   *          the event loop instance to attach the event to.
+   * @return a Trigger instance representing the right bumper button's digital
+   *         signal attached
+   *         to the given loop.
    */
   public Trigger rightBumper(EventLoop loop) {
     return button(XboxController.Button.kRightBumper.value, loop);
   }
+
   /**
-   * NOTE: Trigger Treshold has been overriden by {@link CommandCustomXboxController}, check see
+   * NOTE: Trigger Treshold has been overriden by
+   * {@link CommandCustomXboxController}, check see
    * block below.<br>
    * ORIGINAL DOCS: {@inheritDoc}
    *
@@ -141,7 +154,8 @@ public class CommandCustomXboxController extends CommandXboxController {
   }
 
   /**
-   * NOTE: Trigger Treshold has been overriden by {@link CommandCustomXboxController}, check see
+   * NOTE: Trigger Treshold has been overriden by
+   * {@link CommandCustomXboxController}, check see
    * block below.<br>
    * ORIGINAL DOCS: {@inheritDoc}
    *
@@ -164,7 +178,7 @@ public class CommandCustomXboxController extends CommandXboxController {
 
   public Command rumbleOnOff(double strength, double rumbleTime, double waitTime, int loops) {
     return Commands.repeatingSequence(
-            rumbleSeconds(strength, rumbleTime), Commands.waitSeconds(waitTime))
+        rumbleSeconds(strength, rumbleTime), Commands.waitSeconds(waitTime))
         .withTimeout((rumbleTime + waitTime) * loops);
   }
 
@@ -175,7 +189,8 @@ public class CommandCustomXboxController extends CommandXboxController {
   /**
    * Applies a predefined deadband to a value. Meant for joysticks.
    *
-   * @param stickValue Value of a joystick, usually [-1.0, 1.0]
+   * @param stickValue
+   *          Value of a joystick, usually [-1.0, 1.0]
    * @return Joystick's value with a deadband applied
    */
   private double applyJoystickDeadband(double stickValue) {

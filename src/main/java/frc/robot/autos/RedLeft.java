@@ -18,78 +18,64 @@ import frc.robot.subsystems.Feeder.Feeder;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Pivot.Pivot;
 
-
 public class RedLeft {
 
     private final CommandSwerveDrivetrain drive;
 
-       Intake intake = new Intake();
-         Pivot pivot = new Pivot();
-          Drum drumm = new Drum();
-            Feeder feeder = new Feeder();
+    Intake intake = new Intake();
+    Pivot pivot = new Pivot();
+    Drum drumm = new Drum();
+    Feeder feeder = new Feeder();
 
     public RedLeft(CommandSwerveDrivetrain drive) {
         this.drive = drive;
     }
-    
 
     Path RedLeft = new Path("RedLeft");
     // Path path_2 = new Path("auto_1_path_2");
 
-
     public Command getAutoCommand() {
-        return Commands.parallel( new InstantCommand(() -> {
-                            Pose2d startPose = RedLeft.getStartPose();
-                            if (Util.isRedSide()) {
-                                startPose = FlippingUtil.flipFieldPose(startPose);
-                            }
-                            drive.resetPose(startPose);
-                        }),
-                        drive.getPathBuilder().build(RedLeft).withName("RedLeft"),
+        return Commands.parallel(new InstantCommand(() -> {
+            Pose2d startPose = RedLeft.getStartPose();
+            if (Util.isRedSide()) {
+                startPose = FlippingUtil.flipFieldPose(startPose);
+            }
+            drive.resetPose(startPose);
+        }),
+                drive.getPathBuilder().build(RedLeft).withName("RedLeft"),
 
-                        new WaitUntilCommand(() -> {
-                            return
-                            drive.getPose().getX() > (13.446);
-                            
-                        }).alongWith(   new WaitUntilCommand(() -> {
-                            return
-                            drive.getPose().getY() > (3.370);
-                            
-                        })).andThen(
-                                
-                        new ParallelDeadlineGroup( 
-                            new WaitCommand(10),
-                            new ParallelCommandGroup(
-                                drumm.DRUMNear(),
-                                new SequentialCommandGroup(
-                                    new WaitCommand(2),
-                                    feeder.FeederFeed()
-                                                          )
-                                                    )
+                new WaitUntilCommand(() -> {
+                    return drive.getPose().getX() > (13.446);
 
+                }).alongWith(new WaitUntilCommand(() -> {
+                    return drive.getPose().getY() > (3.370);
 
-                                                 ),
+                })).andThen(
 
-                                                 drumm.DRUMStop(),
-                                                 feeder.FeederStop()
-                                                 
-                            //  new ParallelDeadlineGroup(new WaitCommand(10), new ParallelCommandGroup( drumm.DRUM4(),
-                            //      new SequentialCommandGroup( new WaitCommand(2)),
-                            //      feeder.FeederFeed()))),
-                            //     drumm.DRUMNO(),
-                            //     feeder.FeederStop()
-                     )
-                    
-                    )
+                        new ParallelDeadlineGroup(
+                                new WaitCommand(10),
+                                new ParallelCommandGroup(
+                                        drumm.DRUMNear(),
+                                        new SequentialCommandGroup(
+                                                new WaitCommand(2),
+                                                feeder.FeederFeed()))
+
+                        ),
+
+                        drumm.DRUMStop(),
+                        feeder.FeederStop()
+
+                // new ParallelDeadlineGroup(new WaitCommand(10), new ParallelCommandGroup(
+                // drumm.DRUM4(),
+                // new SequentialCommandGroup( new WaitCommand(2)),
+                // feeder.FeederFeed()))),
+                // drumm.DRUMNO(),
+                // feeder.FeederStop()
+                )
+
+        )
                 .withName("Entire sequence");
-                
-                
-
 
     }
 
-
-
-        
-        
 }

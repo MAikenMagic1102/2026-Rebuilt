@@ -11,35 +11,31 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class IntakeConstants {
 
-     public static String bus = "rio";
+    public static String bus = "rio";
     public static int IntakeMotorFX = 54;
 
     public static double intakegearRatio = 12.5;
 
-     public static TalonFXConfiguration config = new TalonFXConfiguration()
-        .withCurrentLimits(
-            new CurrentLimitsConfigs()
-            .withSupplyCurrentLimit(70)
-        )
-        .withMotorOutput(
-            new MotorOutputConfigs()
-            .withNeutralMode(NeutralModeValue.Brake)
-            .withInverted(InvertedValue.Clockwise_Positive)
-        )
-        .withFeedback(
-            new FeedbackConfigs()
-            .withSensorToMechanismRatio(intakegearRatio)
-        )
-        
-        .withSlot0(
-            new Slot0Configs()
-            .withKG(.82)
-            .withKV(0.0)
-            .withKA(0.0)
-            .withKP(40.0)
-            .withKI(0.0)
-            .withKD(4.0)
-            .withGravityType(GravityTypeValue.Arm_Cosine)
-        );
-   
+    public static TalonFXConfiguration config = new TalonFXConfiguration()
+            .withCurrentLimits(
+                    new CurrentLimitsConfigs()
+                            .withSupplyCurrentLimit(70))
+            .withMotorOutput(
+                    new MotorOutputConfigs()
+                            .withNeutralMode(NeutralModeValue.Brake)
+                            .withInverted(InvertedValue.Clockwise_Positive))
+            .withFeedback(
+                    new FeedbackConfigs()
+                            .withSensorToMechanismRatio(intakegearRatio))
+
+            .withSlot0(
+                    new Slot0Configs()
+                            .withKG(.82)
+                            .withKV(0.0)
+                            .withKA(0.0)
+                            .withKP(40.0)
+                            .withKI(0.0)
+                            .withKD(4.0)
+                            .withGravityType(GravityTypeValue.Arm_Cosine));
+
 }

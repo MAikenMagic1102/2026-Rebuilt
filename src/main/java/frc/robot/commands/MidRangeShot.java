@@ -7,16 +7,13 @@ import frc.robot.subsystems.Feeder.Feeder;
 import frc.robot.subsystems.Floor.Floor;
 import frc.robot.subsystems.Hood.Hood;
 
-public class MidRangeShot extends SequentialCommandGroup{
+public class MidRangeShot extends SequentialCommandGroup {
 
-
-    public MidRangeShot(Drum drumm, Hood hood, Feeder feeder, Floor floor){
+    public MidRangeShot(Drum drumm, Hood hood, Feeder feeder, Floor floor) {
         addCommands(
-            hood.MIDDLEPOS().alongWith(drumm.DRUMFar()),
-            new WaitCommand(1.5),
-            feeder.FeederFeed().alongWith(floor.FloorOn())
-        );
+                hood.MIDDLEPOS().alongWith(drumm.DRUMFar()),
+                new WaitCommand(1.5),
+                feeder.FeederFeed().alongWith(floor.FloorOn()));
     }
-
 
 }
