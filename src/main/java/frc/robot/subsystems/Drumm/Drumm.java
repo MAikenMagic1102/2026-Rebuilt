@@ -6,6 +6,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -41,11 +42,11 @@ public class Drumm extends SubsystemBase {
         // Slot0Configs.kD = 0;
 
         TalonFXConfiguration drumConfig = new TalonFXConfiguration();
-        // drumConfig.Slot0.kS = 0.1;
-        // drumConfig.Slot0.kV = 0.12; // * 2,3,4,5,6,7,8,9;
-        // drumConfig.Slot0.kP = 0.11;
-        // drumConfig.Slot0.kI = 0;
-        // drumConfig.Slot0.kD = 0;
+        drumConfig.Slot0.kS = 0.1;
+        drumConfig.Slot0.kV = 0.12; // * 2,3,4,5,6,7,8,9;
+        drumConfig.Slot0.kP = 0.11;
+        drumConfig.Slot0.kI = 0;
+        drumConfig.Slot0.kD = 0;
         drumConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         drumConfig.CurrentLimits.SupplyCurrentLimit = 80;
         
@@ -84,28 +85,47 @@ public class Drumm extends SubsystemBase {
     }
     
     public void DrummStop(){
-      DrummL.setVoltage(0);
+      final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
+
+// set velocity to 8 rps, add 0.5 V to overcome gravity
+    DrummL.setControl(m_request.withVelocity(1).withFeedForward(0.5));
       // DrummR.setVoltage(0);
     }
 
     public void DrummClean(){
-      DrummL.setVoltage(6);
+      final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
+
+// set velocity to 8 rps, add 0.5 V to overcome gravity
+    DrummL.setControl(m_request.withVelocity(1).withFeedForward(0.5));
       // DrummR.setVoltage(6);
     }
 
     public void DrummNear(){
+<<<<<<< Updated upstream
       DrummL.setVoltage(-4.0);
+=======
+      final VelocityVoltage m_request = new VelocityVoltage(1).withSlot(0);
+
+// set velocity to 8 rps, add 0.5 V to overcome gravity
+    DrummL.setControl(m_request.withVelocity(1).withFeedForward(0.5));
+>>>>>>> Stashed changes
       // DrummR.setVoltage(12);
     }
 
       public void DrummFar(){
-      DrummL.setVoltage(-5.0);
+      final VelocityVoltage m_request = new VelocityVoltage(1).withSlot(0);
+
+// set velocity to 8 rps, add 0.5 V to overcome gravity
+    DrummL.setControl(m_request.withVelocity(1).withFeedForward(0.5));
       // DrummR.setVoltage(12);
     }
     
 
       public void DrummShuttle(){
-      DrummL.setVoltage(-9.0);
+      final VelocityVoltage m_request = new VelocityVoltage(1).withSlot(0);
+
+// set velocity to 8 rps, add 0.5 V to overcome gravity
+    DrummL.setControl(m_request.withVelocity(1).withFeedForward(0.5));
       // DrummR.setVoltage(12);
     }
     

@@ -4,6 +4,10 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 public class DrummConstants {
     // Distance (meters) → Shooter Voltage
     public static final InterpolatingDoubleTreeMap kVoltageMap = new InterpolatingDoubleTreeMap();
+    public static double drummNearSpeed = 1;
+    public static double drummShuttleSpeed = 1;
+    public static double drummFarSpeed = 1;
+    public static double drummClearSpeed = -1;
 
     static {
         // PLACEHOLDER VALUES — must be tuned on the real robot!
