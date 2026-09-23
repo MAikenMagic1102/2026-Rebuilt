@@ -10,6 +10,9 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 public class Hood extends SubsystemBase{
+
+    //TODO: Move configurations to HoodConstants.java
+    
     public static TalonFX hoodMotorFx = new TalonFX(28 ,"rio");
     public static CANcoder hoodCANcoder = new CANcoder(22,"rio");
     

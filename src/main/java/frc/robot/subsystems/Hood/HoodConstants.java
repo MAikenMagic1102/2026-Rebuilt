@@ -3,6 +3,7 @@ package frc.robot.subsystems.Hood;
 import edu.wpi.first.math.util.Units;
 
 public class HoodConstants {
+
     public static double HoodMaxAngle =  Units.degreesToRadians(55.5);
     public static double HoodMinAngle = Units.degreesToRadians(10.5);
     public static double hoodGearing = 6.667;

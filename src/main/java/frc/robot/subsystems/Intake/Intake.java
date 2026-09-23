@@ -11,6 +11,7 @@ public class Intake extends SubsystemBase {
 
     public static TalonFX  IntakeMotorFX = new TalonFX(2, "can2");
 
+    //TODO: Move the voltage control values to IntakeConstants (CAN IDs as well)
 
     public void periodic() {
         SmartDashboard.putNumber("Intake Speed RPM", IntakeMotorFX.getVelocity().getValueAsDouble() * 60);

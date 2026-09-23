@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Pivot extends SubsystemBase{
 
+    //TODO: Move configuration and CAN IDs to a PivotConstants
+    //TODO: Use angle controls instead of voltage controls?
+
     public static TalonFX Pivot = new TalonFX(1, "can2");
     
     public Pivot(){

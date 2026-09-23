@@ -10,7 +10,7 @@ import frc.robot.Util;
 import frc.robot.lib.BLine.FlippingUtil;
 import frc.robot.lib.BLine.Path;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Drumm.Drumm;
+import frc.robot.subsystems.Drum.Drum;
 import frc.robot.subsystems.Feeder.Feeder;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Pivot.Pivot;
@@ -22,7 +22,7 @@ public class TEST {
 
        Intake intake = new Intake();
          Pivot pivot = new Pivot();
-          Drumm drumm = new Drumm();
+          Drum drumm = new Drum();
             Feeder feeder = new Feeder();
 
     public TEST(CommandSwerveDrivetrain drive) {
@@ -49,9 +49,9 @@ public class TEST {
                             drive.getPose().getX() > (2.562);
                         }).andThen(
                                 
-                                drumm.DRUMMNear().alongWith(new WaitCommand(2)).andThen(feeder.FeederFeed().alongWith(drumm.DRUMMNear())),
+                                drumm.DRUMNear().alongWith(new WaitCommand(2)).andThen(feeder.FeederFeed().alongWith(drumm.DRUMNear())),
                                 new WaitCommand(5),
-                                drumm.DRUMMStop(),
+                                drumm.DRUMStop(),
                                 feeder.FeederStop()
                                                     ) 
                     )

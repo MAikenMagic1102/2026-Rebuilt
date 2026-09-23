@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Floor extends SubsystemBase {
     public static TalonFX floorMotor = new TalonFX(21, "rio");
 
+    //TODO: Move configurations, can IDs, and voltage control values to a FloorConstants.java
+
     public Floor(){
         TalonFXConfiguration feederConfig = new TalonFXConfiguration();
         feederConfig.CurrentLimits.SupplyCurrentLimitEnable = true;

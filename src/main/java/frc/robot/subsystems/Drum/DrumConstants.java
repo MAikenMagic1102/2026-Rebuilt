@@ -1,7 +1,7 @@
-package frc.robot.subsystems.Drumm;
+package frc.robot.subsystems.Drum;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 
-public class DrummConstants {
+public class DrumConstants {
     // Distance (meters) → Shooter Voltage
     public static final InterpolatingDoubleTreeMap kVoltageMap = new InterpolatingDoubleTreeMap();
 

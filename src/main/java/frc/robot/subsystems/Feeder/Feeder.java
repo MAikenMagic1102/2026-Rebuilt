@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Feeder extends SubsystemBase {
     public static TalonFX feederMotor = new TalonFX(23, "rio");
 
+    //TODO: Move voltage control values, configurations, and CAN ids to a FeederConstants.Java
+
     public Feeder(){
         TalonFXConfiguration feederConfig = new TalonFXConfiguration();
         feederConfig.CurrentLimits.SupplyCurrentLimitEnable = true;

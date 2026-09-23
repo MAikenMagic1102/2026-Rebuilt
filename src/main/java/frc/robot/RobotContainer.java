@@ -24,7 +24,7 @@ import frc.robot.commands.Shuttle;
 import frc.robot.commands.SystemOff;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Drumm.Drumm;
+import frc.robot.subsystems.Drum.Drum;
 import frc.robot.subsystems.Feeder.Feeder;
 import frc.robot.subsystems.Floor.Floor;
 import frc.robot.subsystems.Hood.Hood;
@@ -54,7 +54,7 @@ public class RobotContainer {
 
     Intake intake = new Intake();
     Pivot pivot = new Pivot();
-    Drumm drumm = new Drumm();
+    Drum drumm = new Drum();
     Feeder feeder = new Feeder();
     Floor floor = new Floor();
     Hood hood =  new Hood();
@@ -104,7 +104,7 @@ public class RobotContainer {
         joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
        
-        //joystick2.rightBumper().onTrue(drumm.DRUMMCLEAN()).onFalse(drumm.DRUMMNO());
+        //joystick2.rightBumper().onTrue(drumm.DRUMCLEAN()).onFalse(drumm.DRUMNO());
 
         joystick.leftTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
         joystick.rightBumper().onTrue(new OutTake(floor, intake)).onFalse(intake.OUT().alongWith(floor.FloorStop()));
