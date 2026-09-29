@@ -31,15 +31,19 @@ public class Pivot extends SubsystemBase{
         Slot0Configs.kI = 0;
         Slot0Configs.kD = 0;
 
+
+
+
         // PivotR.getConfigurator().apply(Slot0Configs);
         Pivot.getConfigurator().apply(Slot0Configs);
 
-        Pivot.setPosition(0);
-        // PivotR.setPosition(0);
-    
+
+
     }
 
-  
+    final PositionVoltage m_request = new PositionVoltage(0).withSlot(0);
+
+
     @Override
     public void periodic() {
     //PivotR.setControl(m_follower);
@@ -54,17 +58,16 @@ public class Pivot extends SubsystemBase{
     }
 
     public void PIVOTDown(){
-        Pivot.setVoltage(12);
+        Pivot.setControl(m_request.withPosition(-3));
         // PivotR.set(0.25);
     }
 
     public void PIVOTUp(){
-        Pivot.setVoltage(-12);
+        Pivot.setControl(m_request.withPosition(3));
         // PivotR.set(-0.3);
     }
 
     public void PIVOTStop(){
-        Pivot.setVoltage(0);
         // PivotR.set(0);
     }
 
