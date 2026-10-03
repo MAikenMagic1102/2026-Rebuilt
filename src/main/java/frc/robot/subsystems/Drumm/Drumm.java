@@ -5,7 +5,7 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -30,7 +30,7 @@ public class Drumm extends SubsystemBase {
     // private final Follower m_followerLT = new Follower(DrummLB.getDeviceID(), MotorAlignmentValue.Aligned);
     // private final Follower m_followerRT = new Follower(DrummLB.getDeviceID(), MotorAlignmentValue.Opposed);
     // private final Follower m_followerRB = new Follower(DrummLB.getDeviceID(), MotorAlignmentValue.Opposed);
-    public double VoltageClosedLoopRampPeriod = 1;
+    private final VelocityVoltage m_velocity = new VelocityVoltage(0);
     
 
     public Drumm(){
@@ -42,11 +42,12 @@ public class Drumm extends SubsystemBase {
         // Slot0Configs.kD = 0;
 
         TalonFXConfiguration drumConfig = new TalonFXConfiguration();
-        // drumConfig.Slot0.kS = 0.1;
-        // drumConfig.Slot0.kV = 0.12; // * 2,3,4,5,6,7,8,9;
-        // drumConfig.Slot0.kP = 0.11;
-        // drumConfig.Slot0.kI = 0;
-        // drumConfig.Slot0.kD = 0;
+        drumConfig.Slot0.kS = 0.1;
+        drumConfig.Slot0.kV = 0.12;
+        drumConfig.Slot0.kP = 0.11;
+        drumConfig.Slot0.kI = 0;
+        drumConfig.Slot0.kD = 0;
+        drumConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.5;
         drumConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         drumConfig.CurrentLimits.SupplyCurrentLimit = 80;
         
@@ -89,24 +90,23 @@ public class Drumm extends SubsystemBase {
     }
     
     public void DrummStop(){
-      DrummLB.setVoltage(0);
+      DrummLB.setControl(m_velocity.withVelocity(0));
     }
 
     public void DrummClean(){
-      DrummLB.setVoltage(6);
+      DrummLB.setControl(m_velocity.withVelocity(3000.0 / 60.0)); // 3000 RPM
     }
 
     public void DrummNear(){
-      DrummLB.setVoltage(-4.0);
+      DrummLB.setControl(m_velocity.withVelocity(-2000.0 / 60.0)); // -2000 RPM
     }
 
-      public void DrummFar(){
-      DrummLB.setVoltage(-5.0);
+    public void DrummFar(){
+      DrummLB.setControl(m_velocity.withVelocity(-2500.0 / 60.0)); // -2500 RPM
     }
-    
 
-      public void DrummShuttle(){
-      DrummLB.setVoltage(-9.0);
+    public void DrummShuttle(){
+      DrummLB.setControl(m_velocity.withVelocity(-4500.0 / 60.0)); // -4500 RPM
     }
     
     // public void DrummAutoRange() {
