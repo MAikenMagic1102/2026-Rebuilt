@@ -22,13 +22,14 @@ import frc.robot.BobotState;
 public class Drumm extends SubsystemBase {
     
   // Talon motor drumm right
-    public static TalonFX DrummR = new TalonFX(27, "rio");
-    public static TalonFX DrummR2 = new TalonFX(26, "rio");
-    public static TalonFX DrummL = new TalonFX(24, "rio");
-    public static TalonFX DrummL2 = new TalonFX(25, "rio");
-    private final Follower m_follower = new Follower(DrummL.getDeviceID(), MotorAlignmentValue.Opposed);
-    private final Follower m_followerL = new Follower(DrummL.getDeviceID(), MotorAlignmentValue.Aligned);
-    private final Follower m_followerR = new Follower(DrummR.getDeviceID(), MotorAlignmentValue.Aligned);
+    public static TalonFX DrummLB = new TalonFX(24, "rio"); //Left Bottom
+    public static TalonFX DrummLT = new TalonFX(25, "rio"); //Left Top
+    public static TalonFX DrummRT = new TalonFX(26, "rio"); //Right Top
+    public static TalonFX DrummRB = new TalonFX(27, "rio"); //Right Bottom
+
+    // private final Follower m_followerLT = new Follower(DrummLB.getDeviceID(), MotorAlignmentValue.Aligned);
+    // private final Follower m_followerRT = new Follower(DrummLB.getDeviceID(), MotorAlignmentValue.Opposed);
+    // private final Follower m_followerRB = new Follower(DrummLB.getDeviceID(), MotorAlignmentValue.Opposed);
     public double VoltageClosedLoopRampPeriod = 1;
     
 
@@ -50,11 +51,14 @@ public class Drumm extends SubsystemBase {
         drumConfig.CurrentLimits.SupplyCurrentLimit = 80;
         
 
-        DrummL.getConfigurator().apply(drumConfig);
-        DrummR.getConfigurator().apply(drumConfig);
-        DrummR2.getConfigurator().apply(drumConfig);
-        DrummL2.getConfigurator().apply(drumConfig);
+        DrummLB.getConfigurator().apply(drumConfig);
+        DrummLT.getConfigurator().apply(drumConfig);
+        DrummRT.getConfigurator().apply(drumConfig);
+        DrummRB.getConfigurator().apply(drumConfig);
 
+        DrummLT.setControl(new Follower(DrummLB.getDeviceID(), MotorAlignmentValue.Aligned)); // Aligned
+        DrummRT.setControl(new Follower(DrummLB.getDeviceID(), MotorAlignmentValue.Opposed));  // Opposed
+        DrummRB.setControl(new Follower(DrummLB.getDeviceID(), MotorAlignmentValue.Opposed));  // Opposed
 
         
         
@@ -63,50 +67,46 @@ public class Drumm extends SubsystemBase {
 
     @Override
     public void periodic() {
-      DrummR.setControl(m_follower);
-      DrummR2.setControl(m_followerR);
-      DrummL2.setControl(m_followerL);
-      SmartDashboard.putNumber("Shooter L Speed RPM", DrummL.getVelocity().getValueAsDouble() * 60);
-      SmartDashboard.putNumber("Shooter L Voltage", DrummL.getMotorVoltage().getValueAsDouble());
-      SmartDashboard.putNumber("Shooter L Current (A)", DrummL.getStatorCurrent().getValueAsDouble());
+      // DrummLT.setControl(m_followerLT);
+      // DrummRT.setControl(m_followerRT);
+      // DrummRB.setControl(m_followerRB);
 
-      SmartDashboard.putNumber("Shooter L2 Speed RPM", DrummL2.getVelocity().getValueAsDouble() * 60);
-      SmartDashboard.putNumber("Shooter L2 Voltage", DrummL2.getMotorVoltage().getValueAsDouble());
-      SmartDashboard.putNumber("Shooter L2 Current (A)", DrummL2.getStatorCurrent().getValueAsDouble());
+      SmartDashboard.putNumber("Drumm LB Speed RPM", DrummLB.getVelocity().getValueAsDouble() * 60);
+      SmartDashboard.putNumber("Drumm LB Voltage", DrummLB.getMotorVoltage().getValueAsDouble());
+      SmartDashboard.putNumber("Drumm LB Current (A)", DrummLB.getStatorCurrent().getValueAsDouble());
 
-      SmartDashboard.putNumber("Shooter R Speed RPM", DrummR.getVelocity().getValueAsDouble() * 60);
-      SmartDashboard.putNumber("Shooter R Voltage", DrummR.getMotorVoltage().getValueAsDouble());
-      SmartDashboard.putNumber("Shooter R Current (A)", DrummR.getStatorCurrent().getValueAsDouble());
+      SmartDashboard.putNumber("Drumm LT Speed RPM", DrummLT.getVelocity().getValueAsDouble() * 60);
+      SmartDashboard.putNumber("Drumm LT Voltage", DrummLT.getMotorVoltage().getValueAsDouble());
+      SmartDashboard.putNumber("Drumm LT Current (A)", DrummLT.getStatorCurrent().getValueAsDouble());
 
-      SmartDashboard.putNumber("Shooter R2 Speed RPM", DrummR2.getVelocity().getValueAsDouble() * 60);
-      SmartDashboard.putNumber("Shooter R2 Voltage", DrummR2.getMotorVoltage().getValueAsDouble());
-      SmartDashboard.putNumber("Shooter R2 Current (A)", DrummR2.getStatorCurrent().getValueAsDouble());
+      SmartDashboard.putNumber("Drumm RB Speed RPM", DrummRB.getVelocity().getValueAsDouble() * 60);
+      SmartDashboard.putNumber("Drumm RB Voltage", DrummRB.getMotorVoltage().getValueAsDouble());
+      SmartDashboard.putNumber("Drumm RB Current (A)", DrummRB.getStatorCurrent().getValueAsDouble());
+
+      SmartDashboard.putNumber("Drumm RT Speed RPM", DrummRT.getVelocity().getValueAsDouble() * 60);
+      SmartDashboard.putNumber("Drumm RT Voltage", DrummRT.getMotorVoltage().getValueAsDouble());
+      SmartDashboard.putNumber("Drumm RT Current (A)", DrummRT.getStatorCurrent().getValueAsDouble());
     }
     
     public void DrummStop(){
-      DrummL.setVoltage(0);
-      // DrummR.setVoltage(0);
+      DrummLB.setVoltage(0);
     }
 
     public void DrummClean(){
-      DrummL.setVoltage(6);
-      // DrummR.setVoltage(6);
+      DrummLB.setVoltage(6);
     }
 
     public void DrummNear(){
-      DrummL.setVoltage(-4.0);
-      // DrummR.setVoltage(12);
+      DrummLB.setVoltage(-4.0);
     }
 
       public void DrummFar(){
-      DrummL.setVoltage(-5.0);
-      // DrummR.setVoltage(12);
+      DrummLB.setVoltage(-5.0);
     }
     
 
       public void DrummShuttle(){
-      DrummL.setVoltage(-9.0);
-      // DrummR.setVoltage(12);
+      DrummLB.setVoltage(-9.0);
     }
     
     // public void DrummAutoRange() {

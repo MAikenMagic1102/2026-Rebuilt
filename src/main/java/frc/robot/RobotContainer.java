@@ -244,6 +244,7 @@ public class RobotContainer {
         joystick.y().toggleOnTrue(new Shuttle(drumm, hood, feeder, floor));
         joystick.x().toggleOnTrue(new SystemOff(drumm, feeder, floor));
 
+        joystick.povDown().onTrue(drumm.DRUMMNear()).onFalse(drumm.DRUMMStop());
 
         // joystick.x().onTrue(drumm.DRUMM4())
         // THIS STUFF IS VISION CODE
