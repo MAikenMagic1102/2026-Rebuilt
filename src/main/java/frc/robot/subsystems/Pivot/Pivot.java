@@ -58,12 +58,12 @@ public class Pivot extends SubsystemBase{
     }
 
     public void PIVOTDown(){
-        Pivot.setControl(m_request.withPosition(-3));
+        Pivot.setControl(m_request.withPosition(-8.9));
         // PivotR.set(0.25);
     }
 
     public void PIVOTUp(){
-        Pivot.setControl(m_request.withPosition(3));
+        Pivot.setControl(m_request.withPosition(.33));
         // PivotR.set(-0.3);
     }
 
