@@ -20,7 +20,7 @@ public class CloseShot extends SequentialCommandGroup{
     public CloseShot(Drumm drumm, Hood hood, Feeder feeder, Floor floor){
         addCommands(
         hood.HOODNear().alongWith(drumm.DRUMMNear()),
-        new WaitCommand(1.5),
+        new WaitCommand(2),
         feeder.FeederFeed().alongWith(floor.FloorOn())
         );
     }

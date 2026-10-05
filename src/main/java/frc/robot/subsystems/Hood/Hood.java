@@ -104,6 +104,11 @@ public class Hood extends SubsystemBase{
         hoodMotorFx.setControl(m_hood.withPosition(-0.30));
     }
 
+    public void HoodNearPos(){
+        hoodMotorFx.setControl(m_hood.withPosition(-0.75));
+    }
+
+
     public void MiddleHoodPos(){
         hoodMotorFx.setControl(m_hood.withPosition(-1.5));
     }
@@ -111,7 +116,7 @@ public class Hood extends SubsystemBase{
         hoodMotorFx.setControl(m_hood.withPosition(-4));
     }
 
-    public Command HOODNear(){
+    public Command HOODHome(){
 
         return runOnce(
             () -> {
@@ -119,6 +124,17 @@ public class Hood extends SubsystemBase{
             }
         );
     }
+
+    
+    public Command HOODNear(){
+
+        return runOnce(
+            () -> {
+                HoodNearPos();
+            }
+        );
+    }
+
 
         public Command MIDDLEPOS(){
 

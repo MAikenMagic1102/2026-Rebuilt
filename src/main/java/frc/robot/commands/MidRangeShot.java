@@ -21,7 +21,7 @@ public class MidRangeShot extends SequentialCommandGroup{
     public MidRangeShot(Drumm drumm, Hood hood, Feeder feeder, Floor floor){
         addCommands(
             hood.MIDDLEPOS().alongWith(drumm.DRUMMFar()),
-            new WaitCommand(1.5),
+            new WaitCommand(2),
             feeder.FeederFeed().alongWith(floor.FloorOn())
         );
     }

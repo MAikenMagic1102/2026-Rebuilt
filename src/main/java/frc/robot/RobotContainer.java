@@ -236,7 +236,7 @@ public class RobotContainer {
         joystick.leftTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
         joystick.rightTrigger().onTrue(new OutTake(floor, intake)).onFalse(intake.STOP().alongWith(floor.FloorStop()));
 
-        joystick.povUp().toggleOnTrue(hood.HOODNear());
+        joystick.povUp().toggleOnTrue(hood.HOODHome());
 
 
         joystick.leftBumper().onTrue(pivot.PivotUp()).onFalse(pivot.PivotStop());
