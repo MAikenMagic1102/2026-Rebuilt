@@ -108,7 +108,8 @@ public class Drumm extends SubsystemBase {
     public void DrummShuttle(){
       DrummLB.setControl(m_velocity.withVelocity(-4500.0 / 60.0)); // -4500 RPM
     }
-    
+
+
     // public void DrummAutoRange() {
     // double voltage = DrummConstants.kVoltageMap.get(BobotState.getDrummDistance());
     // SmartDashboard.putNumber("Drumm Voltage", voltage);

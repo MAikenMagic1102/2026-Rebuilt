@@ -34,7 +34,7 @@ public class Floor extends SubsystemBase {
     }
 
     public void FloorREVERSE(){
-        floorMotor.setVoltage(-12);
+        floorMotor.setVoltage(6);
     }
 
     public void FloorSTOP(){
