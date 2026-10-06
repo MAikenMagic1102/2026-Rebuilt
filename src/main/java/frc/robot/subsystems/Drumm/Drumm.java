@@ -5,7 +5,7 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -30,7 +30,7 @@ public class Drumm extends SubsystemBase {
     // private final Follower m_followerLT = new Follower(DrummLB.getDeviceID(), MotorAlignmentValue.Aligned);
     // private final Follower m_followerRT = new Follower(DrummLB.getDeviceID(), MotorAlignmentValue.Opposed);
     // private final Follower m_followerRB = new Follower(DrummLB.getDeviceID(), MotorAlignmentValue.Opposed);
-    private final VelocityVoltage m_velocity = new VelocityVoltage(0);
+    private final MotionMagicVelocityVoltage m_velocity = new MotionMagicVelocityVoltage(0);
     
 
     public Drumm(){
@@ -47,7 +47,7 @@ public class Drumm extends SubsystemBase {
         drumConfig.Slot0.kP = 0.11;
         drumConfig.Slot0.kI = 0;
         drumConfig.Slot0.kD = 0;
-        drumConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.5;
+        drumConfig.MotionMagic.MotionMagicAcceleration = 200; // RPS/s — tune this
         drumConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         drumConfig.CurrentLimits.SupplyCurrentLimit = 80;
         
