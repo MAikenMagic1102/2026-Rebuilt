@@ -267,9 +267,11 @@ public class RobotContainer {
         // joystick.a().whileTrue(Commands.runOnce(() -> autoAlignComand.AutoAlignCommand()));
     
         // Drum Vision + Autoalign
+        final SwerveRequest.FieldCentricFacingAngle facingAngle = new SwerveRequest.FieldCentricFacingAngle().withHeadingPID(8.0, 0.0, 0.0);
         joystick.a().whileTrue(  
             drivetrain.applyRequest(() ->
-                drive.withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
+                facingAngle
+                .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
                 .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
                 .withTargetDirection(drivetrain.getAngley())
                 .withMaxAbsRotationalRate(MaxAngularRate)));
