@@ -44,12 +44,12 @@ public class Drumm extends SubsystemBase {
         TalonFXConfiguration drumConfig = new TalonFXConfiguration();
         drumConfig.Slot0.kS = 0.1;
         drumConfig.Slot0.kV = 0.12;
-        drumConfig.Slot0.kP = 0.11;
+        drumConfig.Slot0.kP = 2.5;
         drumConfig.Slot0.kI = 0;
-        drumConfig.Slot0.kD = 0;
+        drumConfig.Slot0.kD = 0.2;
         drumConfig.MotionMagic.MotionMagicAcceleration = 200; // RPS/s — tune this
         drumConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-        drumConfig.CurrentLimits.SupplyCurrentLimit = 80;
+        drumConfig.CurrentLimits.SupplyCurrentLimit = 120;
         
 
         DrummLB.getConfigurator().apply(drumConfig);
@@ -90,7 +90,7 @@ public class Drumm extends SubsystemBase {
     }
     
     public void DrummStop(){
-      DrummLB.setControl(m_velocity.withVelocity(0));
+      DrummLB.stopMotor();
     }
 
     public void DrummClean(){
@@ -98,7 +98,7 @@ public class Drumm extends SubsystemBase {
     }
 
     public void DrummNear(){
-      DrummLB.setControl(m_velocity.withVelocity(-2000.0 / 60.0)); // -2000 RPM
+      DrummLB.setControl(m_velocity.withVelocity(-2000.0 / 60.0)); // -2250 RPM
     }
 
     public void DrummFar(){
