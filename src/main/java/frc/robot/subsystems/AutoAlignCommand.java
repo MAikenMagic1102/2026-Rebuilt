@@ -8,17 +8,23 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.BobotState;
 import frc.robot.game_util.FieldConstants.Hub;
 
-public class AutoAlignCommand extends SubsystemBase {
+public class AutoAlignCommand extends Command {
 
-        private static double metersToInches(double meters){
-    double inches = meters / 0.0254;
-    return inches;
-  }
-    public Command AutoAlignCommand(){
+//     private static double metersToInches(double meters){
+//     double inches = meters / 0.0254;
+//     return inches;
+//   }
+    public AutoAlignCommand(){}
+
+    public void AutoAlign(){
+
+
+    // public void execute() {
     CommandSwerveDrivetrain drivetrain = BobotState.getM_Drivetrain();
     Pose2d pose = BobotState.getGlobalPose();
     Translation2d robotPos = pose.getTranslation();
@@ -67,19 +73,27 @@ public class AutoAlignCommand extends SubsystemBase {
 
                 
 
-    
-  // In command:
-        return runOnce(
-            () -> {
-            
-            drivetrain.applyRequest(() ->
-            driveAtAngle
-                .withVelocityY(0)
-                .withVelocityX(0)
-                .withTargetDirection(angley)
-                .withMaxAbsRotationalRate(0.5));
-            }
-        );
+    // //   In command:
+    //     return Commands.runOnce(
+    //         () -> {
+    //         System.out.print("A");
+    //         drivetrain.applyRequest(() ->
+    //         driveAtAngle
+    //             .withVelocityY(0)
+    //             .withVelocityX(0)
+    //             .withTargetDirection(angley)
+    //             .withMaxAbsRotationalRate(0.5));
+    //         }
+    //     );
+
+    //  drivetrain.applyRequest(() ->
+    //         driveAtAngle
+
+    //             .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
+    //             .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
+    //             .withTargetDirection(drivetrain.getAngley())
+    //             .withMaxAbsRotationalRate(MaxAngularRate));
+    // }
     }
 
 }
