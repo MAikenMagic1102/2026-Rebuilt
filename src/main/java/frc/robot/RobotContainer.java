@@ -233,12 +233,12 @@ public class RobotContainer {
         joystick.rightBumper().onTrue(pivot.PivotDown()).onFalse(pivot.PivotStop());
         // joystick.a().onTrue(AutoAlignCommand.AutoAlign());
 
-        joystick.x().whileTrue(
-            drivetrain.applyRequest(() ->
-            drive.withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
-                .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
-                .withTargetDirection(drivetrain.getAngley())
-                .withMaxAbsRotationalRate(MaxAngularRate)));
+        // joystick.x().whileTrue(
+        //     drivetrain.applyRequest(() ->
+        //     drive.withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
+        //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
+        //         .withTargetDirection(drivetrain.getAngley())
+        //         .withMaxAbsRotationalRate(MaxAngularRate)));
         // .onFalse(drumm.DRUMMNO());
 
         // joystick.y().onTrue(drumm.DRUMM7())
