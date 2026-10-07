@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.units.PerUnit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -15,13 +16,18 @@ import frc.robot.subsystems.Feeder.Feeder;
 import frc.robot.subsystems.Floor.Floor;
 import frc.robot.subsystems.Hood.Hood;
 
-public class CloseShot extends SequentialCommandGroup{
+public class CloseShot extends SequentialCommandGroup {
 
     public CloseShot(Drumm drumm, Hood hood, Feeder feeder, Floor floor){
         addCommands(
-        hood.HOODNear().alongWith(drumm.DRUMMNear()),
-        new WaitCommand(2),
-        feeder.FeederFeed().alongWith(floor.FloorOn())
+            hood.CLOSEPOSE().alongWith(drumm.DRUMMCLOSE()),
+            new WaitCommand(2),
+            floor.FloorOn().alongWith(feeder.FeederFeed()),
+            new WaitCommand(4),
+            drumm.DRUMMStop(),
+            feeder.FeederStop(),
+            floor.FloorStop(),
+            hood.HOODHome()
         );
     }
 

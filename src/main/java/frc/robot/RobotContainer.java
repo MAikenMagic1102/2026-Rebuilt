@@ -15,7 +15,7 @@ import frc.robot.subsystems.util.CommandCustomXboxController;
 // import frc.robot.subsystems.vision.VisionIOPhotonVision;
 // import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 // import static frc.robot.subsystems.vision.VisionConstants.*;
-import frc.robot.subsystems.AutoAlignCommand;
+//import frc.robot.subsystems.AutoAlignCommand;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -29,10 +29,11 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.autos.*;
 import frc.robot.commands.CloseShot;
+import frc.robot.commands.FarShot;
 import frc.robot.commands.MidRangeShot;
 import frc.robot.commands.OutTake;
-import frc.robot.commands.Shuttle;
 import frc.robot.commands.SystemOff;
+import frc.robot.commands.TowerShot;
 import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.generated.TunerConstants;
 import frc.robot.lib.BLine.FollowPath;
@@ -234,20 +235,18 @@ public class RobotContainer {
         //joystick2.rightBumper().onTrue(drumm.DRUMMCLEAN()).onFalse(drumm.DRUMMNO());
 
         joystick.leftTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
-        joystick.rightTrigger().onTrue(new OutTake(floor, intake)).onFalse(intake.STOP().alongWith(floor.FloorStop()));
-
-        joystick.povUp().toggleOnTrue(hood.HOODHome());
-
+        joystick.rightTrigger().onTrue(new OutTake(floor, intake)).onFalse(intake.OUT().alongWith(floor.FloorStop()));
 
         joystick.leftBumper().onTrue(pivot.PivotUp()).onFalse(pivot.PivotStop());
         joystick.rightBumper().onTrue(pivot.PivotDown()).onFalse(pivot.PivotStop());
 
-        joystick.a().toggleOnTrue(new CloseShot(drumm, hood, feeder, floor));
+        joystick.a().toggleOnTrue(new TowerShot(drumm, hood, feeder, floor));
         joystick.b().toggleOnTrue(new MidRangeShot(drumm, hood, feeder, floor));
-        joystick.y().toggleOnTrue(new Shuttle(drumm, hood, feeder, floor));
+        joystick.y().toggleOnTrue(new FarShot(drumm, hood, feeder, floor));
         joystick.x().toggleOnTrue(new SystemOff(drumm, feeder, floor));
+        
+        joystick.povDown().toggleOnTrue(new CloseShot(drumm, hood, feeder, floor));
 
-        joystick.povDown().onTrue(drumm.DRUMMNear()).onFalse(drumm.DRUMMStop());
 
         // joystick.x().onTrue(drumm.DRUMM4())
         // THIS STUFF IS VISION CODE

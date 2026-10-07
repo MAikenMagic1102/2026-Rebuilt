@@ -105,12 +105,20 @@ public class Hood extends SubsystemBase{
         hoodMotorFx.setControl(m_hood.withPosition(0.05));
     }
 
-    public void HoodNearPos(){
+    public void HoodClosePos(){
+        hoodMotorFx.setControl(m_hood.withPosition(-0.07));
+    }
+      
+    public void MiddleHoodPos(){
+        hoodMotorFx.setControl(m_hood.withPosition(-1.5));
+    }
+
+    public void HoodTowerPos(){
         hoodMotorFx.setControl(m_hood.withPosition(-0.60));
     }
 
-    public void MiddleHoodPos(){
-        hoodMotorFx.setControl(m_hood.withPosition(-1.5));
+    public void HoodFarPos(){
+        hoodMotorFx.setControl(m_hood.withPosition(0));
     }
     
     public void MaxHoodPos(){
@@ -126,18 +134,15 @@ public class Hood extends SubsystemBase{
         );
     }
 
-    
-    public Command HOODNear(){
-
+    public Command CLOSEPOSE(){
         return runOnce(
             () -> {
-                HoodNearPos();
+                HoodClosePos();
             }
         );
     }
 
-
-        public Command MIDDLEPOS(){
+    public Command MIDDLEPOS(){
 
         return runOnce(
             () -> {
@@ -145,8 +150,25 @@ public class Hood extends SubsystemBase{
             }
         );
     }
+    
+    public Command HOODTOWER(){
 
-        public Command MaxHOODPOS(){
+        return runOnce(
+            () -> {
+                HoodTowerPos();
+            }
+        );
+    }
+
+    public Command HOODFARPOS() {
+        return runOnce(
+            () -> {
+                HoodFarPos();
+            }
+        );
+    }
+
+    public Command MaxHOODPOS(){
 
         return runOnce(
             () -> {

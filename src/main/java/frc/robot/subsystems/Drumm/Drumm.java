@@ -11,6 +11,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.MutMomentOfInertia;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -97,12 +98,24 @@ public class Drumm extends SubsystemBase {
       DrummLB.setControl(m_velocity.withVelocity(3000.0 / 60.0)); // 3000 RPM
     }
 
-    public void DrummNear(){
+    public void DrummClose() {
+      DrummLB.setControl(m_velocity.withVelocity(-2000.0/60.0));
+    }
+
+    public void DrummMid() {
+      DrummLB.setControl(m_velocity.withVelocity(0));
+    }
+
+    public void DrummTower(){
       DrummLB.setControl(m_velocity.withVelocity(-2000.0 / 60.0)); // -2250 RPM
     }
 
     public void DrummFar(){
       DrummLB.setControl(m_velocity.withVelocity(-2500.0 / 60.0)); // -2500 RPM
+    }
+
+    public void MaxShot(){
+      DrummLB.setControl(m_velocity.withVelocity(0));
     }
 
     public void DrummShuttle(){
@@ -116,10 +129,29 @@ public class Drumm extends SubsystemBase {
     // DrummL.setVoltage(voltage);  // positive because we used negative values in points
     // }
     
-    public Command DRUMMNear(){
+
+
+
+    public Command DRUMMCLOSE() {
       return runOnce(
         () -> {
-            DrummNear();
+          DrummClose();
+        }
+      );
+    }
+
+    public Command DRUMMMIDSHOT() {
+      return runOnce(
+        () -> {
+          DrummMid();
+        }
+      );
+    }
+
+    public Command DRUMMTOWER(){
+      return runOnce(
+        () -> {
+            DrummTower();
         }
       );
     }
@@ -131,7 +163,16 @@ public class Drumm extends SubsystemBase {
         }
       );
     }
-        public Command DRUMMShuttle(){
+
+        public Command MAXSHOT () {
+          return runOnce(
+            () -> {
+              MaxShot();
+            }
+          );
+        }
+
+        public Command DRUMMNear(){
       return runOnce(
         () -> {
             DrummShuttle();

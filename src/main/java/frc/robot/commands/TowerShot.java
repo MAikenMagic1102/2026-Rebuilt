@@ -15,22 +15,20 @@ import frc.robot.subsystems.Feeder.Feeder;
 import frc.robot.subsystems.Floor.Floor;
 import frc.robot.subsystems.Hood.Hood;
 
-public class MidRangeShot extends SequentialCommandGroup{
+public class TowerShot extends SequentialCommandGroup{
 
-
-    public MidRangeShot(Drumm drumm, Hood hood, Feeder feeder, Floor floor){
+    public TowerShot(Drumm drumm, Hood hood, Feeder feeder, Floor floor){
         addCommands(
-            hood.MIDDLEPOS().alongWith(drumm.DRUMMMIDSHOT()),
-            new WaitCommand(2),
-            feeder.FeederFeed().alongWith(floor.FloorOn()),
-            new WaitCommand(4),
-            drumm.DRUMMStop(),
-            feeder.FeederStop(),
-            floor.FloorStop(),
-            hood.HOODHome()
+        hood.HOODTOWER().alongWith(drumm.DRUMMTOWER()),
+        new WaitCommand(2),
+        feeder.FeederFeed().alongWith(floor.FloorOn()),
+        new WaitCommand(4),
+        drumm.DRUMMStop(),
+        feeder.FeederStop(),
+        floor.FloorStop(),
+        hood.HOODHome()
         
         );
     }
-
 
 }
