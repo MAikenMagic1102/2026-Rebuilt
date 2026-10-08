@@ -43,15 +43,16 @@ public class VisionConstants {
   public static Transform3d robotToCameraLeft =
       // new Transform3d(inchesToMeters(-11.753), inchesToMeters(-2.02), inchesToMeters(10.771), 
       // new Rotation3d(Units.degreesToRadians(10), Units.degreesToRadians(114.595), Units.degreesToRadians(170)));
-      new Transform3d(inchesToMeters(-11.753), inchesToMeters(-2.02), inchesToMeters(10.771), 
-      new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(10), Units.degreesToRadians(170)));
+      // new Transform3d(inchesToMeters(-11.753), inchesToMeters(-1.27), inchesToMeters(10.771), 
+      new Transform3d(inchesToMeters(-12.009), inchesToMeters(-2.069), inchesToMeters(10.890),
+      new Rotation3d(Units.degreesToRadians(9.055), Units.degreesToRadians(-25), Units.degreesToRadians(-170)));
       
       // new Transform3d(inchesToMeters(16.484 - 1.5), inchesToMeters(-9.427), inchesToMeters(10.619), 
       // new Rotation3d(0.0, Units.degreesToRadians(115), Units.degreesToRadians(180 - 10)));
   public static Transform3d robotToCameraRight =
-      new Transform3d(inchesToMeters(-11.753), inchesToMeters(1.27), inchesToMeters(10.771),
-      (new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(10), Units.degreesToRadians(-170))));
-
+      // new Transform3d(inchesToMeters(-11.753), inchesToMeters(2.02), inchesToMeters(10.771),
+      new Transform3d(inchesToMeters(-12.009), inchesToMeters(1.319), inchesToMeters(10.890),
+      (new Rotation3d(Units.degreesToRadians(9.055), Units.degreesToRadians(-25), Units.degreesToRadians(170))));
 
   // Basic filtering thresholds
   public static double maxAmbiguity = 0.3;
