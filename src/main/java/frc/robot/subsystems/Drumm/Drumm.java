@@ -46,7 +46,7 @@ public class Drumm extends SubsystemBase {
         drumConfig.Slot0.kS = 0.1;
         drumConfig.Slot0.kV = 0.12;
         drumConfig.Slot0.kP = 2.5;
-        drumConfig.Slot0.kI = 0;
+        drumConfig.Slot0.kI = 0.1;
         drumConfig.Slot0.kD = 0.2;
         drumConfig.MotionMagic.MotionMagicAcceleration = 200; // RPS/s — tune this
         drumConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
@@ -99,7 +99,7 @@ public class Drumm extends SubsystemBase {
     }
 
     public void DrummClose() {
-      DrummLB.setControl(m_velocity.withVelocity(-2000.0/60.0));
+      DrummLB.setControl(m_velocity.withVelocity(-1900.0/60.0));
     }
 
     public void DrummMid() {
