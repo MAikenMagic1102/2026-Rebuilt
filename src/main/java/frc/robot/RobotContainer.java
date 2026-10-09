@@ -7,7 +7,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.google.gson.JsonObject;
+
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import frc.robot.subsystems.vision.VisionIOPhotonVision;

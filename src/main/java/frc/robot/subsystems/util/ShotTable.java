@@ -99,8 +99,8 @@ public final class ShotTable {
                 List.of(
                         new ShotSample(feetToMeters(2), -1915, 10.5),
                         new ShotSample(feetToMeters(4), -1950, 13),
-                        new ShotSample(feetToMeters(6), -1950, 16)),
-                        // new ShotSample(feetToMeters(8), -1950, 18)),
+                        new ShotSample(feetToMeters(6), -1950, 16),
+                        new ShotSample(feetToMeters(8), -2000, 20)),
                 10, // 10.2° close shot has to sit inside this limit
                 54);
     }
