@@ -175,6 +175,10 @@ public class Drumm extends SubsystemBase {
     public void DrummShuttle(){
       DrummLB.setControl(m_velocity.withVelocity(-4500.0 / 60.0)); // -4500 RPM
     }
+    
+    public void DrummVariable(double rpm){
+      DrummLB.setControl(m_velocity.withVelocity(rpm / 60.0));
+    }
 
 
     // public void DrummAutoRange() {
@@ -246,6 +250,14 @@ public class Drumm extends SubsystemBase {
         return runOnce(
         () -> {
             DrummClean();
+        }
+      );
+    }
+
+    public Command DRUMMVariable(double rpm){
+      return runOnce(
+        () -> {
+          DrummVariable(rpm);
         }
       );
     }

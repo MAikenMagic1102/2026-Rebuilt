@@ -332,6 +332,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     var state = super.getState();
     // pull out the pose estimate
     Pose2d pose = state.Pose;
+    BobotState.setGlobalPose(pose);
     return pose;
     }
 
@@ -360,19 +361,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return m_pathBuilder;
     }
 
-            private static double metersToInches(double meters){
+ private static double metersToInches(double meters){
     double inches = meters / 0.0254;
     return inches;
   }
 
   public Translation2d distToHub(){
-          Pose2d pose = getPose();
-        Translation2d robotPos = pose.getTranslation();
-        double distBlue = robotPos.getDistance(Hub.blueHubCenter2d);
-        double distRed = robotPos.getDistance(Hub.redHubCenter2d);
-        Translation2d target =
-            distBlue < distRed ? Hub.blueHubCenter2d : Hub.redHubCenter2d;
-        SmartDashboard.putNumber("Distance to red hub", distRed);
+        getPose();
+        // Shoot at our alliance hub. Use blue until the driver station says we are red.
+        Translation2d target = Hub.blueHubCenter2d;
+        if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+            target = Hub.redHubCenter2d;
+        }
+        BobotState.setDistanceToHub(target);
         return target;
   }
 
@@ -382,8 +383,6 @@ public Rotation2d getAngley(){
     Translation2d robotPos = pose.getTranslation();
     Translation2d target = distToHub();
 
-    BobotState.setGlobalPose(pose);
-    BobotState.setDistanceToHub(target);
     BobotState.setDrummDistance(robotPos.getDistance(target));
     SmartDashboard.putNumber("Drumm Distance", robotPos.getDistance(target));
     
@@ -399,6 +398,7 @@ public Rotation2d getAngley(){
     //     targetAngle -= Math.toRadians(180);
     // }
     distToTgt = robotPos.getDistance(target);
+    BobotState.setDistanceToHubActual(distToTgt);
 
 
     // shooterSpeed = (0.0715 * metersToInches(distToTgt)) + 22.25;
