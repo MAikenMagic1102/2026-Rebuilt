@@ -15,18 +15,13 @@ import frc.robot.subsystems.Feeder.Feeder;
 import frc.robot.subsystems.Floor.Floor;
 import frc.robot.subsystems.Hood.Hood;
 
-public class MaxShot extends SequentialCommandGroup{
+public class Shuttle extends SequentialCommandGroup{
 
-    public MaxShot (Drumm drumm, Hood hood, Feeder feeder, Floor floor) {
+    public Shuttle(Drumm drumm, Hood hood, Feeder feeder, Floor floor) {
         addCommands(
-            hood.MaxHOODPOS().alongWith(drumm.MAXSHOT()),
-            new WaitCommand(2),
-            floor.FloorOn().alongWith(feeder.FeederFeed()),
-            new WaitCommand(4),
-            drumm.DRUMMStop(),
-            feeder.FeederStop(),
-            floor.FloorStop(),
-            hood.HOODHome()
+            hood.MaxHOODPOS().alongWith(drumm.DRUMMShuttle()),
+            new WaitCommand(1.5),
+            floor.FloorOn().alongWith(feeder.FeederFeed())
         );
     }
 

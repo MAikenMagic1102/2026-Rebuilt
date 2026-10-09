@@ -3,6 +3,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.BobotState;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -73,6 +74,8 @@ public class Hood extends SubsystemBase{
   // }
   final PositionVoltage m_hood = new PositionVoltage(0).withSlot(0);
  public Hood(){
+    double hoodRaw = 0.175 - (1.475 * (BobotState.getHoodAngle() / 100));
+    SmartDashboard.putNumber("Hood Raw", hoodRaw);
 
 
     var Slot0Configs = new Slot0Configs();
@@ -81,51 +84,34 @@ public class Hood extends SubsystemBase{
     Slot0Configs.kV = 0.5;
     Slot0Configs.kP = 16;
     Slot0Configs.kI = 0.2;
-    Slot0Configs.kD = 0.005;
+    Slot0Configs.kD = 0;
 
     hoodMotorFx.getConfigurator().apply(Slot0Configs);
 
-    hoodCANcoder.setPosition(0);
-
+    
+    
 }
 
  @Override
     public void periodic() {
-            double HOODPOS = (hoodCANcoder.getPosition().getValueAsDouble()*HoodConstants.hoodCANcoderGearing);
-            
+            double HOODPOS = (hoodCANcoder.getPosition().getValueAsDouble()*HoodConstants.hoodCANcoderGearing+(32.0/19.0));
+
             SmartDashboard.putNumber("Hood angle", HOODPOS);
-
-            SmartDashboard.putNumber("Hood Raw", hoodCANcoder.getPosition().getValueAsDouble());
-            SmartDashboard.putNumber("Hood Motor Position", hoodMotorFx.getPosition().getValueAsDouble());
-
 
     }
 
     public void HoodHomePos(){
-        hoodMotorFx.setControl(m_hood.withPosition(0.05));
+        hoodMotorFx.setControl(m_hood.withPosition(-0.30));
     }
 
-    public void HoodClosePos(){
-        hoodMotorFx.setControl(m_hood.withPosition(-0.07));
-    }
-      
     public void MiddleHoodPos(){
         hoodMotorFx.setControl(m_hood.withPosition(-1.5));
     }
-
-    public void HoodTowerPos(){
-        hoodMotorFx.setControl(m_hood.withPosition(-0.60));
-    }
-
-    public void HoodFarPos(){
-        hoodMotorFx.setControl(m_hood.withPosition(0));
-    }
-    
     public void MaxHoodPos(){
         hoodMotorFx.setControl(m_hood.withPosition(-4));
     }
 
-    public Command HOODHome(){
+    public Command HOODNear(){
 
         return runOnce(
             () -> {
@@ -134,15 +120,7 @@ public class Hood extends SubsystemBase{
         );
     }
 
-    public Command CLOSEPOSE(){
-        return runOnce(
-            () -> {
-                HoodClosePos();
-            }
-        );
-    }
-
-    public Command MIDDLEPOS(){
+        public Command MIDDLEPOS(){
 
         return runOnce(
             () -> {
@@ -150,25 +128,8 @@ public class Hood extends SubsystemBase{
             }
         );
     }
-    
-    public Command HOODTOWER(){
 
-        return runOnce(
-            () -> {
-                HoodTowerPos();
-            }
-        );
-    }
-
-    public Command HOODFARPOS() {
-        return runOnce(
-            () -> {
-                HoodFarPos();
-            }
-        );
-    }
-
-    public Command MaxHOODPOS(){
+        public Command MaxHOODPOS(){
 
         return runOnce(
             () -> {
