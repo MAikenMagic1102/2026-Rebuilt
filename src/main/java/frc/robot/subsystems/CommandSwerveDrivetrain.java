@@ -367,15 +367,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   }
 
   public Translation2d distToHub(){
-          Pose2d pose = getPose();
-        Translation2d robotPos = pose.getTranslation();
-        double distBlue = robotPos.getDistance(Hub.blueHubCenter2d);
-        double distRed = robotPos.getDistance(Hub.redHubCenter2d);
-        Translation2d target =
-            distBlue < distRed ? Hub.blueHubCenter2d : Hub.redHubCenter2d;
-        // SmartDashboard.putNumber("Distance to nearest hub", target.getNorm());
+        getPose();
+        // Shoot at our alliance hub. Use blue until the driver station says we are red.
+        Translation2d target = Hub.blueHubCenter2d;
+        if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+            target = Hub.redHubCenter2d;
+        }
         BobotState.setDistanceToHub(target);
-        return target; 
+        return target;
   }
 
 public Rotation2d getAngley(){

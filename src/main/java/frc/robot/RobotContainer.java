@@ -241,7 +241,6 @@ public class RobotContainer {
         joystick.rightBumper().onTrue(pivot.PivotDown()).onFalse(pivot.PivotStop());
         // joystick.a().onTrue(AutoAlignCommand.AutoAlign());
 
-        joystick.a().toggleOnTrue(new TowerShot(drumm, hood, feeder, floor));
         joystick.b().toggleOnTrue(new MidRangeShot(drumm, hood, feeder, floor));
         joystick.y().toggleOnTrue(new FarShot(drumm, hood, feeder, floor));
         joystick.x().toggleOnTrue(new SystemOff(drumm, feeder, floor));
@@ -293,6 +292,7 @@ public class RobotContainer {
         //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
         //         .withTargetDirection(drivetrain.getAngley())
         //         .withMaxAbsRotationalRate(MaxAngularRate)));
+        // Hold A to aim at our hub and set drum RPM + hood angle from the distance table.
         joystick.a().whileTrue(new AutoAlignCommand(joystick).alongWith(new VisionShootCommand()));
 
 

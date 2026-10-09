@@ -33,8 +33,9 @@ public final class ShotTable {
                 throw new IllegalArgumentException(
                         "Distances must be strictly increasing (duplicates are rejected).");
             }
-            if (!Double.isFinite(flywheelRps) || flywheelRps >= 0.0) {
-                throw new IllegalArgumentException("Flywheel RPS must be finite and > 0.");
+            // Negative RPM is the shooting direction. Zero would not spin the drum.
+            if (!Double.isFinite(flywheelRps) || flywheelRps == 0.0) {
+                throw new IllegalArgumentException("Flywheel RPM must be finite and not zero.");
             }
             if (!Double.isFinite(hoodDeg) || hoodDeg < minHoodDeg || hoodDeg > maxHoodDeg) {
                 throw new IllegalArgumentException("Hood angle is outside calibrated limits.");
@@ -98,7 +99,7 @@ public final class ShotTable {
                         new ShotSample(feetToMeters(4), -1950, 13),
                         new ShotSample(feetToMeters(6), -1950, 16)),
                         // new ShotSample(feetToMeters(8), -1950, 18)),
-                11,
+                10, // 10.2° close shot has to sit inside this limit
                 54);
     }
 }
