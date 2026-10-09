@@ -30,6 +30,13 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 // import frc.robot.Commands.AutoAlignCommandOld;
 import frc.robot.autos.*;
+import frc.robot.commands.CloseShot;
+import frc.robot.commands.FarShot;
+import frc.robot.commands.MidRangeShot;
+import frc.robot.commands.OutTake;
+import frc.robot.commands.SystemOff;
+import frc.robot.commands.TestingHood;
+import frc.robot.commands.TowerShot;
 import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.generated.TunerConstants;
 import frc.robot.lib.BLine.FollowPath;
@@ -65,7 +72,6 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final CommandCustomXboxController joystick = new CommandCustomXboxController(0);
-    private final CommandCustomXboxController joystick2 = new CommandCustomXboxController(1);
 
     public final CommandSwerveDrivetrain drivetrain = BobotState.getM_Drivetrain();
 
@@ -145,8 +151,8 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.7) // Drive forward with negative Y (forward)
+                    .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.7) // Drive left with negative X (left)
                     .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
@@ -246,6 +252,8 @@ public class RobotContainer {
         joystick.x().toggleOnTrue(new SystemOff(drumm, feeder, floor));
         
         joystick.povDown().toggleOnTrue(new CloseShot(drumm, hood, feeder, floor));
+        joystick.povUp().toggleOnTrue(new TestingHood(drumm, feeder, floor));
+        
 
 
         // joystick.x().onTrue(drumm.DRUMM4())
