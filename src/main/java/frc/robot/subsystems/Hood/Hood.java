@@ -125,23 +125,23 @@ public class Hood extends SubsystemBase{
     //Home is 11 degrees and max is 55 using an angle finder
 
     public void HoodHomePos(){
-        hoodMotorFx.setControl(m_hood.withPosition(hoodDegreesToMotor(11.0)));  // physical minimum
+        hoodMotorFx.setControl(m_hood.withPosition(hoodDegreesToMotor(10.2)));  // physical minimum
     }
 
     public void HoodClosePos(){
-        hoodMotorFx.setControl(m_hood.withPosition(hoodDegreesToMotor(20.0)));  // tune me
+        hoodMotorFx.setControl(m_hood.withPosition(hoodDegreesToMotor(10.5)));  // 2ft
     }
 
     public void MiddleHoodPos(){
-        hoodMotorFx.setControl(m_hood.withPosition(hoodDegreesToMotor(33.0)));  // tune me
+        hoodMotorFx.setControl(m_hood.withPosition(hoodDegreesToMotor(13.0)));  // 4ft
     }
 
     public void HoodTowerPos(){
-        hoodMotorFx.setControl(m_hood.withPosition(hoodDegreesToMotor(25.0)));  // tune me
+        hoodMotorFx.setControl(m_hood.withPosition(hoodDegreesToMotor(16.0))); // 6ft
     }
 
     public void HoodFarPos(){
-        hoodMotorFx.setControl(m_hood.withPosition(hoodDegreesToMotor(45.0)));  // tune me
+        hoodMotorFx.setControl(m_hood.withPosition(hoodDegreesToMotor(20.0)));  // tune me
     }
 
     public void MaxHoodPos(){

@@ -27,7 +27,7 @@ import java.io.PrintWriter;
 
 
 public class Drumm extends SubsystemBase {
-    
+
   // Talon motor drumm right
     public static TalonFX DrummLB = new TalonFX(24, "rio"); //Left Bottom
     public static TalonFX DrummLT = new TalonFX(25, "rio"); //Left Top
@@ -153,19 +153,19 @@ public class Drumm extends SubsystemBase {
     }
 
     public void DrummClose() {
-      DrummLB.setControl(m_velocity.withVelocity(-1750.0/60.0)); // -2000 RPM
+      DrummLB.setControl(m_velocity.withVelocity(-1915.0 / 60.0)); // 2ft -1915 RPM
     }
 
     public void DrummMid() {
-      DrummLB.setControl(m_velocity.withVelocity(-2000.0/60.0)); // -2000 RPM
+      DrummLB.setControl(m_velocity.withVelocity(-1950.0 / 60.0)); // 4ft -1950 RPM
     }
 
     public void DrummTower(){
-      DrummLB.setControl(m_velocity.withVelocity(-2000.0 / 60.0)); // -2000 RPM
+      DrummLB.setControl(m_velocity.withVelocity(-1950.0 / 60.0)); // 6ft -1950 RPM
     }
 
     public void DrummFar(){
-      DrummLB.setControl(m_velocity.withVelocity(-2000.0 / 60.0)); // -2000 RPM
+      DrummLB.setControl(m_velocity.withVelocity(-1975.0 / 60.0)); // 8ft -1950 RPM
     }
 
     public void MaxShot(){
