@@ -41,7 +41,7 @@ public class VisionShootCommand extends Command {
         if (shot.isPresent()) {
             ShotSetpoint sp = shot.get();
             // Table numbers are RPM, same as DrummClose and DrummTower.
-            double drummRpm = sp.flywheelRps();
+            double drummRpm = sp.flywheelRpm();
             double hoodDegrees = sp.hoodDeg();
 
             drumm.DrummVariable(drummRpm);

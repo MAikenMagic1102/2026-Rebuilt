@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 public final class ShotTable {
-    private final InterpolatingDoubleTreeMap m_flywheelRps = new InterpolatingDoubleTreeMap();
+    private final InterpolatingDoubleTreeMap m_flywheelRpm = new InterpolatingDoubleTreeMap();
     private final InterpolatingDoubleTreeMap m_hoodDeg = new InterpolatingDoubleTreeMap();
     private final double m_minDistanceM;
     private final double m_maxDistanceM;
@@ -24,7 +24,7 @@ public final class ShotTable {
                 throw new IllegalArgumentException("Shot sample is null.");
             }
             double distanceM = sample.distanceM();
-            double flywheelRps = sample.flywheelRps();
+            double flywheelRps = sample.flywheelRpm();
             double hoodDeg = sample.hoodDeg();
             if (!Double.isFinite(distanceM) || distanceM < 0.0) {
                 throw new IllegalArgumentException("Distance must be finite and >= 0 m.");
@@ -40,7 +40,7 @@ public final class ShotTable {
             if (!Double.isFinite(hoodDeg) || hoodDeg < minHoodDeg || hoodDeg > maxHoodDeg) {
                 throw new IllegalArgumentException("Hood angle is outside calibrated limits.");
             }
-            m_flywheelRps.put(distanceM, flywheelRps);
+            m_flywheelRpm.put(distanceM, flywheelRps);
             m_hoodDeg.put(distanceM, hoodDeg);
             previousDistance = distanceM;
         }
@@ -68,7 +68,7 @@ public final class ShotTable {
         if (distanceM < m_minDistanceM || distanceM > m_maxDistanceM) {
             return Optional.empty();
         }
-        Double flywheelRps = m_flywheelRps.get(distanceM);
+        Double flywheelRps = m_flywheelRpm.get(distanceM);
         Double hoodDeg = m_hoodDeg.get(distanceM);
         if (flywheelRps == null || hoodDeg == null) {
             return Optional.empty();
@@ -89,13 +89,15 @@ public final class ShotTable {
     }
 
     private static double feetToMeters(double feet){
-        return feet * 0.3048;
+        return (feet + (16.25 / 12)) * 0.3048; // Apply the transform to put estimations at the center of robot, not edge. Also convert to meters
     }
+
+    
 
     public static ShotTable maikenMagicTable() {
         return new ShotTable(
                 List.of(
-                        new ShotSample(feetToMeters(2), -1915, 10.2),
+                        new ShotSample(feetToMeters(2), -1915, 10.5),
                         new ShotSample(feetToMeters(4), -1950, 13),
                         new ShotSample(feetToMeters(6), -1950, 16)),
                         // new ShotSample(feetToMeters(8), -1950, 18)),

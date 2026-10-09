@@ -36,8 +36,8 @@ public class AutoAlignCommand extends SequentialCommandGroup {
         addCommands(
                 drivetrain.applyRequest(() ->
                 facingAngle
-                .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
-                .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
+                .withVelocityY(-joystick.getLeftX() * MaxSpeed)
+                .withVelocityX(-joystick.getLeftY() * MaxSpeed)
                 .withTargetDirection(drivetrain.getAngley())
                 .withMaxAbsRotationalRate(MaxAngularRate))
                 );
