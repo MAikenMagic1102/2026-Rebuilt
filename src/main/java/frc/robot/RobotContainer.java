@@ -68,6 +68,8 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = BobotState.getM_Drivetrain();
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+    private final SwerveRequest.FieldCentricFacingAngle facingAngle = new SwerveRequest.FieldCentricFacingAngle().withHeadingPID(5, 0, 0);
+
 
     Intake intake = new Intake();
     Pivot pivot = new Pivot();
@@ -267,7 +269,6 @@ public class RobotContainer {
         // joystick.a().whileTrue(Commands.runOnce(() -> autoAlignComand.AutoAlignCommand()));
     
         // Drum Vision + Autoalign
-        final SwerveRequest.FieldCentricFacingAngle facingAngle = new SwerveRequest.FieldCentricFacingAngle().withHeadingPID(5, 0, 0);
         joystick.a().whileTrue(  
             drivetrain.applyRequest(() ->
                 facingAngle
