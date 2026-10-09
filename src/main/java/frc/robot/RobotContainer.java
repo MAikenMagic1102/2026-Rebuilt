@@ -10,12 +10,12 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import frc.robot.subsystems.util.CommandCustomXboxController;
-// import frc.robot.subsystems.vision.Vision;
-// import frc.robot.subsystems.vision.VisionIO;
-// import frc.robot.subsystems.vision.VisionIOPhotonVision;
-// import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
-// import static frc.robot.subsystems.vision.VisionConstants.*;
-//import frc.robot.subsystems.AutoAlignCommand;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOPhotonVision;
+import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -27,16 +27,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+// import frc.robot.Commands.AutoAlignCommandOld;
 import frc.robot.autos.*;
-import frc.robot.commands.CloseShot;
-import frc.robot.commands.FarShot;
-import frc.robot.commands.MidRangeShot;
-import frc.robot.commands.OutTake;
-import frc.robot.commands.SystemOff;
-import frc.robot.commands.TowerShot;
 import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.generated.TunerConstants;
 import frc.robot.lib.BLine.FollowPath;
+import frc.robot.subsystems.AutoAlignCommand;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Drumm.Drumm;
 import frc.robot.subsystems.Feeder.Feeder;
@@ -72,6 +68,8 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = BobotState.getM_Drivetrain();
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+    private final SwerveRequest.FieldCentricFacingAngle facingAngle = new SwerveRequest.FieldCentricFacingAngle().withHeadingPID(5, 0, 0);
+
 
     Intake intake = new Intake();
     Pivot pivot = new Pivot();
@@ -80,9 +78,10 @@ public class RobotContainer {
     Floor floor = new Floor();
     Hood hood =  new Hood();
 
+    // private final Command autoAlign = new AutoAlignCommandOld();
 
 
-    //private final Vision vision;
+    private final Vision vision;
 
 
     // private static double metersToInches(double meters){
@@ -91,31 +90,31 @@ public class RobotContainer {
     // }
 
     public RobotContainer() {
-        //         switch (Constants.currentMode) {
-        //     case REAL:
-        //         // Real robot, instantiate hardware IO implementations
-        //         vision =
-        //             new Vision(
-        //                 drivetrain::addVisionMeasurement,
-        //                 new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
-        //                 new VisionIOPhotonVision(camera1Name, robotToCameraRight));
-        //         break;
+                switch (Constants.currentMode) {
+            case REAL:
+                // Real robot, instantiate hardware IO implementations
+                vision =
+                    new Vision(
+                        drivetrain::addVisionMeasurement,
+                        new VisionIOPhotonVision(camera0Name, robotToCameraLeft),
+                        new VisionIOPhotonVision(camera1Name, robotToCameraRight));
+                break;
 
-        //     case SIM:
-        //         // Sim robot, instantiate physics sim IO implementations
-        //         vision =
-        //             new Vision(
-        //                 drivetrain::addVisionMeasurement,
-        //                 new VisionIOPhotonVisionSim(camera0Name, robotToCameraLeft, drivetrain::getPose),
-        //                 new VisionIOPhotonVisionSim(camera1Name, robotToCameraRight, drivetrain::getPose));
-        //         break;
+            case SIM:
+                // Sim robot, instantiate physics sim IO implementations
+                vision =
+                    new Vision(
+                        drivetrain::addVisionMeasurement,
+                        new VisionIOPhotonVisionSim(camera0Name, robotToCameraLeft, drivetrain::getPose),
+                        new VisionIOPhotonVisionSim(camera1Name, robotToCameraRight, drivetrain::getPose));
+                break;
 
-        //     default:
-        //         // Replayed robot, disable IO implementations
-        //         // (Use same number of dummy implementations as the real robot)
-        //         vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {}, new VisionIO() {});
-        //         break;
-        // }
+            default:
+                // Replayed robot, disable IO implementations
+                // (Use same number of dummy implementations as the real robot)
+                vision = new Vision(drivetrain::addVisionMeasurement, new VisionIO() {}, new VisionIO() {}, new VisionIO() {});
+                break;
+        }
         // BLINE EVENT TRIGGERS HERE
         // FollowPath.registerEventTrigger("ShooterOn", drumm.DRUMMNear());
         // FollowPath.registerEventTrigger("FeederOn", feeder.FeederFeed());
@@ -230,7 +229,6 @@ public class RobotContainer {
         joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
         joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-
        
         //joystick2.rightBumper().onTrue(drumm.DRUMMCLEAN()).onFalse(drumm.DRUMMNO());
 
@@ -239,6 +237,7 @@ public class RobotContainer {
 
         joystick.leftBumper().onTrue(pivot.PivotUp()).onFalse(pivot.PivotStop());
         joystick.rightBumper().onTrue(pivot.PivotDown()).onFalse(pivot.PivotStop());
+        // joystick.a().onTrue(AutoAlignCommand.AutoAlign());
 
         joystick.a().toggleOnTrue(new TowerShot(drumm, hood, feeder, floor));
         joystick.b().toggleOnTrue(new MidRangeShot(drumm, hood, feeder, floor));
@@ -253,11 +252,10 @@ public class RobotContainer {
         // I know its sloppy, but you have to uncomment this stuff for EACH place it appears
         // .whileTrue(
         //     drivetrain.applyRequest(() ->
-        //     driveAtAngle
-        //         .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
+        //     drive.withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
         //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
         //         .withTargetDirection(drivetrain.getAngley())
-        //         .withMaxAbsRotationalRate(MaxAngularRate)))
+        //         .withMaxAbsRotationalRate(MaxAngularRate)));
         // .onFalse(drumm.DRUMMNO());
 
         // joystick.y().onTrue(drumm.DRUMM7())
@@ -282,28 +280,30 @@ public class RobotContainer {
 
         // // )
         // .onFalse(drumm.DRUMMNO());
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
         // joystick.a().whileTrue(Commands.runOnce(() -> autoAlignComand.AutoAlignCommand()));
-    }
+    
         // Drum Vision + Autoalign
-    //     joystick.a().whileTrue(
-    //         drivetrain.applyRequest(() ->
-    //         driveAtAngle
+        joystick.a().whileTrue(  
+            drivetrain.applyRequest(() ->
+                facingAngle
+                .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
+                .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
+                .withTargetDirection(drivetrain.getAngley())
+                .withMaxAbsRotationalRate(MaxAngularRate)));
 
-    //             .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
-    //             .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
-    //             .withTargetDirection(drivetrain.getAngley())
-    //             .withMaxAbsRotationalRate(MaxAngularRate)).alongWith(
-    //     Commands.run(() -> {
-    //         drumm.DrummAutoRange();
-    //     }, drumm)
-    //     )).onFalse(
-    //         Commands.runOnce(() -> {
-    //             drumm.DrummStop();
-    //         }, drumm)
-    //     );
-    // }
 
+    
+                // .alongWith(
+        // Commands.run(() -> {
+        //     drumm.DrummAutoRange();
+        // }, drumm)
+        // )).onFalse(
+        //     Commands.runOnce(() -> {
+        //         drumm.DrummStop();
+        //     }, drumm)
+        // );
+    }
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
     }
