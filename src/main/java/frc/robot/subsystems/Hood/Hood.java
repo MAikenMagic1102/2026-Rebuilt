@@ -3,8 +3,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -68,9 +70,7 @@ public class Hood extends SubsystemBase{
   // public Command setAngle(double angle){
   //   return runOnce(() -> setAnglePosition(angle));
   // }
-  final PositionVoltage m_hood = new PositionVoltage(0).withSlot(0);
-  private double lastTargetAngle = 11.0;
-
+  final MotionMagicVoltage m_hood = new MotionMagicVoltage(0).withSlot(0);
   // Converts absolute physical hood angle (degrees) to motor rotations
   // Negative motor = more hood angle, so we subtract the home offset and negate
   private double hoodDegreesToMotor(double physicalDegrees) {
@@ -89,15 +89,29 @@ public class Hood extends SubsystemBase{
 
     Slot0Configs.kS = .15;
     Slot0Configs.kV = 0.5;
-    Slot0Configs.kP = 16;
+    Slot0Configs.kP = 12;
     Slot0Configs.kI = 0.2;
     Slot0Configs.kD = 0.005;
 
     hoodMotorFx.getConfigurator().apply(Slot0Configs);
 
-    hoodCANcoder.setPosition(0);
+    var mmConfigs = new MotionMagicConfigs();
+    mmConfigs.MotionMagicCruiseVelocity = 10; // motor rotations/sec — tune me
+    mmConfigs.MotionMagicAcceleration = 20;   // motor rotations/sec² — tune me
+    hoodMotorFx.getConfigurator().apply(mmConfigs);
 
-    SmartDashboard.putNumber("Hood Target Angle", 11.0);
+    SmartDashboard.putNumber("Hood Target Angle", HoodConstants.HoodStartingAngle);
+    setDefaultCommand(run(() -> {
+        double target = SmartDashboard.getNumber("Hood Target Angle", HoodConstants.HoodStartingAngle);
+        hoodMotorFx.setControl(m_hood.withPosition(hoodDegreesToMotor(target)));
+    }));
+
+    // Seed TalonFX encoder from CANcoder absolute position so motor position 0 = home (11°)
+    // regardless of where the TalonFX magnetic encoder happens to boot.
+    var absSignal = hoodCANcoder.getAbsolutePosition();
+    BaseStatusSignal.waitForAll(0.1, absSignal);
+    double absCANcoder = absSignal.getValueAsDouble();
+    hoodMotorFx.setPosition(-absCANcoder * HoodConstants.hoodGearing / (182.0 / 10.0));
 
 }
 
@@ -105,13 +119,8 @@ public class Hood extends SubsystemBase{
     public void periodic() {
             SmartDashboard.putNumber("Hood Angle (deg)", getHoodAngleDegrees());
             SmartDashboard.putNumber("Hood Raw", hoodCANcoder.getPosition().getValueAsDouble());
+            SmartDashboard.putNumber("Hood Absolute", hoodCANcoder.getAbsolutePosition().getValueAsDouble());
             SmartDashboard.putNumber("Hood Motor Position", hoodMotorFx.getPosition().getValueAsDouble());
-
-            double targetAngle = SmartDashboard.getNumber("Hood Target Angle", lastTargetAngle);
-            if (targetAngle != lastTargetAngle) {
-                hoodMotorFx.setControl(m_hood.withPosition(hoodDegreesToMotor(targetAngle)));
-                lastTargetAngle = targetAngle;
-            }
     }
     //Home is 11 degrees and max is 55 using an angle finder
 

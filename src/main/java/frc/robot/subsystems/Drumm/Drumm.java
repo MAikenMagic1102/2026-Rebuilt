@@ -153,7 +153,7 @@ public class Drumm extends SubsystemBase {
     }
 
     public void DrummClose() {
-      DrummLB.setControl(m_velocity.withVelocity(-2000.0/60.0)); // -2000 RPM
+      DrummLB.setControl(m_velocity.withVelocity(-1750.0/60.0)); // -2000 RPM
     }
 
     public void DrummMid() {
