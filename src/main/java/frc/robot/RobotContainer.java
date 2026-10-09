@@ -10,12 +10,12 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.google.gson.JsonObject;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
-import frc.robot.subsystems.util.CommandCustomXboxController;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOPhotonVision;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+
 import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -40,6 +40,7 @@ import frc.robot.subsystems.Floor.Floor;
 import frc.robot.subsystems.Hood.Hood;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Pivot.Pivot;
+import frc.robot.subsystems.util.CommandCustomXboxController;
 import frc.robot.commands.*;
 
 import edu.wpi.first.units.measure.Angle;
@@ -292,7 +293,7 @@ public class RobotContainer {
         //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
         //         .withTargetDirection(drivetrain.getAngley())
         //         .withMaxAbsRotationalRate(MaxAngularRate)));
-        joystick.a().whileTrue(new AutoAlignCommand(joystick));
+        joystick.a().whileTrue(new AutoAlignCommand(joystick).alongWith(new VisionShootCommand()));
 
 
     

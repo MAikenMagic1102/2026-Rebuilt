@@ -8,6 +8,7 @@ import frc.robot.subsystems.Drumm.Drumm;
 import lombok.Getter;
 import lombok.Setter;
 import frc.robot.subsystems.Hood.Hood;
+import frc.robot.subsystems.util.ShotTable;
 
 public class BobotState {
     @Getter @Setter
@@ -26,5 +27,8 @@ public class BobotState {
     private static Hood hood = new Hood();
     @Getter @Setter
     private static Drumm drumm = new Drumm();
-
+    @Getter @Setter
+    private static ShotTable shotTable = ShotTable.maikenMagicTable();
+    @Getter @Setter
+    private static double distanceToHubActual;
 }
