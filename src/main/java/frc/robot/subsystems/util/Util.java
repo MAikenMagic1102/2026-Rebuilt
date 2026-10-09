@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.subsystems.util;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -184,4 +184,5 @@ public class Util {
                     new Rotation3d(rollPositive, pitchPositive, yawPositive));
         }
     }
+
 }
