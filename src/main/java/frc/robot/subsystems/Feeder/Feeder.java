@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Feeder extends SubsystemBase {
     public static TalonFX feederMotor = new TalonFX(23, "rio");
-    private int logCounter = 0;
 
     public Feeder(){
         TalonFXConfiguration feederConfig = new TalonFXConfiguration();
@@ -23,17 +22,16 @@ public class Feeder extends SubsystemBase {
 
     @Override
     public void periodic() {
-      if (++logCounter >= 10) {
-        logCounter = 0;
-        SmartDashboard.putNumber("feeder Speed RPM", feederMotor.getVelocity().getValueAsDouble() * 60);
-        SmartDashboard.putNumber("feeder Voltage", feederMotor.getMotorVoltage().getValueAsDouble());
-        SmartDashboard.putNumber("feeder Current (A)", feederMotor.getStatorCurrent().getValueAsDouble());
-      }
+      SmartDashboard.putNumber("feeder Speed RPM", feederMotor.getVelocity().getValueAsDouble() * 60);
+      SmartDashboard.putNumber("feeder Voltage", feederMotor.getMotorVoltage().getValueAsDouble());
+      SmartDashboard.putNumber("feeder Current (A)", feederMotor.getStatorCurrent().getValueAsDouble());
+
+      
     }
     
 
     public void FeederON(){
-        feederMotor.setVoltage(-8);
+        feederMotor.setVoltage(-11);
     }
 
     public void FeederCLEAR(){

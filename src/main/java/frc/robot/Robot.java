@@ -24,7 +24,7 @@ public class Robot extends TimedRobot {
         .withJoystickReplay();
 
     public Robot() {
-        RobotController.setBrownoutVoltage(Volts.of(6.5));
+        RobotController.setBrownoutVoltage(Volts.of(6.0));
 
         m_robotContainer = new RobotContainer();
     }
