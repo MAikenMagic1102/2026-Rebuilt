@@ -87,12 +87,17 @@ public final class ShotTable {
                 70.0);
     }
 
+    private static double feetToMeters(double feet){
+        return feet * 0.3048;
+    }
 
     public static ShotTable maikenMagicTable() {
         return new ShotTable(
                 List.of(
-                        new ShotSample(2.00, -1950, 18),
-                        new ShotSample(5.00, -3000, 18)),
+                        new ShotSample(feetToMeters(2), -1915, 10.2),
+                        new ShotSample(feetToMeters(4), -1950, 13),
+                        new ShotSample(feetToMeters(6), -1950, 16)),
+                        // new ShotSample(feetToMeters(8), -1950, 18)),
                 11,
                 54);
     }
