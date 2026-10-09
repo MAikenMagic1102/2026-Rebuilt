@@ -360,7 +360,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return m_pathBuilder;
     }
 
-            private static double metersToInches(double meters){
+    private static double metersToInches(double meters){
     double inches = meters / 0.0254;
     return inches;
   }

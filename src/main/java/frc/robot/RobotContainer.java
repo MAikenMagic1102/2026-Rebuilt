@@ -7,6 +7,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.google.gson.JsonObject;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import frc.robot.subsystems.util.CommandCustomXboxController;
@@ -32,7 +33,6 @@ import frc.robot.autos.*;
 import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.generated.TunerConstants;
 import frc.robot.lib.BLine.FollowPath;
-import frc.robot.subsystems.AutoAlignCommand;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Drumm.Drumm;
 import frc.robot.subsystems.Feeder.Feeder;
@@ -40,6 +40,7 @@ import frc.robot.subsystems.Floor.Floor;
 import frc.robot.subsystems.Hood.Hood;
 import frc.robot.subsystems.Intake.Intake;
 import frc.robot.subsystems.Pivot.Pivot;
+import frc.robot.commands.*;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -73,10 +74,10 @@ public class RobotContainer {
 
     Intake intake = new Intake();
     Pivot pivot = new Pivot();
-    Drumm drumm = new Drumm();
+    private final Drumm drumm = BobotState.getDrumm();
     Feeder feeder = new Feeder();
     Floor floor = new Floor();
-    Hood hood =  new Hood();
+    private final Hood hood =  BobotState.getHood();
 
     // private final Command autoAlign = new AutoAlignCommandOld();
 
@@ -284,13 +285,14 @@ public class RobotContainer {
         // joystick.a().whileTrue(Commands.runOnce(() -> autoAlignComand.AutoAlignCommand()));
     
         // Drum Vision + Autoalign
-        joystick.a().whileTrue(  
-            drivetrain.applyRequest(() ->
-                facingAngle
-                .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
-                .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
-                .withTargetDirection(drivetrain.getAngley())
-                .withMaxAbsRotationalRate(MaxAngularRate)));
+        // joystick.a().whileTrue(  
+        //     drivetrain.applyRequest(() ->
+        //         facingAngle
+        //         .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
+        //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
+        //         .withTargetDirection(drivetrain.getAngley())
+        //         .withMaxAbsRotationalRate(MaxAngularRate)));
+        joystick.a().whileTrue(new AutoAlignCommand(joystick));
 
 
     

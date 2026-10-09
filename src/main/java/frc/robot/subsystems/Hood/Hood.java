@@ -125,6 +125,10 @@ public class Hood extends SubsystemBase{
         hoodMotorFx.setControl(m_hood.withPosition(-4));
     }
 
+    public void hoodVariable(double position){
+        hoodMotorFx.setControl(m_hood.withPosition(position));
+    }
+
     public Command HOODHome(){
 
         return runOnce(
@@ -175,6 +179,14 @@ public class Hood extends SubsystemBase{
                 MaxHoodPos();
             }
         );
+    }
 
+    public Command HOODVariable(double angle){
+        
+        return runOnce(
+            () -> {
+                hoodVariable(angle);
+            }
+        );
     }
 }

@@ -4,8 +4,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Drumm.Drumm;
 import lombok.Getter;
 import lombok.Setter;
+import frc.robot.subsystems.Hood.Hood;
 
 public class BobotState {
     @Getter @Setter
@@ -20,4 +22,9 @@ public class BobotState {
     private static CommandSwerveDrivetrain m_Drivetrain = TunerConstants.createDrivetrain();
     @Getter @Setter
     private static double drummDistance = 0.0;
+    @Getter @Setter
+    private static Hood hood = new Hood();
+    @Getter @Setter
+    private static Drumm drumm = new Drumm();
+
 }
