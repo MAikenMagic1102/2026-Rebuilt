@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find 'C:/Users/FRC Trevor/.gradle/caches' -name *phoenix*)",
+      "Bash(grep -r HeadingController 'C:\\\\Users\\\\FRC Trevor\\\\Documents\\\\GitHub\\\\2026-Rebuilt' --include=*.java)",
+      "WebFetch(domain:api.ctr-electronics.com)",
+      "WebFetch(domain:v6.docs.ctr-electronics.com)",
+      "WebFetch(domain:docs.ctr-electronics.com)",
+      "Bash(./gradlew compileJava)",
+      "Read(//c/Users/FRC Trevor/wpilib/2025/jdk/bin/**)",
+      "Read(//c/Users/FRC Trevor/wpilib/2026/jdk/bin/**)"
+    ]
+  }
+}

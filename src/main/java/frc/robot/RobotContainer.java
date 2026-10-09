@@ -150,8 +150,8 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.7) // Drive forward with negative Y (forward)
+                    .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.7) // Drive left with negative X (left)
                     .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
@@ -293,13 +293,14 @@ public class RobotContainer {
         // joystick.a().whileTrue(Commands.runOnce(() -> autoAlignComand.AutoAlignCommand()));
     
         // Drum Vision + Autoalign
-        joystick.a().whileTrue(  
+        joystick.a().whileTrue(
             drivetrain.applyRequest(() ->
                 facingAngle
                 .withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
                 .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)
                 .withTargetDirection(drivetrain.getAngley())
                 .withMaxAbsRotationalRate(MaxAngularRate)));
+            // .onFalse(Commands.runOnce(() -> facingAngle.HeadingController.reset()));
 
 
     
