@@ -230,12 +230,27 @@ public class RobotContainer {
         joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
        
-        // joystick2.rightBumper().onTrue(drumm.DRUMMCLEAN()).onFalse(drumm.DRUMMNO());
+        //joystick2.rightBumper().onTrue(drumm.DRUMMCLEAN()).onFalse(drumm.DRUMMNO());
+
+        joystick.leftTrigger().onTrue(intake.IN()).onFalse(intake.STOP());
+        joystick.rightTrigger().onTrue(new OutTake(floor, intake)).onFalse(intake.OUT().alongWith(floor.FloorStop()));
+
         joystick.leftBumper().onTrue(pivot.PivotUp()).onFalse(pivot.PivotStop());
         joystick.rightBumper().onTrue(pivot.PivotDown()).onFalse(pivot.PivotStop());
         // joystick.a().onTrue(AutoAlignCommand.AutoAlign());
 
-        // joystick.x().whileTrue(
+        joystick.a().toggleOnTrue(new TowerShot(drumm, hood, feeder, floor));
+        joystick.b().toggleOnTrue(new MidRangeShot(drumm, hood, feeder, floor));
+        joystick.y().toggleOnTrue(new FarShot(drumm, hood, feeder, floor));
+        joystick.x().toggleOnTrue(new SystemOff(drumm, feeder, floor));
+        
+        joystick.povDown().toggleOnTrue(new CloseShot(drumm, hood, feeder, floor));
+
+
+        // joystick.x().onTrue(drumm.DRUMM4())
+        // THIS STUFF IS VISION CODE
+        // I know its sloppy, but you have to uncomment this stuff for EACH place it appears
+        // .whileTrue(
         //     drivetrain.applyRequest(() ->
         //     drive.withVelocityY(-joystick.getLeftX() * MaxSpeed * 0.3)
         //         .withVelocityX(-joystick.getLeftY() * MaxSpeed * 0.3)

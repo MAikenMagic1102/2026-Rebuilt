@@ -24,7 +24,10 @@ public class DrummConstants {
 
 
 
+
     }
+
+    public static double startingTestSpeed = 0;
     
    
 }
