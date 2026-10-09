@@ -33,6 +33,7 @@ import frc.robot.commands.FarShot;
 import frc.robot.commands.MidRangeShot;
 import frc.robot.commands.OutTake;
 import frc.robot.commands.SystemOff;
+import frc.robot.commands.TestingHood;
 import frc.robot.commands.TowerShot;
 import frc.robot.game_util.FieldConstants.Hub;
 import frc.robot.generated.TunerConstants;
@@ -246,6 +247,8 @@ public class RobotContainer {
         joystick.x().toggleOnTrue(new SystemOff(drumm, feeder, floor));
         
         joystick.povDown().toggleOnTrue(new CloseShot(drumm, hood, feeder, floor));
+        joystick.povUp().toggleOnTrue(new TestingHood(drumm, feeder, floor));
+        
 
 
         // joystick.x().onTrue(drumm.DRUMM4())
