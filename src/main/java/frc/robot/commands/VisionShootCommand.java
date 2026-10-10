@@ -46,7 +46,7 @@ public class VisionShootCommand extends Command {
 
             drumm.DrummVariable(drummRpm);
             // The hood Talon setpoint is rotations, not degrees.
-            hood.hoodVariable(hoodDegrees); 
+            hood.hoodVariable(hoodDegrees);
             log(hoodDegrees, drummRpm);
         }
     }
