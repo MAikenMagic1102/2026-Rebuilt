@@ -165,8 +165,9 @@ public class Drumm extends SubsystemBase {
     }
 
     public void DrummFar(){
-      DrummLB.setControl(m_velocity.withVelocity(-1975.0 / 60.0)); // 8ft -1950 RPM
-    }
+      DrummLB.setControl(m_velocity.withVelocity(-2100.0 / 60.0)); // 8ft -2000 RPM
+    }                                                              // 10ft -2100 RPM
+                                                                   // 12ft -2400 RPM
 
     public void MaxShot(){
       DrummLB.setControl(m_velocity.withVelocity(0));

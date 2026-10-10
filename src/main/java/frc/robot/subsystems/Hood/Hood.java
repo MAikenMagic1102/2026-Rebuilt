@@ -137,13 +137,14 @@ public class Hood extends SubsystemBase{
     }
 
     public void HoodTowerPos(){
-        hoodMotorFx.setControl(m_hood.withPosition(hoodDegreesToMotor(16.0))); // 6ft
+        hoodMotorFx.setControl(m_hood.withPosition(hoodDegreesToMotor(16.0)));  // 6ft
     }
 
     public void HoodFarPos(){
-        hoodMotorFx.setControl(m_hood.withPosition(hoodDegreesToMotor(20.0)));  // tune me
-    }
-
+        hoodMotorFx.setControl(m_hood.withPosition(hoodDegreesToMotor(22.0)));  // 8ft
+    }                                                                                           // 20.0  8ft
+                                                                                                // 22.0 10ft
+                                                                                                // 22.0 12ft
     public void MaxHoodPos(){
         hoodMotorFx.setControl(m_hood.withPosition(hoodDegreesToMotor(55.0)));  // physical maximum
     }
